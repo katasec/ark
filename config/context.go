@@ -23,7 +23,7 @@ func check(e error) {
 	}
 }
 
-func NewContext(cloudId string) *Config {
+func NewConfig(cloudId string) *Config {
 
 	// Define config dir
 	homeDir, _ := os.UserHomeDir()
@@ -36,10 +36,10 @@ func NewContext(cloudId string) *Config {
 	}
 
 	// Create config yaml
-	myContext := &Config{
+	myConfig := &Config{
 		Cloud: cloudId,
 	}
-	yamlData, err := yaml.Marshal(myContext)
+	yamlData, err := yaml.Marshal(myConfig)
 	check(err)
 
 	// Save file
@@ -47,7 +47,7 @@ func NewContext(cloudId string) *Config {
 	err = os.WriteFile(ContextFile, yamlData, 0644)
 	check(err)
 
-	return myContext
+	return myConfig
 }
 
 func SaveContext() {

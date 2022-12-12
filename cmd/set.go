@@ -27,7 +27,7 @@ to quickly create a Cobra application.`,
 			os.Exit(1)
 		}
 
-		config.NewContext(cloudId)
+		config.NewConfig(cloudId)
 	},
 }
 
