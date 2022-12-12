@@ -13,7 +13,7 @@ var (
 	ContextFile = fmt.Sprintf("%s/config", ArkDir)
 )
 
-type Context struct {
+type Config struct {
 	Cloud string `yaml:"cloud"`
 }
 
@@ -23,7 +23,7 @@ func check(e error) {
 	}
 }
 
-func NewContext(cloudId string) *Context {
+func NewContext(cloudId string) *Config {
 
 	// Define config dir
 	homeDir, _ := os.UserHomeDir()
@@ -36,14 +36,14 @@ func NewContext(cloudId string) *Context {
 	}
 
 	// Create config yaml
-	myContext := &Context{
+	myContext := &Config{
 		Cloud: cloudId,
 	}
 	yamlData, err := yaml.Marshal(myContext)
 	check(err)
 
 	// Save file
-	ContextFile = fmt.Sprintf("%s/context", ArkDir)
+	ContextFile = fmt.Sprintf("%s/config", ArkDir)
 	err = os.WriteFile(ContextFile, yamlData, 0644)
 	check(err)
 
