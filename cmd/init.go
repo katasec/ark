@@ -4,8 +4,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-
+	dev "github.com/katasec/ark/dev"
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +14,7 @@ var initCmd = &cobra.Command{
 	Short: "Initializes a local ark environment",
 	Long:  `Initializes the dependencies required by ark before starting a local environment.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("init called")
+		dev.Init()
 	},
 }
 
