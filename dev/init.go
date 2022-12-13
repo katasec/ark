@@ -12,13 +12,13 @@ func Init() {
 
 	// Setup Pulumi run parameters
 	args := &pulumihelper.PulumiRunRemoteParameters{
-		ProjectName: "Azure",
+		ProjectName: "ArkInit",
 		StackName:   "dev",
 		Destroy:     false,
 		Plugins: []map[string]string{
 			{
 				"name":    "azure-native",
-				"version": "v1.64.1",
+				"version": "v1.89.1",
 			},
 		},
 		GitURL:      "https://github.com/katasec/ArkInit.git",
@@ -28,6 +28,8 @@ func Init() {
 				"location": "westus2",
 			},
 		},
+		Runtime: "dotnet",
+		Branch:  "refs/remotes/origin/main",
 	}
 
 	ctx := context.Background()
