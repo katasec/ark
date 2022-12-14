@@ -8,18 +8,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// initCmd represents the init command
-var initCmd = &cobra.Command{
-	Use:   "init",
-	Short: "Initializes a local ark environment",
-	Long:  `Initializes the dependencies required by ark before starting a local environment.`,
+// createCmd represents the init command
+var createCmd = &cobra.Command{
+	Use:   "create",
+	Short: "Create cloud dependencies for a local ark environment",
+	Long:  "Creates cloud components required for a local ark environment",
 	Run: func(cmd *cobra.Command, args []string) {
-		dev.Init()
+		dev.Create()
 	},
 }
 
 func init() {
-	devCmd.AddCommand(initCmd)
+	devCmd.AddCommand(createCmd)
 
 	// Here you will define your flags and configuration settings.
 
