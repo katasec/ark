@@ -11,8 +11,8 @@ import (
 // createCmd represents the init command
 var createCmd = &cobra.Command{
 	Use:   "create",
-	Short: "Create cloud dependencies for a local ark environment",
-	Long:  "Creates cloud components required for a local ark environment",
+	Short: "Create cloud dependencies required for spinning up a local ark environment",
+	Long:  "Create cloud dependencies required for spinning up a local ark environment.",
 	Run: func(cmd *cobra.Command, args []string) {
 		dev.Create()
 	},

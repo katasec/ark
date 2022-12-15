@@ -2,11 +2,15 @@ package dev
 
 import (
 	"context"
+	"os"
 
+	"github.com/dapr/cli/pkg/print"
 	pulumihelper "github.com/katasec/pulumi-helper"
 )
 
 func Create() {
+
+	print.PendingStatusEvent(os.Stdout, "Creating cloud resources for local dev environment.")
 
 	args := &pulumihelper.PulumiRunRemoteParameters{
 		ProjectName: "ArkInit",
@@ -31,7 +35,14 @@ func Create() {
 	}
 
 	ctx := context.Background()
-	pulumihelper.RunPulumiRemote(ctx, args)
+	err := pulumihelper.RunPulumiRemote(ctx, args)
+
+	if err != nil {
+		print.FailureStatusEvent(os.Stdout, "Cloud not complete creation of cloud resources.")
+	} else {
+		print.SuccessStatusEvent(os.Stdout, "Created cloud resources for local dev environment")
+	}
+
 }
 
 func Delete() {
