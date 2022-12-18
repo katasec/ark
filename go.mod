@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/dapr/cli v1.9.1
-	github.com/katasec/pulumi-runner v0.1.0
+	github.com/katasec/pulumi-runner v0.1.1
 	github.com/mitchellh/go-ps v1.0.0
 	github.com/spf13/cobra v1.6.1
 	gopkg.in/yaml.v2 v2.4.0
