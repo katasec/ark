@@ -1,29 +1,31 @@
 package dev
 
 import (
-	"context"
 	"os"
 
 	"github.com/dapr/cli/pkg/print"
-	pulumihelper "github.com/katasec/pulumi-helper"
+	// pulumihelper "github.com/katasec/pulumi-helper"
+
+	pulumirunner "github.com/katasec/pulumi-runner"
+	utils "github.com/katasec/pulumi-runner/utils"
 )
 
-func Create() {
+func createPulumiProgram() *pulumirunner.RemoteProgram {
 
-	print.PendingStatusEvent(os.Stdout, "Creating cloud resources for local dev environment.")
+	logger := utils.ConfigureLogger("ark.log")
 
-	args := &pulumihelper.PulumiRunRemoteParameters{
+	args := &pulumirunner.RemoteProgramArgs{
 		ProjectName: "ArkInit",
+		GitURL:      "https://github.com/katasec/ArkInit.git",
+		Branch:      "refs/remotes/origin/main",
+		ProjectPath: "Azure",
 		StackName:   "dev",
-		Destroy:     false,
 		Plugins: []map[string]string{
 			{
 				"name":    "azure-native",
 				"version": "v1.89.1",
 			},
 		},
-		GitURL:      "https://github.com/katasec/ArkInit.git",
-		ProjectPath: "Azure",
 		Config: []map[string]string{
 			{
 				"name":  "azure-native:location",
@@ -31,44 +33,29 @@ func Create() {
 			},
 		},
 		Runtime: "dotnet",
-		Branch:  "refs/remotes/origin/main",
+		Writer:  logger,
 	}
 
-	ctx := context.Background()
-	err := pulumihelper.RunPulumiRemote(ctx, args)
+	return pulumirunner.NewRemoteProgram(args)
+}
+func Create() {
 
-	if err != nil {
-		print.FailureStatusEvent(os.Stdout, "Cloud not complete creation of cloud resources.")
-	} else {
-		print.SuccessStatusEvent(os.Stdout, "Created cloud resources for local dev environment")
-	}
+	message := "Creating cloud resources for local dev environment."
+	stopSpinning := print.Spinner(os.Stdout, message)
+	p := createPulumiProgram()
+	p.Up()
 
+	stopSpinning(print.Success)
+	//print.FailureStatusEvent(os.Stdout, message)
 }
 
 func Delete() {
+	p := createPulumiProgram()
 
-	args := &pulumihelper.PulumiRunRemoteParameters{
-		ProjectName: "ArkInit",
-		StackName:   "dev",
-		Destroy:     true,
-		Plugins: []map[string]string{
-			{
-				"name":    "azure-native",
-				"version": "v1.89.1",
-			},
-		},
-		GitURL:      "https://github.com/katasec/ArkInit.git",
-		ProjectPath: "Azure",
-		Config: []map[string]string{
-			{
-				"name":  "azure-native:location",
-				"value": "westus2",
-			},
-		},
-		Runtime: "dotnet",
-		Branch:  "refs/remotes/origin/main",
-	}
+	message := "Deleting cloud resources for local dev environment."
+	stopSpinning := print.Spinner(os.Stdout, message)
 
-	ctx := context.Background()
-	pulumihelper.RunPulumiRemote(ctx, args)
+	p.Destroy()
+	stopSpinning(print.Success)
+
 }

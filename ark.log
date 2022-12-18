@@ -1,0 +1,885 @@
+2022/12/18 16:45:34 ****** Creating New Remote Pulumi Program
+2022/12/18 16:45:34 Cloning repo: https://github.com/katasec/ArkInit.git
+2022/12/18 16:45:34 Cloning: https://github.com/katasec/ArkInit.git
+2022/12/18 16:45:34 Repo Dir: /tmp/ark-remote10185786
+Enumerating objects: 62, done.
+Counting objects:   1% (1/62)Counting objects:   3% (2/62)Counting objects:   4% (3/62)Counting objects:   6% (4/62)Counting objects:   8% (5/62)Counting objects:   9% (6/62)Counting objects:  11% (7/62)Counting objects:  12% (8/62)Counting objects:  14% (9/62)Counting objects:  16% (10/62)Counting objects:  17% (11/62)Counting objects:  19% (12/62)Counting objects:  20% (13/62)Counting objects:  22% (14/62)Counting objects:  24% (15/62)Counting objects:  25% (16/62)Counting objects:  27% (17/62)Counting objects:  29% (18/62)Counting objects:  30% (19/62)Counting objects:  32% (20/62)Counting objects:  33% (21/62)Counting objects:  35% (22/62)Counting objects:  37% (23/62)Counting objects:  38% (24/62)Counting objects:  40% (25/62)Counting objects:  41% (26/62)Counting objects:  43% (27/62)Counting objects:  45% (28/62)Counting objects:  46% (29/62)Counting objects:  48% (30/62)Counting objects:  50% (31/62)Counting objects:  51% (32/62)Counting objects:  53% (33/62)Counting objects:  54% (34/62)Counting objects:  56% (35/62)Counting objects:  58% (36/62)Counting objects:  59% (37/62)Counting objects:  61% (38/62)Counting objects:  62% (39/62)Counting objects:  64% (40/62)Counting objects:  66% (41/62)Counting objects:  67% (42/62)Counting objects:  69% (43/62)Counting objects:  70% (44/62)Counting objects:  72% (45/62)Counting objects:  74% (46/62)Counting objects:  75% (47/62)Counting objects:  77% (48/62)Counting objects:  79% (49/62)Counting objects:  80% (50/62)Counting objects:  82% (51/62)Counting objects:  83% (52/62)Counting objects:  85% (53/62)Counting objects:  87% (54/62)Counting objects:  88% (55/62)Counting objects:  90% (56/62)Counting objects:  91% (57/62)Counting objects:  93% (58/62)Counting objects:  95% (59/62)Counting objects:  96% (60/62)Counting objects:  98% (61/62)Counting objects: 100% (62/62)Counting objects: 100% (62/62), done.
+Compressing objects:   2% (1/41)Compressing objects:   4% (2/41)Compressing objects:   7% (3/41)Compressing objects:   9% (4/41)Compressing objects:  12% (5/41)Compressing objects:  14% (6/41)Compressing objects:  17% (7/41)Compressing objects:  19% (8/41)Compressing objects:  21% (9/41)Compressing objects:  24% (10/41)Compressing objects:  26% (11/41)Compressing objects:  29% (12/41)Compressing objects:  31% (13/41)Compressing objects:  34% (14/41)Compressing objects:  36% (15/41)Compressing objects:  39% (16/41)Compressing objects:  41% (17/41)Compressing objects:  43% (18/41)Compressing objects:  46% (19/41)Compressing objects:  48% (20/41)Compressing objects:  51% (21/41)Compressing objects:  53% (22/41)Compressing objects:  56% (23/41)Compressing objects:  58% (24/41)Compressing objects:  60% (25/41)Compressing objects:  63% (26/41)Compressing objects:  65% (27/41)Compressing objects:  68% (28/41)Compressing objects:  70% (29/41)Compressing objects:  73% (30/41)Compressing objects:  75% (31/41)Compressing objects:  78% (32/41)Compressing objects:  80% (33/41)Compressing objects:  82% (34/41)Compressing objects:  85% (35/41)Compressing objects:  87% (36/41)Compressing objects:  90% (37/41)Compressing objects:  92% (38/41)Compressing objects:  95% (39/41)Compressing objects:  97% (40/41)Compressing objects: 100% (41/41)Compressing objects: 100% (41/41), done.
+Total 62 (delta 22), reused 53 (delta 19), pack-reused 0
+2022/12/18 16:45:35 Done.
+2022/12/18 16:45:40 Successfully set config
+2022/12/18 16:45:40 ****** Starting Pulumi Up
+2022/12/18 16:45:40 Starting refresh
+2022/12/18 16:45:48 Refresh succeeded!, Result:succeeded 
+
+Updating (dev)
+
+View Live: https://app.pulumi.com/katasec/ArkInit/dev/updates/46
+
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev  running 'dotnet build -nologo .'
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev    Determining projects to restore...
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev    Restored /tmp/ark-remote10185786/Azure/Azure.csproj (in 334 ms).
+@ Updating.......
+    pulumi:pulumi:Stack ArkInit-dev    Azure -> /tmp/ark-remote10185786/Azure/bin/Debug/net7.0/Azure.dll
+    pulumi:pulumi:Stack ArkInit-dev  
+    pulumi:pulumi:Stack ArkInit-dev      0 Warning(s)
+    pulumi:pulumi:Stack ArkInit-dev  'dotnet build -nologo .' completed successfully
+@ Updating......
+
+@ Updating.....
+ +  pulumi:pulumi:Stack ArkInit-dev creating (0s) 'dotnet build -nologo .' completed successfully
+@ Updating..........
+ +  azure-native:resources:ResourceGroup rg-pulumi- creating (0s) 
+ +  azure-native:resources:ResourceGroup rg-ark- creating (0s) 
+@ Updating........
+ +  azure-native:resources:ResourceGroup rg-pulumi- created (5s) 
+ +  azure-native:resources:ResourceGroup rg-ark- created (5s) 
+@ Updating....
+ +  azure-native:storage:StorageAccount stpulumistate creating (0s) 
+@ Updating....
+ +  azure-native:storage:StorageAccount starklogs creating (0s) 
+@ Updating...............................
+ +  azure-native:storage:StorageAccount starklogs created (28s) 
+ +  azure-native:storage:StorageAccount stpulumistate created (29s) 
+@ Updating.....
+ +  pulumi:pulumi:Stack ArkInit-dev created (43s) 
+
+Outputs:
+    ark-resourcegroup   : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+        PackageVersion: ""
+    }
+    ark-storage         : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+        PackageVersion: ""
+    }
+    pulumi-resourcegroup: {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+        PackageVersion: ""
+    }
+    pulumi-storage      : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+        PackageVersion: ""
+    }
+
+Resources:
+    + 5 created
+
+Duration: 46s
+
+2022/12/18 16:46:58 Stack successfully updated
+2022/12/18 16:47:19 ****** Creating New Remote Pulumi Program
+2022/12/18 16:47:19 Cloning repo: https://github.com/katasec/ArkInit.git
+2022/12/18 16:47:19 Cloning: https://github.com/katasec/ArkInit.git
+2022/12/18 16:47:19 Repo Dir: /tmp/ark-remote2966201143
+Enumerating objects: 62, done.
+Counting objects:   1% (1/62)Counting objects:   3% (2/62)Counting objects:   4% (3/62)Counting objects:   6% (4/62)Counting objects:   8% (5/62)Counting objects:   9% (6/62)Counting objects:  11% (7/62)Counting objects:  12% (8/62)Counting objects:  14% (9/62)Counting objects:  16% (10/62)Counting objects:  17% (11/62)Counting objects:  19% (12/62)Counting objects:  20% (13/62)Counting objects:  22% (14/62)Counting objects:  24% (15/62)Counting objects:  25% (16/62)Counting objects:  27% (17/62)Counting objects:  29% (18/62)Counting objects:  30% (19/62)Counting objects:  32% (20/62)Counting objects:  33% (21/62)Counting objects:  35% (22/62)Counting objects:  37% (23/62)Counting objects:  38% (24/62)Counting objects:  40% (25/62)Counting objects:  41% (26/62)Counting objects:  43% (27/62)Counting objects:  45% (28/62)Counting objects:  46% (29/62)Counting objects:  48% (30/62)Counting objects:  50% (31/62)Counting objects:  51% (32/62)Counting objects:  53% (33/62)Counting objects:  54% (34/62)Counting objects:  56% (35/62)Counting objects:  58% (36/62)Counting objects:  59% (37/62)Counting objects:  61% (38/62)Counting objects:  62% (39/62)Counting objects:  64% (40/62)Counting objects:  66% (41/62)Counting objects:  67% (42/62)Counting objects:  69% (43/62)Counting objects:  70% (44/62)Counting objects:  72% (45/62)Counting objects:  74% (46/62)Counting objects:  75% (47/62)Counting objects:  77% (48/62)Counting objects:  79% (49/62)Counting objects:  80% (50/62)Counting objects:  82% (51/62)Counting objects:  83% (52/62)Counting objects:  85% (53/62)Counting objects:  87% (54/62)Counting objects:  88% (55/62)Counting objects:  90% (56/62)Counting objects:  91% (57/62)Counting objects:  93% (58/62)Counting objects:  95% (59/62)Counting objects:  96% (60/62)Counting objects:  98% (61/62)Counting objects: 100% (62/62)Counting objects: 100% (62/62), done.
+Compressing objects:   2% (1/41)Compressing objects:   4% (2/41)Compressing objects:   7% (3/41)Compressing objects:   9% (4/41)Compressing objects:  12% (5/41)Compressing objects:  14% (6/41)Compressing objects:  17% (7/41)Compressing objects:  19% (8/41)Compressing objects:  21% (9/41)Compressing objects:  24% (10/41)Compressing objects:  26% (11/41)Compressing objects:  29% (12/41)Compressing objects:  31% (13/41)Compressing objects:  34% (14/41)Compressing objects:  36% (15/41)Compressing objects:  39% (16/41)Compressing objects:  41% (17/41)Compressing objects:  43% (18/41)Compressing objects:  46% (19/41)Compressing objects:  48% (20/41)Compressing objects:  51% (21/41)Compressing objects:  53% (22/41)Compressing objects:  56% (23/41)Compressing objects:  58% (24/41)Compressing objects:  60% (25/41)Compressing objects:  63% (26/41)Compressing objects:  65% (27/41)Compressing objects:  68% (28/41)Compressing objects:  70% (29/41)Compressing objects:  73% (30/41)Compressing objects:  75% (31/41)Compressing objects:  78% (32/41)Compressing objects:  80% (33/41)Compressing objects:  82% (34/41)Compressing objects:  85% (35/41)Compressing objects:  87% (36/41)Compressing objects:  90% (37/41)Compressing objects:  92% (38/41)Compressing objects:  95% (39/41)Compressing objects:  97% (40/41)Compressing objects: 100% (41/41)Compressing objects: 100% (41/41), done.
+Total 62 (delta 22), reused 53 (delta 19), pack-reused 0
+2022/12/18 16:47:20 Done.
+2022/12/18 16:47:25 Successfully set config
+2022/12/18 16:47:25 ****** Starting Pulumi Up
+2022/12/18 16:47:25 Starting refresh
+2022/12/18 16:47:43 Refresh succeeded!, Result:succeeded 
+
+Updating (dev)
+
+View Live: https://app.pulumi.com/katasec/ArkInit/dev/updates/48
+
+    pulumi:pulumi:Stack ArkInit-dev  running 'dotnet build -nologo .'
+@ Updating.....
+    pulumi:pulumi:Stack ArkInit-dev    Determining projects to restore...
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev    Restored /tmp/ark-remote2966201143/Azure/Azure.csproj (in 378 ms).
+@ Updating.......
+    pulumi:pulumi:Stack ArkInit-dev    Azure -> /tmp/ark-remote2966201143/Azure/bin/Debug/net7.0/Azure.dll
+    pulumi:pulumi:Stack ArkInit-dev  
+    pulumi:pulumi:Stack ArkInit-dev  Build succeeded.
+    pulumi:pulumi:Stack ArkInit-dev  'dotnet build -nologo .' completed successfully
+@ Updating.......
+
+@ Updating.....
+    pulumi:pulumi:Stack ArkInit-dev running 'dotnet build -nologo .' completed successfully
+@ Updating......
+    azure-native:resources:ResourceGroup rg-ark-  
+    azure-native:resources:ResourceGroup rg-pulumi-  
+    azure-native:storage:StorageAccount starklogs  
+    azure-native:storage:StorageAccount stpulumistate  
+@ Updating.....
+    pulumi:pulumi:Stack ArkInit-dev  
+
+Outputs:
+    ark-resourcegroup   : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+        PackageVersion: ""
+    }
+    ark-storage         : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+        PackageVersion: ""
+    }
+    pulumi-resourcegroup: {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+        PackageVersion: ""
+    }
+    pulumi-storage      : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+        PackageVersion: ""
+    }
+
+Resources:
+    5 unchanged
+
+Duration: 7s
+
+2022/12/18 16:48:14 Stack successfully updated
+2022/12/18 16:52:24 ****** Creating New Remote Pulumi Program
+2022/12/18 16:52:24 Cloning repo: https://github.com/katasec/ArkInit.git
+2022/12/18 16:52:24 Cloning: https://github.com/katasec/ArkInit.git
+2022/12/18 16:52:24 Repo Dir: /tmp/ark-remote3975411945
+Enumerating objects: 62, done.
+Counting objects:   1% (1/62)Counting objects:   3% (2/62)Counting objects:   4% (3/62)Counting objects:   6% (4/62)Counting objects:   8% (5/62)Counting objects:   9% (6/62)Counting objects:  11% (7/62)Counting objects:  12% (8/62)Counting objects:  14% (9/62)Counting objects:  16% (10/62)Counting objects:  17% (11/62)Counting objects:  19% (12/62)Counting objects:  20% (13/62)Counting objects:  22% (14/62)Counting objects:  24% (15/62)Counting objects:  25% (16/62)Counting objects:  27% (17/62)Counting objects:  29% (18/62)Counting objects:  30% (19/62)Counting objects:  32% (20/62)Counting objects:  33% (21/62)Counting objects:  35% (22/62)Counting objects:  37% (23/62)Counting objects:  38% (24/62)Counting objects:  40% (25/62)Counting objects:  41% (26/62)Counting objects:  43% (27/62)Counting objects:  45% (28/62)Counting objects:  46% (29/62)Counting objects:  48% (30/62)Counting objects:  50% (31/62)Counting objects:  51% (32/62)Counting objects:  53% (33/62)Counting objects:  54% (34/62)Counting objects:  56% (35/62)Counting objects:  58% (36/62)Counting objects:  59% (37/62)Counting objects:  61% (38/62)Counting objects:  62% (39/62)Counting objects:  64% (40/62)Counting objects:  66% (41/62)Counting objects:  67% (42/62)Counting objects:  69% (43/62)Counting objects:  70% (44/62)Counting objects:  72% (45/62)Counting objects:  74% (46/62)Counting objects:  75% (47/62)Counting objects:  77% (48/62)Counting objects:  79% (49/62)Counting objects:  80% (50/62)Counting objects:  82% (51/62)Counting objects:  83% (52/62)Counting objects:  85% (53/62)Counting objects:  87% (54/62)Counting objects:  88% (55/62)Counting objects:  90% (56/62)Counting objects:  91% (57/62)Counting objects:  93% (58/62)Counting objects:  95% (59/62)Counting objects:  96% (60/62)Counting objects:  98% (61/62)Counting objects: 100% (62/62)Counting objects: 100% (62/62), done.
+Compressing objects:   2% (1/41)Compressing objects:   4% (2/41)Compressing objects:   7% (3/41)Compressing objects:   9% (4/41)Compressing objects:  12% (5/41)Compressing objects:  14% (6/41)Compressing objects:  17% (7/41)Compressing objects:  19% (8/41)Compressing objects:  21% (9/41)Compressing objects:  24% (10/41)Compressing objects:  26% (11/41)Compressing objects:  29% (12/41)Compressing objects:  31% (13/41)Compressing objects:  34% (14/41)Compressing objects:  36% (15/41)Compressing objects:  39% (16/41)Compressing objects:  41% (17/41)Compressing objects:  43% (18/41)Compressing objects:  46% (19/41)Compressing objects:  48% (20/41)Compressing objects:  51% (21/41)Compressing objects:  53% (22/41)Compressing objects:  56% (23/41)Compressing objects:  58% (24/41)Compressing objects:  60% (25/41)Compressing objects:  63% (26/41)Compressing objects:  65% (27/41)Compressing objects:  68% (28/41)Compressing objects:  70% (29/41)Compressing objects:  73% (30/41)Compressing objects:  75% (31/41)Compressing objects:  78% (32/41)Compressing objects:  80% (33/41)Compressing objects:  82% (34/41)Compressing objects:  85% (35/41)Compressing objects:  87% (36/41)Compressing objects:  90% (37/41)Compressing objects:  92% (38/41)Compressing objects:  95% (39/41)Compressing objects:  97% (40/41)Compressing objects: 100% (41/41)Compressing objects: 100% (41/41), done.
+Total 62 (delta 22), reused 53 (delta 19), pack-reused 0
+2022/12/18 16:52:25 Done.
+2022/12/18 16:52:30 Successfully set config
+2022/12/18 16:52:30 ****** Starting Pulumi Up
+2022/12/18 16:52:30 Starting refresh
+2022/12/18 16:52:50 Refresh succeeded!, Result:succeeded 
+
+Updating (dev)
+
+View Live: https://app.pulumi.com/katasec/ArkInit/dev/updates/50
+
+    pulumi:pulumi:Stack ArkInit-dev  running 'dotnet build -nologo .'
+@ Updating.....
+    pulumi:pulumi:Stack ArkInit-dev    Determining projects to restore...
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev    Restored /tmp/ark-remote3975411945/Azure/Azure.csproj (in 400 ms).
+@ Updating.......
+    pulumi:pulumi:Stack ArkInit-dev    Azure -> /tmp/ark-remote3975411945/Azure/bin/Debug/net7.0/Azure.dll
+    pulumi:pulumi:Stack ArkInit-dev  
+    pulumi:pulumi:Stack ArkInit-dev      0 Warning(s)
+    pulumi:pulumi:Stack ArkInit-dev  'dotnet build -nologo .' completed successfully
+@ Updating.......
+
+@ Updating.....
+    pulumi:pulumi:Stack ArkInit-dev running 'dotnet build -nologo .' completed successfully
+@ Updating......
+    azure-native:resources:ResourceGroup rg-ark-  
+    azure-native:resources:ResourceGroup rg-pulumi-  
+    azure-native:storage:StorageAccount starklogs  
+    azure-native:storage:StorageAccount stpulumistate  
+@ Updating.....
+    pulumi:pulumi:Stack ArkInit-dev  
+
+Outputs:
+    ark-resourcegroup   : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+        PackageVersion: ""
+    }
+    ark-storage         : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+        PackageVersion: ""
+    }
+    pulumi-resourcegroup: {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+        PackageVersion: ""
+    }
+    pulumi-storage      : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+        PackageVersion: ""
+    }
+
+Resources:
+    5 unchanged
+
+Duration: 7s
+
+2022/12/18 16:53:21 Stack successfully updated
+2022/12/18 16:53:42 ****** Creating New Remote Pulumi Program
+2022/12/18 16:53:42 Cloning repo: https://github.com/katasec/ArkInit.git
+2022/12/18 16:53:42 Cloning: https://github.com/katasec/ArkInit.git
+2022/12/18 16:53:42 Repo Dir: /tmp/ark-remote3116947471
+Enumerating objects: 62, done.
+Counting objects:   1% (1/62)Counting objects:   3% (2/62)Counting objects:   4% (3/62)Counting objects:   6% (4/62)Counting objects:   8% (5/62)Counting objects:   9% (6/62)Counting objects:  11% (7/62)Counting objects:  12% (8/62)Counting objects:  14% (9/62)Counting objects:  16% (10/62)Counting objects:  17% (11/62)Counting objects:  19% (12/62)Counting objects:  20% (13/62)Counting objects:  22% (14/62)Counting objects:  24% (15/62)Counting objects:  25% (16/62)Counting objects:  27% (17/62)Counting objects:  29% (18/62)Counting objects:  30% (19/62)Counting objects:  32% (20/62)Counting objects:  33% (21/62)Counting objects:  35% (22/62)Counting objects:  37% (23/62)Counting objects:  38% (24/62)Counting objects:  40% (25/62)Counting objects:  41% (26/62)Counting objects:  43% (27/62)Counting objects:  45% (28/62)Counting objects:  46% (29/62)Counting objects:  48% (30/62)Counting objects:  50% (31/62)Counting objects:  51% (32/62)Counting objects:  53% (33/62)Counting objects:  54% (34/62)Counting objects:  56% (35/62)Counting objects:  58% (36/62)Counting objects:  59% (37/62)Counting objects:  61% (38/62)Counting objects:  62% (39/62)Counting objects:  64% (40/62)Counting objects:  66% (41/62)Counting objects:  67% (42/62)Counting objects:  69% (43/62)Counting objects:  70% (44/62)Counting objects:  72% (45/62)Counting objects:  74% (46/62)Counting objects:  75% (47/62)Counting objects:  77% (48/62)Counting objects:  79% (49/62)Counting objects:  80% (50/62)Counting objects:  82% (51/62)Counting objects:  83% (52/62)Counting objects:  85% (53/62)Counting objects:  87% (54/62)Counting objects:  88% (55/62)Counting objects:  90% (56/62)Counting objects:  91% (57/62)Counting objects:  93% (58/62)Counting objects:  95% (59/62)Counting objects:  96% (60/62)Counting objects:  98% (61/62)Counting objects: 100% (62/62)Counting objects: 100% (62/62), done.
+Compressing objects:   2% (1/41)Compressing objects:   4% (2/41)Compressing objects:   7% (3/41)Compressing objects:   9% (4/41)Compressing objects:  12% (5/41)Compressing objects:  14% (6/41)Compressing objects:  17% (7/41)Compressing objects:  19% (8/41)Compressing objects:  21% (9/41)Compressing objects:  24% (10/41)Compressing objects:  26% (11/41)Compressing objects:  29% (12/41)Compressing objects:  31% (13/41)Compressing objects:  34% (14/41)Compressing objects:  36% (15/41)Compressing objects:  39% (16/41)Compressing objects:  41% (17/41)Compressing objects:  43% (18/41)Compressing objects:  46% (19/41)Compressing objects:  48% (20/41)Compressing objects:  51% (21/41)Compressing objects:  53% (22/41)Compressing objects:  56% (23/41)Compressing objects:  58% (24/41)Compressing objects:  60% (25/41)Compressing objects:  63% (26/41)Compressing objects:  65% (27/41)Compressing objects:  68% (28/41)Compressing objects:  70% (29/41)Compressing objects:  73% (30/41)Compressing objects:  75% (31/41)Compressing objects:  78% (32/41)Compressing objects:  80% (33/41)Compressing objects:  82% (34/41)Compressing objects:  85% (35/41)Compressing objects:  87% (36/41)Compressing objects:  90% (37/41)Compressing objects:  92% (38/41)Compressing objects:  95% (39/41)Compressing objects:  97% (40/41)Compressing objects: 100% (41/41)Compressing objects: 100% (41/41), done.
+Total 62 (delta 22), reused 53 (delta 19), pack-reused 0
+2022/12/18 16:53:43 Done.
+2022/12/18 16:53:48 Successfully set config
+2022/12/18 16:53:48 ****** Starting Pulumi Up
+2022/12/18 16:53:48 Starting refresh
+2022/12/18 16:54:07 Refresh succeeded!, Result:succeeded 
+
+Updating (dev)
+
+View Live: https://app.pulumi.com/katasec/ArkInit/dev/updates/52
+
+    pulumi:pulumi:Stack ArkInit-dev  running 'dotnet build -nologo .'
+@ Updating.....
+    pulumi:pulumi:Stack ArkInit-dev    Determining projects to restore...
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev    Restored /tmp/ark-remote3116947471/Azure/Azure.csproj (in 350 ms).
+@ Updating.......
+    pulumi:pulumi:Stack ArkInit-dev    Azure -> /tmp/ark-remote3116947471/Azure/bin/Debug/net7.0/Azure.dll
+    pulumi:pulumi:Stack ArkInit-dev  
+    pulumi:pulumi:Stack ArkInit-dev      0 Warning(s)
+    pulumi:pulumi:Stack ArkInit-dev  'dotnet build -nologo .' completed successfully
+@ Updating.......
+
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev running 'dotnet build -nologo .' completed successfully
+@ Updating......
+    azure-native:resources:ResourceGroup rg-ark-  
+    azure-native:resources:ResourceGroup rg-pulumi-  
+    azure-native:storage:StorageAccount starklogs  
+    azure-native:storage:StorageAccount stpulumistate  
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev  
+
+Outputs:
+    ark-resourcegroup   : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+        PackageVersion: ""
+    }
+    ark-storage         : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+        PackageVersion: ""
+    }
+    pulumi-resourcegroup: {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+        PackageVersion: ""
+    }
+    pulumi-storage      : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+        PackageVersion: ""
+    }
+
+Resources:
+    5 unchanged
+
+Duration: 6s
+
+2022/12/18 16:54:37 Stack successfully updated
+2022/12/18 16:54:57 ****** Creating New Remote Pulumi Program
+2022/12/18 16:54:57 Cloning repo: https://github.com/katasec/ArkInit.git
+2022/12/18 16:54:57 Cloning: https://github.com/katasec/ArkInit.git
+2022/12/18 16:54:57 Repo Dir: /tmp/ark-remote4157525506
+Enumerating objects: 62, done.
+Counting objects:   1% (1/62)Counting objects:   3% (2/62)Counting objects:   4% (3/62)Counting objects:   6% (4/62)Counting objects:   8% (5/62)Counting objects:   9% (6/62)Counting objects:  11% (7/62)Counting objects:  12% (8/62)Counting objects:  14% (9/62)Counting objects:  16% (10/62)Counting objects:  17% (11/62)Counting objects:  19% (12/62)Counting objects:  20% (13/62)Counting objects:  22% (14/62)Counting objects:  24% (15/62)Counting objects:  25% (16/62)Counting objects:  27% (17/62)Counting objects:  29% (18/62)Counting objects:  30% (19/62)Counting objects:  32% (20/62)Counting objects:  33% (21/62)Counting objects:  35% (22/62)Counting objects:  37% (23/62)Counting objects:  38% (24/62)Counting objects:  40% (25/62)Counting objects:  41% (26/62)Counting objects:  43% (27/62)Counting objects:  45% (28/62)Counting objects:  46% (29/62)Counting objects:  48% (30/62)Counting objects:  50% (31/62)Counting objects:  51% (32/62)Counting objects:  53% (33/62)Counting objects:  54% (34/62)Counting objects:  56% (35/62)Counting objects:  58% (36/62)Counting objects:  59% (37/62)Counting objects:  61% (38/62)Counting objects:  62% (39/62)Counting objects:  64% (40/62)Counting objects:  66% (41/62)Counting objects:  67% (42/62)Counting objects:  69% (43/62)Counting objects:  70% (44/62)Counting objects:  72% (45/62)Counting objects:  74% (46/62)Counting objects:  75% (47/62)Counting objects:  77% (48/62)Counting objects:  79% (49/62)Counting objects:  80% (50/62)Counting objects:  82% (51/62)Counting objects:  83% (52/62)Counting objects:  85% (53/62)Counting objects:  87% (54/62)Counting objects:  88% (55/62)Counting objects:  90% (56/62)Counting objects:  91% (57/62)Counting objects:  93% (58/62)Counting objects:  95% (59/62)Counting objects:  96% (60/62)Counting objects:  98% (61/62)Counting objects: 100% (62/62)Counting objects: 100% (62/62), done.
+Compressing objects:   2% (1/41)Compressing objects:   4% (2/41)Compressing objects:   7% (3/41)Compressing objects:   9% (4/41)Compressing objects:  12% (5/41)Compressing objects:  14% (6/41)Compressing objects:  17% (7/41)Compressing objects:  19% (8/41)Compressing objects:  21% (9/41)Compressing objects:  24% (10/41)Compressing objects:  26% (11/41)Compressing objects:  29% (12/41)Compressing objects:  31% (13/41)Compressing objects:  34% (14/41)Compressing objects:  36% (15/41)Compressing objects:  39% (16/41)Compressing objects:  41% (17/41)Compressing objects:  43% (18/41)Compressing objects:  46% (19/41)Compressing objects:  48% (20/41)Compressing objects:  51% (21/41)Compressing objects:  53% (22/41)Compressing objects:  56% (23/41)Compressing objects:  58% (24/41)Compressing objects:  60% (25/41)Compressing objects:  63% (26/41)Compressing objects:  65% (27/41)Compressing objects:  68% (28/41)Compressing objects:  70% (29/41)Compressing objects:  73% (30/41)Compressing objects:  75% (31/41)Compressing objects:  78% (32/41)Compressing objects:  80% (33/41)Compressing objects:  82% (34/41)Compressing objects:  85% (35/41)Compressing objects:  87% (36/41)Compressing objects:  90% (37/41)Compressing objects:  92% (38/41)Compressing objects:  95% (39/41)Compressing objects:  97% (40/41)Compressing objects: 100% (41/41)Compressing objects: 100% (41/41), done.
+Total 62 (delta 22), reused 53 (delta 19), pack-reused 0
+2022/12/18 16:54:58 Done.
+2022/12/18 16:55:03 Successfully set config
+2022/12/18 16:55:03 ****** Starting Pulumi Up
+2022/12/18 16:55:03 Starting refresh
+2022/12/18 16:55:21 Refresh succeeded!, Result:succeeded 
+
+Updating (dev)
+
+View Live: https://app.pulumi.com/katasec/ArkInit/dev/updates/54
+
+    pulumi:pulumi:Stack ArkInit-dev  running 'dotnet build -nologo .'
+@ Updating.....
+    pulumi:pulumi:Stack ArkInit-dev    Determining projects to restore...
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev    Restored /tmp/ark-remote4157525506/Azure/Azure.csproj (in 359 ms).
+@ Updating.......
+    pulumi:pulumi:Stack ArkInit-dev    Azure -> /tmp/ark-remote4157525506/Azure/bin/Debug/net7.0/Azure.dll
+    pulumi:pulumi:Stack ArkInit-dev  
+    pulumi:pulumi:Stack ArkInit-dev      0 Warning(s)
+    pulumi:pulumi:Stack ArkInit-dev  'dotnet build -nologo .' completed successfully
+@ Updating.......
+
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev running 'dotnet build -nologo .' completed successfully
+@ Updating......
+    azure-native:resources:ResourceGroup rg-ark-  
+    azure-native:resources:ResourceGroup rg-pulumi-  
+    azure-native:storage:StorageAccount stpulumistate  
+    azure-native:storage:StorageAccount starklogs  
+@ Updating.....
+    pulumi:pulumi:Stack ArkInit-dev  
+
+Outputs:
+    ark-resourcegroup   : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+        PackageVersion: ""
+    }
+    ark-storage         : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+        PackageVersion: ""
+    }
+    pulumi-resourcegroup: {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+        PackageVersion: ""
+    }
+    pulumi-storage      : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+        PackageVersion: ""
+    }
+
+Resources:
+    5 unchanged
+
+Duration: 7s
+
+2022/12/18 16:55:52 Stack successfully updated
+2022/12/18 16:57:08 ****** Creating New Remote Pulumi Program
+2022/12/18 16:57:08 Cloning repo: https://github.com/katasec/ArkInit.git
+2022/12/18 16:57:08 Cloning: https://github.com/katasec/ArkInit.git
+2022/12/18 16:57:08 Repo Dir: /tmp/ark-remote243713242
+Enumerating objects: 62, done.
+Counting objects:   1% (1/62)Counting objects:   3% (2/62)Counting objects:   4% (3/62)Counting objects:   6% (4/62)Counting objects:   8% (5/62)Counting objects:   9% (6/62)Counting objects:  11% (7/62)Counting objects:  12% (8/62)Counting objects:  14% (9/62)Counting objects:  16% (10/62)Counting objects:  17% (11/62)Counting objects:  19% (12/62)Counting objects:  20% (13/62)Counting objects:  22% (14/62)Counting objects:  24% (15/62)Counting objects:  25% (16/62)Counting objects:  27% (17/62)Counting objects:  29% (18/62)Counting objects:  30% (19/62)Counting objects:  32% (20/62)Counting objects:  33% (21/62)Counting objects:  35% (22/62)Counting objects:  37% (23/62)Counting objects:  38% (24/62)Counting objects:  40% (25/62)Counting objects:  41% (26/62)Counting objects:  43% (27/62)Counting objects:  45% (28/62)Counting objects:  46% (29/62)Counting objects:  48% (30/62)Counting objects:  50% (31/62)Counting objects:  51% (32/62)Counting objects:  53% (33/62)Counting objects:  54% (34/62)Counting objects:  56% (35/62)Counting objects:  58% (36/62)Counting objects:  59% (37/62)Counting objects:  61% (38/62)Counting objects:  62% (39/62)Counting objects:  64% (40/62)Counting objects:  66% (41/62)Counting objects:  67% (42/62)Counting objects:  69% (43/62)Counting objects:  70% (44/62)Counting objects:  72% (45/62)Counting objects:  74% (46/62)Counting objects:  75% (47/62)Counting objects:  77% (48/62)Counting objects:  79% (49/62)Counting objects:  80% (50/62)Counting objects:  82% (51/62)Counting objects:  83% (52/62)Counting objects:  85% (53/62)Counting objects:  87% (54/62)Counting objects:  88% (55/62)Counting objects:  90% (56/62)Counting objects:  91% (57/62)Counting objects:  93% (58/62)Counting objects:  95% (59/62)Counting objects:  96% (60/62)Counting objects:  98% (61/62)Counting objects: 100% (62/62)Counting objects: 100% (62/62), done.
+Compressing objects:   2% (1/41)Compressing objects:   4% (2/41)Compressing objects:   7% (3/41)Compressing objects:   9% (4/41)Compressing objects:  12% (5/41)Compressing objects:  14% (6/41)Compressing objects:  17% (7/41)Compressing objects:  19% (8/41)Compressing objects:  21% (9/41)Compressing objects:  24% (10/41)Compressing objects:  26% (11/41)Compressing objects:  29% (12/41)Compressing objects:  31% (13/41)Compressing objects:  34% (14/41)Compressing objects:  36% (15/41)Compressing objects:  39% (16/41)Compressing objects:  41% (17/41)Compressing objects:  43% (18/41)Compressing objects:  46% (19/41)Compressing objects:  48% (20/41)Compressing objects:  51% (21/41)Compressing objects:  53% (22/41)Compressing objects:  56% (23/41)Compressing objects:  58% (24/41)Compressing objects:  60% (25/41)Compressing objects:  63% (26/41)Compressing objects:  65% (27/41)Compressing objects:  68% (28/41)Compressing objects:  70% (29/41)Compressing objects:  73% (30/41)Compressing objects:  75% (31/41)Compressing objects:  78% (32/41)Compressing objects:  80% (33/41)Compressing objects:  82% (34/41)Compressing objects:  85% (35/41)Compressing objects:  87% (36/41)Compressing objects:  90% (37/41)Compressing objects:  92% (38/41)Compressing objects:  95% (39/41)Compressing objects:  97% (40/41)Compressing objects: 100% (41/41)Compressing objects: 100% (41/41), done.
+Total 62 (delta 22), reused 53 (delta 19), pack-reused 0
+2022/12/18 16:57:08 Done.
+2022/12/18 16:57:14 Successfully set config
+2022/12/18 16:57:14 ****** Starting Pulumi Up
+2022/12/18 16:57:14 Starting refresh
+2022/12/18 16:57:32 Refresh succeeded!, Result:succeeded 
+
+Updating (dev)
+
+View Live: https://app.pulumi.com/katasec/ArkInit/dev/updates/56
+
+    pulumi:pulumi:Stack ArkInit-dev  running 'dotnet build -nologo .'
+@ Updating.....
+    pulumi:pulumi:Stack ArkInit-dev    Determining projects to restore...
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev    Restored /tmp/ark-remote243713242/Azure/Azure.csproj (in 370 ms).
+@ Updating.......
+    pulumi:pulumi:Stack ArkInit-dev    Azure -> /tmp/ark-remote243713242/Azure/bin/Debug/net7.0/Azure.dll
+    pulumi:pulumi:Stack ArkInit-dev  
+    pulumi:pulumi:Stack ArkInit-dev      0 Warning(s)
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev  'dotnet build -nologo .' completed successfully
+@ Updating......
+
+@ Updating.....
+    pulumi:pulumi:Stack ArkInit-dev running 'dotnet build -nologo .' completed successfully
+@ Updating......
+    azure-native:resources:ResourceGroup rg-ark-  
+    azure-native:resources:ResourceGroup rg-pulumi-  
+    azure-native:storage:StorageAccount starklogs  
+    azure-native:storage:StorageAccount stpulumistate  
+@ Updating.....
+    pulumi:pulumi:Stack ArkInit-dev  
+
+Outputs:
+    ark-resourcegroup   : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+        PackageVersion: ""
+    }
+    ark-storage         : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+        PackageVersion: ""
+    }
+    pulumi-resourcegroup: {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+        PackageVersion: ""
+    }
+    pulumi-storage      : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+        PackageVersion: ""
+    }
+
+Resources:
+    5 unchanged
+
+Duration: 7s
+
+2022/12/18 16:58:04 Stack successfully updated
+2022/12/18 16:59:39 ****** Creating New Remote Pulumi Program
+2022/12/18 16:59:39 Cloning repo: https://github.com/katasec/ArkInit.git
+2022/12/18 16:59:39 Cloning: https://github.com/katasec/ArkInit.git
+2022/12/18 16:59:39 Repo Dir: /tmp/ark-remote1365461078
+Enumerating objects: 62, done.
+Counting objects:   1% (1/62)Counting objects:   3% (2/62)Counting objects:   4% (3/62)Counting objects:   6% (4/62)Counting objects:   8% (5/62)Counting objects:   9% (6/62)Counting objects:  11% (7/62)Counting objects:  12% (8/62)Counting objects:  14% (9/62)Counting objects:  16% (10/62)Counting objects:  17% (11/62)Counting objects:  19% (12/62)Counting objects:  20% (13/62)Counting objects:  22% (14/62)Counting objects:  24% (15/62)Counting objects:  25% (16/62)Counting objects:  27% (17/62)Counting objects:  29% (18/62)Counting objects:  30% (19/62)Counting objects:  32% (20/62)Counting objects:  33% (21/62)Counting objects:  35% (22/62)Counting objects:  37% (23/62)Counting objects:  38% (24/62)Counting objects:  40% (25/62)Counting objects:  41% (26/62)Counting objects:  43% (27/62)Counting objects:  45% (28/62)Counting objects:  46% (29/62)Counting objects:  48% (30/62)Counting objects:  50% (31/62)Counting objects:  51% (32/62)Counting objects:  53% (33/62)Counting objects:  54% (34/62)Counting objects:  56% (35/62)Counting objects:  58% (36/62)Counting objects:  59% (37/62)Counting objects:  61% (38/62)Counting objects:  62% (39/62)Counting objects:  64% (40/62)Counting objects:  66% (41/62)Counting objects:  67% (42/62)Counting objects:  69% (43/62)Counting objects:  70% (44/62)Counting objects:  72% (45/62)Counting objects:  74% (46/62)Counting objects:  75% (47/62)Counting objects:  77% (48/62)Counting objects:  79% (49/62)Counting objects:  80% (50/62)Counting objects:  82% (51/62)Counting objects:  83% (52/62)Counting objects:  85% (53/62)Counting objects:  87% (54/62)Counting objects:  88% (55/62)Counting objects:  90% (56/62)Counting objects:  91% (57/62)Counting objects:  93% (58/62)Counting objects:  95% (59/62)Counting objects:  96% (60/62)Counting objects:  98% (61/62)Counting objects: 100% (62/62)Counting objects: 100% (62/62), done.
+Compressing objects:   2% (1/41)Compressing objects:   4% (2/41)Compressing objects:   7% (3/41)Compressing objects:   9% (4/41)Compressing objects:  12% (5/41)Compressing objects:  14% (6/41)Compressing objects:  17% (7/41)Compressing objects:  19% (8/41)Compressing objects:  21% (9/41)Compressing objects:  24% (10/41)Compressing objects:  26% (11/41)Compressing objects:  29% (12/41)Compressing objects:  31% (13/41)Compressing objects:  34% (14/41)Compressing objects:  36% (15/41)Compressing objects:  39% (16/41)Compressing objects:  41% (17/41)Compressing objects:  43% (18/41)Compressing objects:  46% (19/41)Compressing objects:  48% (20/41)Compressing objects:  51% (21/41)Compressing objects:  53% (22/41)Compressing objects:  56% (23/41)Compressing objects:  58% (24/41)Compressing objects:  60% (25/41)Compressing objects:  63% (26/41)Compressing objects:  65% (27/41)Compressing objects:  68% (28/41)Compressing objects:  70% (29/41)Compressing objects:  73% (30/41)Compressing objects:  75% (31/41)Compressing objects:  78% (32/41)Compressing objects:  80% (33/41)Compressing objects:  82% (34/41)Compressing objects:  85% (35/41)Compressing objects:  87% (36/41)Compressing objects:  90% (37/41)Compressing objects:  92% (38/41)Compressing objects:  95% (39/41)Compressing objects:  97% (40/41)Compressing objects: 100% (41/41)Compressing objects: 100% (41/41), done.
+Total 62 (delta 22), reused 53 (delta 19), pack-reused 0
+2022/12/18 16:59:40 Done.
+2022/12/18 16:59:45 Successfully set config
+2022/12/18 16:59:45 ****** Starting Pulumi Up
+2022/12/18 16:59:45 Starting refresh
+2022/12/18 17:00:04 Refresh succeeded!, Result:succeeded 
+
+Updating (dev)
+
+View Live: https://app.pulumi.com/katasec/ArkInit/dev/updates/58
+
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev  running 'dotnet build -nologo .'
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev    Determining projects to restore...
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev    Restored /tmp/ark-remote1365461078/Azure/Azure.csproj (in 374 ms).
+@ Updating.......
+    pulumi:pulumi:Stack ArkInit-dev    Azure -> /tmp/ark-remote1365461078/Azure/bin/Debug/net7.0/Azure.dll
+    pulumi:pulumi:Stack ArkInit-dev  
+    pulumi:pulumi:Stack ArkInit-dev  Build succeeded.
+    pulumi:pulumi:Stack ArkInit-dev  'dotnet build -nologo .' completed successfully
+@ Updating.......
+
+@ Updating.....
+    pulumi:pulumi:Stack ArkInit-dev running 'dotnet build -nologo .' completed successfully
+@ Updating......
+    azure-native:resources:ResourceGroup rg-ark-  
+    azure-native:resources:ResourceGroup rg-pulumi-  
+    azure-native:storage:StorageAccount stpulumistate  
+    azure-native:storage:StorageAccount starklogs  
+@ Updating.....
+    pulumi:pulumi:Stack ArkInit-dev  
+
+Outputs:
+    ark-resourcegroup   : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+        PackageVersion: ""
+    }
+    ark-storage         : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+        PackageVersion: ""
+    }
+    pulumi-resourcegroup: {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+        PackageVersion: ""
+    }
+    pulumi-storage      : {
+        URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+        ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+        PackageVersion: ""
+    }
+
+Resources:
+    5 unchanged
+
+Duration: 7s
+
+2022/12/18 17:00:35 Stack successfully updated
+2022/12/18 17:03:33 ****** Creating New Remote Pulumi Program
+2022/12/18 17:03:33 Cloning repo: https://github.com/katasec/ArkInit.git
+2022/12/18 17:03:33 Cloning: https://github.com/katasec/ArkInit.git
+2022/12/18 17:03:33 Repo Dir: /tmp/ark-remote4292444227
+Enumerating objects: 62, done.
+Counting objects:   1% (1/62)Counting objects:   3% (2/62)Counting objects:   4% (3/62)Counting objects:   6% (4/62)Counting objects:   8% (5/62)Counting objects:   9% (6/62)Counting objects:  11% (7/62)Counting objects:  12% (8/62)Counting objects:  14% (9/62)Counting objects:  16% (10/62)Counting objects:  17% (11/62)Counting objects:  19% (12/62)Counting objects:  20% (13/62)Counting objects:  22% (14/62)Counting objects:  24% (15/62)Counting objects:  25% (16/62)Counting objects:  27% (17/62)Counting objects:  29% (18/62)Counting objects:  30% (19/62)Counting objects:  32% (20/62)Counting objects:  33% (21/62)Counting objects:  35% (22/62)Counting objects:  37% (23/62)Counting objects:  38% (24/62)Counting objects:  40% (25/62)Counting objects:  41% (26/62)Counting objects:  43% (27/62)Counting objects:  45% (28/62)Counting objects:  46% (29/62)Counting objects:  48% (30/62)Counting objects:  50% (31/62)Counting objects:  51% (32/62)Counting objects:  53% (33/62)Counting objects:  54% (34/62)Counting objects:  56% (35/62)Counting objects:  58% (36/62)Counting objects:  59% (37/62)Counting objects:  61% (38/62)Counting objects:  62% (39/62)Counting objects:  64% (40/62)Counting objects:  66% (41/62)Counting objects:  67% (42/62)Counting objects:  69% (43/62)Counting objects:  70% (44/62)Counting objects:  72% (45/62)Counting objects:  74% (46/62)Counting objects:  75% (47/62)Counting objects:  77% (48/62)Counting objects:  79% (49/62)Counting objects:  80% (50/62)Counting objects:  82% (51/62)Counting objects:  83% (52/62)Counting objects:  85% (53/62)Counting objects:  87% (54/62)Counting objects:  88% (55/62)Counting objects:  90% (56/62)Counting objects:  91% (57/62)Counting objects:  93% (58/62)Counting objects:  95% (59/62)Counting objects:  96% (60/62)Counting objects:  98% (61/62)Counting objects: 100% (62/62)Counting objects: 100% (62/62), done.
+Compressing objects:   2% (1/41)Compressing objects:   4% (2/41)Compressing objects:   7% (3/41)Compressing objects:   9% (4/41)Compressing objects:  12% (5/41)Compressing objects:  14% (6/41)Compressing objects:  17% (7/41)Compressing objects:  19% (8/41)Compressing objects:  21% (9/41)Compressing objects:  24% (10/41)Compressing objects:  26% (11/41)Compressing objects:  29% (12/41)Compressing objects:  31% (13/41)Compressing objects:  34% (14/41)Compressing objects:  36% (15/41)Compressing objects:  39% (16/41)Compressing objects:  41% (17/41)Compressing objects:  43% (18/41)Compressing objects:  46% (19/41)Compressing objects:  48% (20/41)Compressing objects:  51% (21/41)Compressing objects:  53% (22/41)Compressing objects:  56% (23/41)Compressing objects:  58% (24/41)Compressing objects:  60% (25/41)Compressing objects:  63% (26/41)Compressing objects:  65% (27/41)Compressing objects:  68% (28/41)Compressing objects:  70% (29/41)Compressing objects:  73% (30/41)Compressing objects:  75% (31/41)Compressing objects:  78% (32/41)Compressing objects:  80% (33/41)Compressing objects:  82% (34/41)Compressing objects:  85% (35/41)Compressing objects:  87% (36/41)Compressing objects:  90% (37/41)Compressing objects:  92% (38/41)Compressing objects:  95% (39/41)Compressing objects:  97% (40/41)Compressing objects: 100% (41/41)Compressing objects: 100% (41/41), done.
+Total 62 (delta 22), reused 53 (delta 19), pack-reused 0
+2022/12/18 17:03:34 Done.
+2022/12/18 17:03:39 Successfully set config
+2022/12/18 17:03:39 ****** Starting Pulumi Destroy
+2022/12/18 17:03:39 Starting refresh
+2022/12/18 17:03:58 Refresh succeeded!, Result:succeeded 
+
+Destroying (dev)
+
+View Live: https://app.pulumi.com/katasec/ArkInit/dev/updates/60
+
+@ Destroying....
+
+ -  azure-native:storage:StorageAccount starklogs deleting (0s) 
+ -  azure-native:storage:StorageAccount stpulumistate deleting (0s) 
+@ Destroying.................
+ -  azure-native:storage:StorageAccount stpulumistate deleted (13s) 
+@ Destroying....
+ -  azure-native:storage:StorageAccount starklogs deleted (14s) 
+ -  azure-native:resources:ResourceGroup rg-pulumi- deleting (0s) 
+ -  azure-native:resources:ResourceGroup rg-ark- deleting (0s) 
+@ Destroying........................
+ -  azure-native:resources:ResourceGroup rg-pulumi- deleted (20s) 
+@ Destroying....
+ -  azure-native:resources:ResourceGroup rg-ark- deleted (21s) 
+ -  pulumi:pulumi:Stack ArkInit-dev deleting (0s) 
+@ Destroying....
+ -  pulumi:pulumi:Stack ArkInit-dev deleted 
+
+Outputs:
+  - ark-resourcegroup   : {
+      - URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+      - ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+      - PackageVersion: ""
+    }
+  - ark-storage         : {
+      - URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+      - ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+      - PackageVersion: ""
+    }
+  - pulumi-resourcegroup: {
+      - URN: "urn:pulumi:dev::ArkInit::azure-native:resources:ResourceGroup::rg-pulumi-"
+      - ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e"
+      - PackageVersion: ""
+    }
+  - pulumi-storage      : {
+      - URN: "urn:pulumi:dev::ArkInit::azure-native:storage:StorageAccount::stpulumistate"
+      - ID : "/subscriptions/174c6cc1-faef-4e40-91f4-1bef3a703153/resourceGroups/rg-pulumi-a1a0b96e/providers/Microsoft.Storage/storageAccounts/stpulumistatef560d3e2"
+      - PackageVersion: ""
+    }
+
+Resources:
+    - 5 deleted
+
+Duration: 39s
+
+The resources in the stack have been deleted, but the history and configuration associated with the stack are still maintained. 
+If you want to remove the stack completely, run `pulumi stack rm dev`.
+2022/12/18 17:04:46 Stack successfully destroyed
+2022/12/18 17:12:37 ****** Creating New Remote Pulumi Program
+2022/12/18 17:12:37 Cloning repo: https://github.com/katasec/ArkInit.git
+2022/12/18 17:12:37 Cloning: https://github.com/katasec/ArkInit.git
+2022/12/18 17:12:37 Repo Dir: /tmp/ark-remote3944636563
+Enumerating objects: 62, done.
+Counting objects:   1% (1/62)Counting objects:   3% (2/62)Counting objects:   4% (3/62)Counting objects:   6% (4/62)Counting objects:   8% (5/62)Counting objects:   9% (6/62)Counting objects:  11% (7/62)Counting objects:  12% (8/62)Counting objects:  14% (9/62)Counting objects:  16% (10/62)Counting objects:  17% (11/62)Counting objects:  19% (12/62)Counting objects:  20% (13/62)Counting objects:  22% (14/62)Counting objects:  24% (15/62)Counting objects:  25% (16/62)Counting objects:  27% (17/62)Counting objects:  29% (18/62)Counting objects:  30% (19/62)Counting objects:  32% (20/62)Counting objects:  33% (21/62)Counting objects:  35% (22/62)Counting objects:  37% (23/62)Counting objects:  38% (24/62)Counting objects:  40% (25/62)Counting objects:  41% (26/62)Counting objects:  43% (27/62)Counting objects:  45% (28/62)Counting objects:  46% (29/62)Counting objects:  48% (30/62)Counting objects:  50% (31/62)Counting objects:  51% (32/62)Counting objects:  53% (33/62)Counting objects:  54% (34/62)Counting objects:  56% (35/62)Counting objects:  58% (36/62)Counting objects:  59% (37/62)Counting objects:  61% (38/62)Counting objects:  62% (39/62)Counting objects:  64% (40/62)Counting objects:  66% (41/62)Counting objects:  67% (42/62)Counting objects:  69% (43/62)Counting objects:  70% (44/62)Counting objects:  72% (45/62)Counting objects:  74% (46/62)Counting objects:  75% (47/62)Counting objects:  77% (48/62)Counting objects:  79% (49/62)Counting objects:  80% (50/62)Counting objects:  82% (51/62)Counting objects:  83% (52/62)Counting objects:  85% (53/62)Counting objects:  87% (54/62)Counting objects:  88% (55/62)Counting objects:  90% (56/62)Counting objects:  91% (57/62)Counting objects:  93% (58/62)Counting objects:  95% (59/62)Counting objects:  96% (60/62)Counting objects:  98% (61/62)Counting objects: 100% (62/62)Counting objects: 100% (62/62), done.
+Compressing objects:   2% (1/41)Compressing objects:   4% (2/41)Compressing objects:   7% (3/41)Compressing objects:   9% (4/41)Compressing objects:  12% (5/41)Compressing objects:  14% (6/41)Compressing objects:  17% (7/41)Compressing objects:  19% (8/41)Compressing objects:  21% (9/41)Compressing objects:  24% (10/41)Compressing objects:  26% (11/41)Compressing objects:  29% (12/41)Compressing objects:  31% (13/41)Compressing objects:  34% (14/41)Compressing objects:  36% (15/41)Compressing objects:  39% (16/41)Compressing objects:  41% (17/41)Compressing objects:  43% (18/41)Compressing objects:  46% (19/41)Compressing objects:  48% (20/41)Compressing objects:  51% (21/41)Compressing objects:  53% (22/41)Compressing objects:  56% (23/41)Compressing objects:  58% (24/41)Compressing objects:  60% (25/41)Compressing objects:  63% (26/41)Compressing objects:  65% (27/41)Compressing objects:  68% (28/41)Compressing objects:  70% (29/41)Compressing objects:  73% (30/41)Compressing objects:  75% (31/41)Compressing objects:  78% (32/41)Compressing objects:  80% (33/41)Compressing objects:  82% (34/41)Compressing objects:  85% (35/41)Compressing objects:  87% (36/41)Compressing objects:  90% (37/41)Compressing objects:  92% (38/41)Compressing objects:  95% (39/41)Compressing objects:  97% (40/41)Compressing objects: 100% (41/41)Compressing objects: 100% (41/41), done.
+Total 62 (delta 22), reused 53 (delta 19), pack-reused 0
+2022/12/18 17:12:38 Done.
+2022/12/18 17:12:43 Successfully set config
+2022/12/18 17:12:43 ****** Starting Pulumi Destroy
+2022/12/18 17:12:43 Starting refresh
+2022/12/18 17:12:52 Refresh succeeded!, Result:succeeded 
+
+Destroying (dev)
+
+View Live: https://app.pulumi.com/katasec/ArkInit/dev/updates/62
+
+
+
+Resources:
+
+Duration: 1s
+
+The resources in the stack have been deleted, but the history and configuration associated with the stack are still maintained. 
+If you want to remove the stack completely, run `pulumi stack rm dev`.
+2022/12/18 17:13:00 Stack successfully destroyed
+2022/12/18 17:13:14 ****** Creating New Remote Pulumi Program
+2022/12/18 17:13:14 Cloning repo: https://github.com/katasec/ArkInit.git
+2022/12/18 17:13:14 Cloning: https://github.com/katasec/ArkInit.git
+2022/12/18 17:13:14 Repo Dir: /tmp/ark-remote308921496
+Enumerating objects: 62, done.
+Counting objects:   1% (1/62)Counting objects:   3% (2/62)Counting objects:   4% (3/62)Counting objects:   6% (4/62)Counting objects:   8% (5/62)Counting objects:   9% (6/62)Counting objects:  11% (7/62)Counting objects:  12% (8/62)Counting objects:  14% (9/62)Counting objects:  16% (10/62)Counting objects:  17% (11/62)Counting objects:  19% (12/62)Counting objects:  20% (13/62)Counting objects:  22% (14/62)Counting objects:  24% (15/62)Counting objects:  25% (16/62)Counting objects:  27% (17/62)Counting objects:  29% (18/62)Counting objects:  30% (19/62)Counting objects:  32% (20/62)Counting objects:  33% (21/62)Counting objects:  35% (22/62)Counting objects:  37% (23/62)Counting objects:  38% (24/62)Counting objects:  40% (25/62)Counting objects:  41% (26/62)Counting objects:  43% (27/62)Counting objects:  45% (28/62)Counting objects:  46% (29/62)Counting objects:  48% (30/62)Counting objects:  50% (31/62)Counting objects:  51% (32/62)Counting objects:  53% (33/62)Counting objects:  54% (34/62)Counting objects:  56% (35/62)Counting objects:  58% (36/62)Counting objects:  59% (37/62)Counting objects:  61% (38/62)Counting objects:  62% (39/62)Counting objects:  64% (40/62)Counting objects:  66% (41/62)Counting objects:  67% (42/62)Counting objects:  69% (43/62)Counting objects:  70% (44/62)Counting objects:  72% (45/62)Counting objects:  74% (46/62)Counting objects:  75% (47/62)Counting objects:  77% (48/62)Counting objects:  79% (49/62)Counting objects:  80% (50/62)Counting objects:  82% (51/62)Counting objects:  83% (52/62)Counting objects:  85% (53/62)Counting objects:  87% (54/62)Counting objects:  88% (55/62)Counting objects:  90% (56/62)Counting objects:  91% (57/62)Counting objects:  93% (58/62)Counting objects:  95% (59/62)Counting objects:  96% (60/62)Counting objects:  98% (61/62)Counting objects: 100% (62/62)Counting objects: 100% (62/62), done.
+Compressing objects:   2% (1/41)Compressing objects:   4% (2/41)Compressing objects:   7% (3/41)Compressing objects:   9% (4/41)Compressing objects:  12% (5/41)Compressing objects:  14% (6/41)Compressing objects:  17% (7/41)Compressing objects:  19% (8/41)Compressing objects:  21% (9/41)Compressing objects:  24% (10/41)Compressing objects:  26% (11/41)Compressing objects:  29% (12/41)Compressing objects:  31% (13/41)Compressing objects:  34% (14/41)Compressing objects:  36% (15/41)Compressing objects:  39% (16/41)Compressing objects:  41% (17/41)Compressing objects:  43% (18/41)Compressing objects:  46% (19/41)Compressing objects:  48% (20/41)Compressing objects:  51% (21/41)Compressing objects:  53% (22/41)Compressing objects:  56% (23/41)Compressing objects:  58% (24/41)Compressing objects:  60% (25/41)Compressing objects:  63% (26/41)Compressing objects:  65% (27/41)Compressing objects:  68% (28/41)Compressing objects:  70% (29/41)Compressing objects:  73% (30/41)Compressing objects:  75% (31/41)Compressing objects:  78% (32/41)Compressing objects:  80% (33/41)Compressing objects:  82% (34/41)Compressing objects:  85% (35/41)Compressing objects:  87% (36/41)Compressing objects:  90% (37/41)Compressing objects:  92% (38/41)Compressing objects:  95% (39/41)Compressing objects:  97% (40/41)Compressing objects: 100% (41/41)Compressing objects: 100% (41/41), done.
+Total 62 (delta 22), reused 53 (delta 19), pack-reused 0
+2022/12/18 17:13:15 Done.
+2022/12/18 17:13:21 Successfully set config
+2022/12/18 17:13:21 ****** Starting Pulumi Destroy
+2022/12/18 17:13:21 Starting refresh
+2022/12/18 17:13:29 Refresh succeeded!, Result:succeeded 
+
+Destroying (dev)
+
+View Live: https://app.pulumi.com/katasec/ArkInit/dev/updates/64
+
+
+
+Resources:
+
+Duration: 1s
+
+The resources in the stack have been deleted, but the history and configuration associated with the stack are still maintained. 
+If you want to remove the stack completely, run `pulumi stack rm dev`.
+2022/12/18 17:13:38 Stack successfully destroyed
+2022/12/18 17:14:12 ****** Creating New Remote Pulumi Program
+2022/12/18 17:14:12 Cloning repo: https://github.com/katasec/ArkInit.git
+2022/12/18 17:14:12 Cloning: https://github.com/katasec/ArkInit.git
+2022/12/18 17:14:12 Repo Dir: /tmp/ark-remote2295143550
+Enumerating objects: 62, done.
+Counting objects:   1% (1/62)Counting objects:   3% (2/62)Counting objects:   4% (3/62)Counting objects:   6% (4/62)Counting objects:   8% (5/62)Counting objects:   9% (6/62)Counting objects:  11% (7/62)Counting objects:  12% (8/62)Counting objects:  14% (9/62)Counting objects:  16% (10/62)Counting objects:  17% (11/62)Counting objects:  19% (12/62)Counting objects:  20% (13/62)Counting objects:  22% (14/62)Counting objects:  24% (15/62)Counting objects:  25% (16/62)Counting objects:  27% (17/62)Counting objects:  29% (18/62)Counting objects:  30% (19/62)Counting objects:  32% (20/62)Counting objects:  33% (21/62)Counting objects:  35% (22/62)Counting objects:  37% (23/62)Counting objects:  38% (24/62)Counting objects:  40% (25/62)Counting objects:  41% (26/62)Counting objects:  43% (27/62)Counting objects:  45% (28/62)Counting objects:  46% (29/62)Counting objects:  48% (30/62)Counting objects:  50% (31/62)Counting objects:  51% (32/62)Counting objects:  53% (33/62)Counting objects:  54% (34/62)Counting objects:  56% (35/62)Counting objects:  58% (36/62)Counting objects:  59% (37/62)Counting objects:  61% (38/62)Counting objects:  62% (39/62)Counting objects:  64% (40/62)Counting objects:  66% (41/62)Counting objects:  67% (42/62)Counting objects:  69% (43/62)Counting objects:  70% (44/62)Counting objects:  72% (45/62)Counting objects:  74% (46/62)Counting objects:  75% (47/62)Counting objects:  77% (48/62)Counting objects:  79% (49/62)Counting objects:  80% (50/62)Counting objects:  82% (51/62)Counting objects:  83% (52/62)Counting objects:  85% (53/62)Counting objects:  87% (54/62)Counting objects:  88% (55/62)Counting objects:  90% (56/62)Counting objects:  91% (57/62)Counting objects:  93% (58/62)Counting objects:  95% (59/62)Counting objects:  96% (60/62)Counting objects:  98% (61/62)Counting objects: 100% (62/62)Counting objects: 100% (62/62), done.
+Compressing objects:   2% (1/41)Compressing objects:   4% (2/41)Compressing objects:   7% (3/41)Compressing objects:   9% (4/41)Compressing objects:  12% (5/41)Compressing objects:  14% (6/41)Compressing objects:  17% (7/41)Compressing objects:  19% (8/41)Compressing objects:  21% (9/41)Compressing objects:  24% (10/41)Compressing objects:  26% (11/41)Compressing objects:  29% (12/41)Compressing objects:  31% (13/41)Compressing objects:  34% (14/41)Compressing objects:  36% (15/41)Compressing objects:  39% (16/41)Compressing objects:  41% (17/41)Compressing objects:  43% (18/41)Compressing objects:  46% (19/41)Compressing objects:  48% (20/41)Compressing objects:  51% (21/41)Compressing objects:  53% (22/41)Compressing objects:  56% (23/41)Compressing objects:  58% (24/41)Compressing objects:  60% (25/41)Compressing objects:  63% (26/41)Compressing objects:  65% (27/41)Compressing objects:  68% (28/41)Compressing objects:  70% (29/41)Compressing objects:  73% (30/41)Compressing objects:  75% (31/41)Compressing objects:  78% (32/41)Compressing objects:  80% (33/41)Compressing objects:  82% (34/41)Compressing objects:  85% (35/41)Compressing objects:  87% (36/41)Compressing objects:  90% (37/41)Compressing objects:  92% (38/41)Compressing objects:  95% (39/41)Compressing objects:  97% (40/41)Compressing objects: 100% (41/41)Compressing objects: 100% (41/41), done.
+Total 62 (delta 22), reused 53 (delta 19), pack-reused 0
+2022/12/18 17:14:13 Done.
+2022/12/18 17:14:18 Successfully set config
+2022/12/18 17:14:18 ****** Starting Pulumi Destroy
+2022/12/18 17:14:18 Starting refresh
+2022/12/18 17:14:27 Refresh succeeded!, Result:succeeded 
+
+Destroying (dev)
+
+View Live: https://app.pulumi.com/katasec/ArkInit/dev/updates/66
+
+
+
+Resources:
+
+Duration: 1s
+
+The resources in the stack have been deleted, but the history and configuration associated with the stack are still maintained. 
+If you want to remove the stack completely, run `pulumi stack rm dev`.
+2022/12/18 17:14:35 Stack successfully destroyed
+2022/12/18 17:14:49 ****** Creating New Remote Pulumi Program
+2022/12/18 17:14:49 Cloning repo: https://github.com/katasec/ArkInit.git
+2022/12/18 17:14:49 Cloning: https://github.com/katasec/ArkInit.git
+2022/12/18 17:14:49 Repo Dir: /tmp/ark-remote2810595641
+Enumerating objects: 62, done.
+Counting objects:   1% (1/62)Counting objects:   3% (2/62)Counting objects:   4% (3/62)Counting objects:   6% (4/62)Counting objects:   8% (5/62)Counting objects:   9% (6/62)Counting objects:  11% (7/62)Counting objects:  12% (8/62)Counting objects:  14% (9/62)Counting objects:  16% (10/62)Counting objects:  17% (11/62)Counting objects:  19% (12/62)Counting objects:  20% (13/62)Counting objects:  22% (14/62)Counting objects:  24% (15/62)Counting objects:  25% (16/62)Counting objects:  27% (17/62)Counting objects:  29% (18/62)Counting objects:  30% (19/62)Counting objects:  32% (20/62)Counting objects:  33% (21/62)Counting objects:  35% (22/62)Counting objects:  37% (23/62)Counting objects:  38% (24/62)Counting objects:  40% (25/62)Counting objects:  41% (26/62)Counting objects:  43% (27/62)Counting objects:  45% (28/62)Counting objects:  46% (29/62)Counting objects:  48% (30/62)Counting objects:  50% (31/62)Counting objects:  51% (32/62)Counting objects:  53% (33/62)Counting objects:  54% (34/62)Counting objects:  56% (35/62)Counting objects:  58% (36/62)Counting objects:  59% (37/62)Counting objects:  61% (38/62)Counting objects:  62% (39/62)Counting objects:  64% (40/62)Counting objects:  66% (41/62)Counting objects:  67% (42/62)Counting objects:  69% (43/62)Counting objects:  70% (44/62)Counting objects:  72% (45/62)Counting objects:  74% (46/62)Counting objects:  75% (47/62)Counting objects:  77% (48/62)Counting objects:  79% (49/62)Counting objects:  80% (50/62)Counting objects:  82% (51/62)Counting objects:  83% (52/62)Counting objects:  85% (53/62)Counting objects:  87% (54/62)Counting objects:  88% (55/62)Counting objects:  90% (56/62)Counting objects:  91% (57/62)Counting objects:  93% (58/62)Counting objects:  95% (59/62)Counting objects:  96% (60/62)Counting objects:  98% (61/62)Counting objects: 100% (62/62)Counting objects: 100% (62/62), done.
+Compressing objects:   2% (1/41)Compressing objects:   4% (2/41)Compressing objects:   7% (3/41)Compressing objects:   9% (4/41)Compressing objects:  12% (5/41)Compressing objects:  14% (6/41)Compressing objects:  17% (7/41)Compressing objects:  19% (8/41)Compressing objects:  21% (9/41)Compressing objects:  24% (10/41)Compressing objects:  26% (11/41)Compressing objects:  29% (12/41)Compressing objects:  31% (13/41)Compressing objects:  34% (14/41)Compressing objects:  36% (15/41)Compressing objects:  39% (16/41)Compressing objects:  41% (17/41)Compressing objects:  43% (18/41)Compressing objects:  46% (19/41)Compressing objects:  48% (20/41)Compressing objects:  51% (21/41)Compressing objects:  53% (22/41)Compressing objects:  56% (23/41)Compressing objects:  58% (24/41)Compressing objects:  60% (25/41)Compressing objects:  63% (26/41)Compressing objects:  65% (27/41)Compressing objects:  68% (28/41)Compressing objects:  70% (29/41)Compressing objects:  73% (30/41)Compressing objects:  75% (31/41)Compressing objects:  78% (32/41)Compressing objects:  80% (33/41)Compressing objects:  82% (34/41)Compressing objects:  85% (35/41)Compressing objects:  87% (36/41)Compressing objects:  90% (37/41)Compressing objects:  92% (38/41)Compressing objects:  95% (39/41)Compressing objects:  97% (40/41)Compressing objects: 100% (41/41)Compressing objects: 100% (41/41), done.
+Total 62 (delta 22), reused 53 (delta 19), pack-reused 0
+2022/12/18 17:14:50 Done.
+2022/12/18 17:14:55 Successfully set config
+2022/12/18 17:14:55 ****** Starting Pulumi Up
+2022/12/18 17:14:55 Starting refresh
+2022/12/18 17:15:04 Refresh succeeded!, Result:succeeded 
+
+Updating (dev)
+
+View Live: https://app.pulumi.com/katasec/ArkInit/dev/updates/68
+
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev  running 'dotnet build -nologo .'
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev    Determining projects to restore...
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev    Restored /tmp/ark-remote2810595641/Azure/Azure.csproj (in 420 ms).
+@ Updating........
+    pulumi:pulumi:Stack ArkInit-dev    Azure -> /tmp/ark-remote2810595641/Azure/bin/Debug/net7.0/Azure.dll
+    pulumi:pulumi:Stack ArkInit-dev  
+    pulumi:pulumi:Stack ArkInit-dev  Build succeeded.
+    pulumi:pulumi:Stack ArkInit-dev  'dotnet build -nologo .' completed successfully
+@ Updating......
+
+@ Updating.....
+ +  pulumi:pulumi:Stack ArkInit-dev creating (0s) 'dotnet build -nologo .' completed successfully
+@ Updating.............
+    azure-native:resources:ResourceGroup rg-ark-  error: building authorizer: obtaining Authorization Token from the Azure CLI: parsing json result from the Azure CLI: waiting for the Azure CLI: exit status 1: ERROR: The command failed with an unexpected error. Here is the traceback:
+ +  pulumi:pulumi:Stack ArkInit-dev created 
+    azure-native:resources:ResourceGroup rg-ark- **failed** 1 error
+
+Diagnostics:
+  azure-native:resources:ResourceGroup (rg-ark-):
+    error: building authorizer: obtaining Authorization Token from the Azure CLI: parsing json result from the Azure CLI: waiting for the Azure CLI: exit status 1: ERROR: The command failed with an unexpected error. Here is the traceback:
+    ERROR: 0. The ID token is not yet valid. Make sure your computer's time and time zone are both correct. Current epoch = 1671369331.  The id_token was: {
+      "aud": "04b07795-8ddb-461a-bbee-02f9e1bf7b46",
+      "iss": "https://login.microsoftonline.com/06f19eb3-4f73-4386-8224-9147f6733351/v2.0",
+      "iat": 1671369581,
+      "nbf": 1671369581,
+      "exp": 1671373481,
+      "aio": "AXQAi/8TAAAA04rHOTWkaI9GZ8p/JgInbdfbxqtnhfRz36B2AWJrqEBKXNrYoe+OGaB/SUVNUZarg1CEyKb2I3KXI9ccSzaLAkNl3Iw8wHInpbe9XAGaf4PCWMEezkTVPDU1DQtsEkRxoGqGTFVANZ3cW/CvtMC5hQ==",
+      "name": "Ameer Deen",
+      "nonce": "33de81df7927c6aea99bc4b3bf21ea9581f8e5367ad0973eb67145fdce6be985",
+      "oid": "6afd07d9-8789-4847-a6bb-831e91233d57",
+      "preferred_username": "ameer.deen@katasec.com",
+      "puid": "100320011411F2F2",
+      "rh": "0.AXEAs57xBnNPhkOCJJFH9nMzUZV3sATbjRpGu-4C-eG_e0ZxAFI.",
+      "sub": "7xQXm3ZwIlCtxjvsHFIL_Tb_IrcueK-g2RrG-r0lg5Q",
+      "tid": "06f19eb3-4f73-4386-8224-9147f6733351",
+      "uti": "MtqlVuwdIkSWxY5XELpSAA",
+      "ver": "2.0"
+    }
+    Traceback (most recent call last):
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/knack/cli.py", line 233, in invoke
+        cmd_result = self.invocation.execute(args)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/core/commands/__init__.py", line 663, in execute
+        raise ex
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/core/commands/__init__.py", line 726, in _run_jobs_serially
+        results.append(self._run_job(expanded_arg, cmd_copy))
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/core/commands/__init__.py", line 697, in _run_job
+        result = cmd_copy(params)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/core/commands/__init__.py", line 333, in __call__
+        return self.handler(*args, **kwargs)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/core/commands/command_operation.py", line 121, in handler
+        return op(**command_args)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/command_modules/profile/custom.py", line 66, in get_access_token
+        creds, subscription, tenant = profile.get_raw_token(subscription=subscription, resource=resource, scopes=scopes,
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/core/_profile.py", line 383, in get_raw_token
+        sdk_token = credential.get_token(*scopes)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/core/auth/msal_authentication.py", line 63, in get_token
+        result = self.acquire_token_silent_with_error(list(scopes), self._account, claims_challenge=claims, **kwargs)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/application.py", line 1287, in acquire_token_silent_with_error
+        result = self._acquire_token_silent_from_cache_and_possibly_refresh_it(
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/application.py", line 1392, in _acquire_token_silent_from_cache_and_possibly_refresh_it
+        result = _clean_up(self._acquire_token_silent_by_finding_rt_belongs_to_me_or_my_family(
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/application.py", line 1444, in _acquire_token_silent_by_finding_rt_belongs_to_me_or_my_family
+        last_resp = at = self._acquire_token_silent_by_finding_specific_refresh_token(
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/application.py", line 1491, in _acquire_token_silent_by_finding_specific_refresh_token
+        response = client.obtain_token_by_refresh_token(
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/oauth2cli/oauth2.py", line 830, in obtain_token_by_refresh_token
+        resp = super(Client, self).obtain_token_by_refresh_token(
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/oauth2cli/oauth2.py", line 262, in obtain_token_by_refresh_token
+        return self._obtain_token("refresh_token", data=data, **kwargs)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/oauth2cli/oidc.py", line 116, in _obtain_token
+        ret = super(Client, self)._obtain_token(grant_type, *args, **kwargs)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/oauth2cli/oauth2.py", line 788, in _obtain_token
+        (on_obtaining_tokens or self.on_obtaining_tokens)({
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/application.py", line 1496, in <lambda>
+        on_obtaining_tokens=lambda event: self.token_cache.add(dict(
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/token_cache.py", line 314, in add
+        super(SerializableTokenCache, self).add(event, **kwargs)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/token_cache.py", line 117, in add
+        return self.__add(event, now=now)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/token_cache.py", line 158, in __add
+        decode_id_token(id_token, client_id=event["client_id"]) if id_token else {})
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/oauth2cli/oidc.py", line 77, in decode_id_token
+        raise RuntimeError("%s Current epoch = %s.  The id_token was: %s" % (
+    RuntimeError: 0. The ID token is not yet valid. Make sure your computer's time and time zone are both correct. Current epoch = 1671369331.  The id_token was: {
+      "aud": "04b07795-8ddb-461a-bbee-02f9e1bf7b46",
+      "iss": "https://login.microsoftonline.com/06f19eb3-4f73-4386-8224-9147f6733351/v2.0",
+      "iat": 1671369581,
+      "nbf": 1671369581,
+      "exp": 1671373481,
+      "aio": "AXQAi/8TAAAA04rHOTWkaI9GZ8p/JgInbdfbxqtnhfRz36B2AWJrqEBKXNrYoe+OGaB/SUVNUZarg1CEyKb2I3KXI9ccSzaLAkNl3Iw8wHInpbe9XAGaf4PCWMEezkTVPDU1DQtsEkRxoGqGTFVANZ3cW/CvtMC5hQ==",
+      "name": "Ameer Deen",
+      "nonce": "33de81df7927c6aea99bc4b3bf21ea9581f8e5367ad0973eb67145fdce6be985",
+      "oid": "6afd07d9-8789-4847-a6bb-831e91233d57",
+      "preferred_username": "ameer.deen@katasec.com",
+      "puid": "100320011411F2F2",
+      "rh": "0.AXEAs57xBnNPhkOCJJFH9nMzUZV3sATbjRpGu-4C-eG_e0ZxAFI.",
+      "sub": "7xQXm3ZwIlCtxjvsHFIL_Tb_IrcueK-g2RrG-r0lg5Q",
+      "tid": "06f19eb3-4f73-4386-8224-9147f6733351",
+      "uti": "MtqlVuwdIkSWxY5XELpSAA",
+      "ver": "2.0"
+    }
+    To check existing issues, please visit: https://github.com/Azure/azure-cli/issues
+    To open a new issue, please run `az feedback`
+
+Resources:
+    + 1 created
+
+Duration: 12s
+
+2022/12/18 17:15:32 Failed to update stack: failed to run update: exit status 255
+code: 255
+stdout: Updating (dev)
+
+View Live: https://app.pulumi.com/katasec/ArkInit/dev/updates/68
+
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev  running 'dotnet build -nologo .'
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev    Determining projects to restore...
+@ Updating....
+    pulumi:pulumi:Stack ArkInit-dev    Restored /tmp/ark-remote2810595641/Azure/Azure.csproj (in 420 ms).
+@ Updating........
+    pulumi:pulumi:Stack ArkInit-dev    Azure -> /tmp/ark-remote2810595641/Azure/bin/Debug/net7.0/Azure.dll
+    pulumi:pulumi:Stack ArkInit-dev  
+    pulumi:pulumi:Stack ArkInit-dev  Build succeeded.
+    pulumi:pulumi:Stack ArkInit-dev  'dotnet build -nologo .' completed successfully
+@ Updating......
+
+@ Updating.....
+ +  pulumi:pulumi:Stack ArkInit-dev creating (0s) 'dotnet build -nologo .' completed successfully
+@ Updating.............
+    azure-native:resources:ResourceGroup rg-ark-  error: building authorizer: obtaining Authorization Token from the Azure CLI: parsing json result from the Azure CLI: waiting for the Azure CLI: exit status 1: ERROR: The command failed with an unexpected error. Here is the traceback:
+ +  pulumi:pulumi:Stack ArkInit-dev created 
+    azure-native:resources:ResourceGroup rg-ark- **failed** 1 error
+
+Diagnostics:
+  azure-native:resources:ResourceGroup (rg-ark-):
+    error: building authorizer: obtaining Authorization Token from the Azure CLI: parsing json result from the Azure CLI: waiting for the Azure CLI: exit status 1: ERROR: The command failed with an unexpected error. Here is the traceback:
+    ERROR: 0. The ID token is not yet valid. Make sure your computer's time and time zone are both correct. Current epoch = 1671369331.  The id_token was: {
+      "aud": "04b07795-8ddb-461a-bbee-02f9e1bf7b46",
+      "iss": "https://login.microsoftonline.com/06f19eb3-4f73-4386-8224-9147f6733351/v2.0",
+      "iat": 1671369581,
+      "nbf": 1671369581,
+      "exp": 1671373481,
+      "aio": "AXQAi/8TAAAA04rHOTWkaI9GZ8p/JgInbdfbxqtnhfRz36B2AWJrqEBKXNrYoe+OGaB/SUVNUZarg1CEyKb2I3KXI9ccSzaLAkNl3Iw8wHInpbe9XAGaf4PCWMEezkTVPDU1DQtsEkRxoGqGTFVANZ3cW/CvtMC5hQ==",
+      "name": "Ameer Deen",
+      "nonce": "33de81df7927c6aea99bc4b3bf21ea9581f8e5367ad0973eb67145fdce6be985",
+      "oid": "6afd07d9-8789-4847-a6bb-831e91233d57",
+      "preferred_username": "ameer.deen@katasec.com",
+      "puid": "100320011411F2F2",
+      "rh": "0.AXEAs57xBnNPhkOCJJFH9nMzUZV3sATbjRpGu-4C-eG_e0ZxAFI.",
+      "sub": "7xQXm3ZwIlCtxjvsHFIL_Tb_IrcueK-g2RrG-r0lg5Q",
+      "tid": "06f19eb3-4f73-4386-8224-9147f6733351",
+      "uti": "MtqlVuwdIkSWxY5XELpSAA",
+      "ver": "2.0"
+    }
+    Traceback (most recent call last):
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/knack/cli.py", line 233, in invoke
+        cmd_result = self.invocation.execute(args)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/core/commands/__init__.py", line 663, in execute
+        raise ex
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/core/commands/__init__.py", line 726, in _run_jobs_serially
+        results.append(self._run_job(expanded_arg, cmd_copy))
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/core/commands/__init__.py", line 697, in _run_job
+        result = cmd_copy(params)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/core/commands/__init__.py", line 333, in __call__
+        return self.handler(*args, **kwargs)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/core/commands/command_operation.py", line 121, in handler
+        return op(**command_args)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/command_modules/profile/custom.py", line 66, in get_access_token
+        creds, subscription, tenant = profile.get_raw_token(subscription=subscription, resource=resource, scopes=scopes,
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/core/_profile.py", line 383, in get_raw_token
+        sdk_token = credential.get_token(*scopes)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/azure/cli/core/auth/msal_authentication.py", line 63, in get_token
+        result = self.acquire_token_silent_with_error(list(scopes), self._account, claims_challenge=claims, **kwargs)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/application.py", line 1287, in acquire_token_silent_with_error
+        result = self._acquire_token_silent_from_cache_and_possibly_refresh_it(
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/application.py", line 1392, in _acquire_token_silent_from_cache_and_possibly_refresh_it
+        result = _clean_up(self._acquire_token_silent_by_finding_rt_belongs_to_me_or_my_family(
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/application.py", line 1444, in _acquire_token_silent_by_finding_rt_belongs_to_me_or_my_family
+        last_resp = at = self._acquire_token_silent_by_finding_specific_refresh_token(
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/application.py", line 1491, in _acquire_token_silent_by_finding_specific_refresh_token
+        response = client.obtain_token_by_refresh_token(
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/oauth2cli/oauth2.py", line 830, in obtain_token_by_refresh_token
+        resp = super(Client, self).obtain_token_by_refresh_token(
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/oauth2cli/oauth2.py", line 262, in obtain_token_by_refresh_token
+        return self._obtain_token("refresh_token", data=data, **kwargs)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/oauth2cli/oidc.py", line 116, in _obtain_token
+        ret = super(Client, self)._obtain_token(grant_type, *args, **kwargs)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/oauth2cli/oauth2.py", line 788, in _obtain_token
+        (on_obtaining_tokens or self.on_obtaining_tokens)({
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/application.py", line 1496, in <lambda>
+        on_obtaining_tokens=lambda event: self.token_cache.add(dict(
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/token_cache.py", line 314, in add
+        super(SerializableTokenCache, self).add(event, **kwargs)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/token_cache.py", line 117, in add
+        return self.__add(event, now=now)
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/token_cache.py", line 158, in __add
+        decode_id_token(id_token, client_id=event["client_id"]) if id_token else {})
+      File "/home/linuxbrew/.linuxbrew/Cellar/azure-cli/2.42.0/libexec/lib/python3.10/site-packages/msal/oauth2cli/oidc.py", line 77, in decode_id_token
+        raise RuntimeError("%s Current epoch = %s.  The id_token was: %s" % (
+    RuntimeError: 0. The ID token is not yet valid. Make sure your computer's time and time zone are both correct. Current epoch = 1671369331.  The id_token was: {
+      "aud": "04b07795-8ddb-461a-bbee-02f9e1bf7b46",
+      "iss": "https://login.microsoftonline.com/06f19eb3-4f73-4386-8224-9147f6733351/v2.0",
+      "iat": 1671369581,
+      "nbf": 1671369581,
+      "exp": 1671373481,
+      "aio": "AXQAi/8TAAAA04rHOTWkaI9GZ8p/JgInbdfbxqtnhfRz36B2AWJrqEBKXNrYoe+OGaB/SUVNUZarg1CEyKb2I3KXI9ccSzaLAkNl3Iw8wHInpbe9XAGaf4PCWMEezkTVPDU1DQtsEkRxoGqGTFVANZ3cW/CvtMC5hQ==",
+      "name": "Ameer Deen",
+      "nonce": "33de81df7927c6aea99bc4b3bf21ea9581f8e5367ad0973eb67145fdce6be985",
+      "oid": "6afd07d9-8789-4847-a6bb-831e91233d57",
+      "preferred_username": "ameer.deen@katasec.com",
+      "puid": "100320011411F2F2",
+      "rh": "0.AXEAs57xBnNPhkOCJJFH9nMzUZV3sATbjRpGu-4C-eG_e0ZxAFI.",
+      "sub": "7xQXm3ZwIlCtxjvsHFIL_Tb_IrcueK-g2RrG-r0lg5Q",
+      "tid": "06f19eb3-4f73-4386-8224-9147f6733351",
+      "uti": "MtqlVuwdIkSWxY5XELpSAA",
+      "ver": "2.0"
+    }
+    To check existing issues, please visit: https://github.com/Azure/azure-cli/issues
+    To open a new issue, please run `az feedback`
+
+Resources:
+    + 1 created
+
+Duration: 12s
+
+
+stderr: 
+
