@@ -3,6 +3,7 @@ package dev
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/katasec/ark/utils"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
@@ -18,7 +19,7 @@ var (
 	arkSbNameSpace    = "ark"
 )
 
-func createResourceGroup(ctx *pulumi.Context) error {
+func createRgFunc(ctx *pulumi.Context) error {
 	rg, err := resources.NewResourceGroup(ctx, arkRgName, &resources.ResourceGroupArgs{
 		ResourceGroupName: pulumi.String(arkRgName),
 	})
@@ -35,7 +36,7 @@ func createResourceGroup(ctx *pulumi.Context) error {
 	return nil
 }
 
-func createStorageAccount(ctx *pulumi.Context) error {
+func createStrgFunc(ctx *pulumi.Context) error {
 
 	account, err := storage.NewStorageAccount(ctx, arkStgAccountName, &storage.StorageAccountArgs{
 		ResourceGroupName: pulumi.String(arkRgName),
@@ -57,7 +58,7 @@ func createStorageAccount(ctx *pulumi.Context) error {
 	return nil
 }
 
-func createSbNameSpace(ctx *pulumi.Context) error {
+func createSbNsFunc(ctx *pulumi.Context) error {
 	ns, err := servicebus.NewNamespace(ctx, arkSbNameSpace, &servicebus.NamespaceArgs{
 		ResourceGroupName: pulumi.String(arkRgName),
 		Sku: servicebus.SBSkuArgs{
@@ -72,4 +73,17 @@ func createSbNameSpace(ctx *pulumi.Context) error {
 		return name
 	})
 	return nil
+}
+
+func getReference(stackFQDN string, key string) (output string, err error) {
+	myCmd := fmt.Sprintf("pulumi stack -s %s output %s", stackFQDN, key)
+	return utils.ExecShellCmd(myCmd)
+}
+
+func getDefaultPulumiOrg() (string, error) {
+
+	value, err := utils.ExecShellCmd("pulumi org get-default")
+	value = strings.Trim(value, "\n")
+
+	return value, err
 }

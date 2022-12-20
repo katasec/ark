@@ -1,9 +1,9 @@
 package dev
 
-func Create() {
+func Setup() {
 	createLocal()
 }
 
-func Delete() {
+func SetupDelete() {
 	deleteLocal()
 }

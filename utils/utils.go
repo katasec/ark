@@ -3,6 +3,7 @@ package utils
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
@@ -34,6 +35,12 @@ func ReturnError(err error) error {
 	return nil
 }
 
+func ExitOnError(err error) {
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+}
 func ExecShellCmd(shellCmdStr string) (output string, err error) {
 
 	shellCmd := strings.Split(shellCmdStr, " ")
@@ -61,7 +68,7 @@ func ExecShellCmd(shellCmdStr string) (output string, err error) {
 	err = cmd.Run()
 
 	if err != nil {
-		return errOut.String(), err
+		return "", errors.New(errOut.String())
 	} else {
 		return out.String(), nil
 	}
