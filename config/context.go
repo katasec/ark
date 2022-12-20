@@ -5,17 +5,19 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/katasec/ark/utils"
 	"gopkg.in/yaml.v2"
 )
 
 var (
-	ArkDir      string
-	ContextFile = fmt.Sprintf("%s/config", ArkDir)
+	ArkDir  string
+	cfgFile = fmt.Sprintf("%s/config", ArkDir)
 )
 
 type Config struct {
-	Cloud       string `yaml:"cloud"`
-	AzureConfig AzureConfig
+	Cloud         string `yaml:"cloud"`
+	AzureConfig   AzureConfig
+	StorageConfig StorageConfig
 }
 
 type AzureConfig struct {
@@ -54,19 +56,41 @@ func NewConfig(cloudId string) *Config {
 	check(err)
 
 	// Save file
-	ContextFile = fmt.Sprintf("%s/config", ArkDir)
-	err = os.WriteFile(ContextFile, yamlData, 0644)
+	cfgFile = fmt.Sprintf("%s/config", ArkDir)
+	err = os.WriteFile(cfgFile, yamlData, 0644)
 	check(err)
 
 	return myConfig
 }
 
-func SaveContext() {
+func (cfg *Config) Save() {
+	yamlData, err := yaml.Marshal(cfg)
+	utils.ExitOnError(err)
 
+	// Save file
+	cfgFile = getConfigFileName()
+	err = os.WriteFile(cfgFile, yamlData, 0644)
+	utils.ExitOnError(err)
+
+	fmt.Println("Config was saved!")
 }
 
-func ReadConfig() {
+func ReadConfig() *Config {
 
+	configFile := getConfigFileName()
+
+	// Create config directory
+	if _, err := os.Stat(configFile); errors.Is(err, os.ErrNotExist) {
+		utils.ExitOnError(err)
+	}
+
+	bCfg, err := os.ReadFile(configFile)
+	utils.ExitOnError(err)
+
+	cfg := &Config{}
+	yaml.Unmarshal(bCfg, cfg)
+
+	return cfg
 }
 
 func getArkDir() string {
@@ -75,4 +99,8 @@ func getArkDir() string {
 	ArkDir = homeDir + "/.ark"
 
 	return ArkDir
+}
+
+func getConfigFileName() string {
+	return fmt.Sprintf("%s/config", getArkDir())
 }

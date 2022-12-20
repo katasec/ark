@@ -77,7 +77,11 @@ func createSbNsFunc(ctx *pulumi.Context) error {
 
 func getReference(stackFQDN string, key string) (output string, err error) {
 	myCmd := fmt.Sprintf("pulumi stack -s %s output %s", stackFQDN, key)
-	return utils.ExecShellCmd(myCmd)
+
+	value, err := utils.ExecShellCmd(myCmd)
+	value = strings.Trim(value, "\n")
+
+	return value, err
 }
 
 func getDefaultPulumiOrg() (string, error) {

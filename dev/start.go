@@ -3,11 +3,11 @@ package dev
 import (
 	"fmt"
 
+	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/utils"
 )
 
 func Start() {
-	fmt.Println("Ok - let's start")
 
 	orgName, err := getDefaultPulumiOrg()
 	utils.ExitOnError(err)
@@ -17,5 +17,10 @@ func Start() {
 	utils.ExitOnError(err)
 
 	fmt.Println("The resource group name:" + rgName)
+
+	cfg := config.ReadConfig()
+	cfg.AzureConfig.ResourceGroupName = rgName
+
+	cfg.Save()
 
 }
