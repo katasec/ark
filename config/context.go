@@ -14,7 +14,19 @@ var (
 )
 
 type Config struct {
-	Cloud string `yaml:"cloud"`
+	Cloud       string `yaml:"cloud"`
+	AzureConfig AzureConfig
+}
+
+type AzureConfig struct {
+	ResourceGroupName   string
+	StorageConfig       StorageConfig
+	ServiceBusNameSpace string
+}
+
+type StorageConfig struct {
+	AccountName      string
+	ConncetionString string
 }
 
 func check(e error) {
@@ -26,8 +38,7 @@ func check(e error) {
 func NewConfig(cloudId string) *Config {
 
 	// Define config dir
-	homeDir, _ := os.UserHomeDir()
-	ArkDir = homeDir + "/.ark"
+	ArkDir = getArkDir()
 
 	// Create config directory
 	if _, err := os.Stat(ArkDir); errors.Is(err, os.ErrNotExist) {
@@ -52,4 +63,16 @@ func NewConfig(cloudId string) *Config {
 
 func SaveContext() {
 
+}
+
+func ReadConfig() {
+
+}
+
+func getArkDir() string {
+	// Define config dir
+	homeDir, _ := os.UserHomeDir()
+	ArkDir = homeDir + "/.ark"
+
+	return ArkDir
 }

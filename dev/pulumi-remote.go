@@ -4,18 +4,17 @@ import (
 	"os"
 
 	"github.com/dapr/cli/pkg/print"
-	// pulumihelper "github.com/katasec/pulumi-helper"
-
 	pulumirunner "github.com/katasec/pulumi-runner"
 	utils "github.com/katasec/pulumi-runner/utils"
 )
 
-func createPulumiProgram() *pulumirunner.RemoteProgram {
+func initRemoteProgram() *pulumirunner.RemoteProgram {
 
-	logger := utils.ConfigureLogger("ark.log")
+	homedir, _ := os.UserHomeDir()
+	logger := utils.ConfigureLogger(homedir + "/ark.log")
 
 	args := &pulumirunner.RemoteProgramArgs{
-		ProjectName: "ArkInit",
+		ProjectName: "ark-init",
 		GitURL:      "https://github.com/katasec/ArkInit.git",
 		Branch:      "refs/remotes/origin/main",
 		ProjectPath: "Azure",
@@ -38,19 +37,20 @@ func createPulumiProgram() *pulumirunner.RemoteProgram {
 
 	return pulumirunner.NewRemoteProgram(args)
 }
-func Create() {
+
+func createRemote() {
 
 	message := "Creating cloud resources for local dev environment."
 	stopSpinning := print.Spinner(os.Stdout, message)
-	p := createPulumiProgram()
+	p := initRemoteProgram()
 	p.Up()
 
 	stopSpinning(print.Success)
 	//print.FailureStatusEvent(os.Stdout, message)
 }
 
-func Delete() {
-	p := createPulumiProgram()
+func deleteRemote() {
+	p := initRemoteProgram()
 
 	message := "Deleting cloud resources for local dev environment."
 	stopSpinning := print.Spinner(os.Stdout, message)
