@@ -80,7 +80,7 @@ func createSbNsFunc(ctx *pulumi.Context) error {
 }
 
 func createSbQueue(ctx *pulumi.Context) error {
-
+	return nil
 }
 func getReference(stackFQDN string, key string) (output string, err error) {
 	myCmd := fmt.Sprintf("pulumi stack -s %s output %s", stackFQDN, key)
