@@ -104,3 +104,10 @@ func getArkDir() string {
 func getConfigFileName() string {
 	return fmt.Sprintf("%s/config", getArkDir())
 }
+
+func (cfg *Config) Dump() {
+	yamlData, err := yaml.Marshal(cfg)
+	utils.ExitOnError(err)
+
+	fmt.Println(string(yamlData))
+}

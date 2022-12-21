@@ -67,6 +67,10 @@ func createSbNsFunc(ctx *pulumi.Context) error {
 		},
 	})
 	utils.ReturnError(err)
+
+	ctx.Export("all", ns)
+	ctx.Export("ns", ns.Name)
+
 	ns.Name.ApplyT(func(name string) string {
 		f, _ := os.OpenFile("output.txt", os.O_APPEND|os.O_CREATE, 0600)
 		fmt.Fprintf(f, "Sb Name:"+name)
@@ -75,6 +79,9 @@ func createSbNsFunc(ctx *pulumi.Context) error {
 	return nil
 }
 
+func createSbQueue(ctx *pulumi.Context) error {
+
+}
 func getReference(stackFQDN string, key string) (output string, err error) {
 	myCmd := fmt.Sprintf("pulumi stack -s %s output %s", stackFQDN, key)
 
