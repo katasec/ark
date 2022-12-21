@@ -38,17 +38,17 @@ func createLocal() {
 	var err error
 
 	// Setup Ark Resource Group
-	err = runWithProgressBar("Setup Ark resource group", createRgFunc, "resource-group", "up")
+	err = runWithProgressBar("Setup Ark resource group", createRgFunc, "dev", "up")
 	if err != nil {
 		runSuccess = false
 	}
 	// Setup Ark  Storage Account
-	err = runWithProgressBar("Setup Ark storage account", createStrgFunc, "storage-account", "up")
+	err = runWithProgressBar("Setup Ark storage account", addStrgFunc, "dev", "up")
 	if err != nil {
 		runSuccess = false
 	}
 	// Setup Ark Service Bus Name Space
-	err = runWithProgressBar("Setup Ark Service Bus Name Space", createSbNsFunc, "service-bus", "up")
+	err = runWithProgressBar("Setup Ark Service Bus Name Space", addSbNsFunc, "dev", "up")
 	if err != nil {
 		runSuccess = false
 	}
@@ -62,14 +62,17 @@ func createLocal() {
 
 func deleteLocal() {
 
-	// Destroy Resource Group
-	runWithProgressBar("Setup Ark resource group", createRgFunc, "resource-group", "destroy")
+	// Destroy Ark Service Bus Name Space
+	//runWithProgressBar("Delete Ark Service Bus Name Space", addSbNsFunc, "service-bus", "destroy")
+	//runWithProgressBar("Delete Ark Service Bus Name Space", addSbNsFunc, "dev", "destroy")
 
 	// Destroy Storage Account
-	runWithProgressBar("Setup Ark storage account", createStrgFunc, "storage-account", "destroy")
+	//runWithProgressBar("Delete Ark storage account", addStrgFunc, "storage-account", "destroy")
+	//runWithProgressBar("Delete Ark storage account", addStrgFunc, "dev", "destroy")
 
-	// Destroy Ark Service Bus Name Space
-	runWithProgressBar("Setup Ark Service Bus Name Space", createSbNsFunc, "service-bus", "destroy")
+	// Destroy Resource Group
+	//runWithProgressBar("Delete Ark resource group", createRgFunc, "resource-group", "destroy")
+	runWithProgressBar("Delete Ark resource group", addSbNsFunc, "dev", "destroy")
 
 }
 

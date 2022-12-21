@@ -2,7 +2,6 @@ package dev
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/katasec/ark/utils"
@@ -19,7 +18,10 @@ var (
 	arkSbNameSpace    = "ark"
 )
 
+// createRgFunc Creates RG and returns to update spinner
 func createRgFunc(ctx *pulumi.Context) error {
+
+	// Create RG
 	rg, err := resources.NewResourceGroup(ctx, arkRgName, &resources.ResourceGroupArgs{
 		ResourceGroupName: pulumi.String(arkRgName),
 	})
@@ -27,19 +29,22 @@ func createRgFunc(ctx *pulumi.Context) error {
 
 	ctx.Export("rgName", rg.Name)
 
-	rg.Name.ApplyT(func(name string) string {
-		f, _ := os.OpenFile("output.txt", os.O_APPEND|os.O_CREATE, 0600)
-		fmt.Fprintf(f, "RG Name:"+name)
-		return name
-	})
-
 	return nil
 }
 
-func createStrgFunc(ctx *pulumi.Context) error {
+// createRgFunc Adds resources to project and returns to update spinner
+func addStrgFunc(ctx *pulumi.Context) error {
 
-	account, err := storage.NewStorageAccount(ctx, arkStgAccountName, &storage.StorageAccountArgs{
+	// Create RG
+	rg, err := resources.NewResourceGroup(ctx, arkRgName, &resources.ResourceGroupArgs{
 		ResourceGroupName: pulumi.String(arkRgName),
+	})
+	utils.ReturnError(err)
+	ctx.Export("rgName", rg.Name)
+
+	// Create Storage Account
+	account, err := storage.NewStorageAccount(ctx, arkStgAccountName, &storage.StorageAccountArgs{
+		ResourceGroupName: rg.Name,
 		AccessTier:        storage.AccessTierHot,
 		Sku: &storage.SkuArgs{
 			Name: pulumi.String(storage.SkuName_Standard_LRS),
@@ -47,41 +52,90 @@ func createStrgFunc(ctx *pulumi.Context) error {
 		Kind: pulumi.String(storage.KindStorageV2),
 	})
 	utils.ReturnError(err)
-
 	ctx.Export("accountName", account.Name)
 
-	account.Name.ApplyT(func(name string) string {
-		f, _ := os.OpenFile("output.txt", os.O_APPEND|os.O_CREATE, 0600)
-		fmt.Fprintf(f, "Account Name:"+name)
-		return name
-	})
 	return nil
 }
 
-func createSbNsFunc(ctx *pulumi.Context) error {
-	ns, err := servicebus.NewNamespace(ctx, arkSbNameSpace, &servicebus.NamespaceArgs{
+// addSbNsFunc Adds resources to project and returns to update spinner
+func addSbNsFunc(ctx *pulumi.Context) error {
+
+	// Create RG
+	rg, err := resources.NewResourceGroup(ctx, arkRgName, &resources.ResourceGroupArgs{
 		ResourceGroupName: pulumi.String(arkRgName),
+	})
+	utils.ReturnError(err)
+	ctx.Export("rgName", rg.Name)
+
+	// Add Storage Account
+	account, err := storage.NewStorageAccount(ctx, arkStgAccountName, &storage.StorageAccountArgs{
+		ResourceGroupName: rg.Name,
+		AccessTier:        storage.AccessTierHot,
+		Sku: &storage.SkuArgs{
+			Name: pulumi.String(storage.SkuName_Standard_LRS),
+		},
+		Kind: pulumi.String(storage.KindStorageV2),
+	})
+	utils.ReturnError(err)
+	ctx.Export("accountName", account.Name)
+
+	// Add SB Namespace
+	ns, err := servicebus.NewNamespace(ctx, arkSbNameSpace, &servicebus.NamespaceArgs{
+		ResourceGroupName: rg.Name,
 		Sku: servicebus.SBSkuArgs{
 			Name: servicebus.SkuNameBasic,
 			Tier: servicebus.SkuTierBasic,
 		},
 	})
 	utils.ReturnError(err)
-
-	ctx.Export("all", ns)
 	ctx.Export("ns", ns.Name)
 
-	ns.Name.ApplyT(func(name string) string {
-		f, _ := os.OpenFile("output.txt", os.O_APPEND|os.O_CREATE, 0600)
-		fmt.Fprintf(f, "Sb Name:"+name)
-		return name
-	})
 	return nil
 }
 
-func createSbQueue(ctx *pulumi.Context) error {
+func addSbQueue(ctx *pulumi.Context, namespace string) error {
+
+	// Create RG
+	rg, err := resources.NewResourceGroup(ctx, arkRgName, &resources.ResourceGroupArgs{
+		ResourceGroupName: pulumi.String(arkRgName),
+	})
+	utils.ReturnError(err)
+	ctx.Export("rgName", rg.Name)
+
+	// Add Storage Account
+	account, err := storage.NewStorageAccount(ctx, arkStgAccountName, &storage.StorageAccountArgs{
+		ResourceGroupName: rg.Name,
+		AccessTier:        storage.AccessTierHot,
+		Sku: &storage.SkuArgs{
+			Name: pulumi.String(storage.SkuName_Standard_LRS),
+		},
+		Kind: pulumi.String(storage.KindStorageV2),
+	})
+	utils.ReturnError(err)
+	ctx.Export("accountName", account.Name)
+
+	// Add SB Namespace
+	ns, err := servicebus.NewNamespace(ctx, arkSbNameSpace, &servicebus.NamespaceArgs{
+		ResourceGroupName: rg.Name,
+		Sku: servicebus.SBSkuArgs{
+			Name: servicebus.SkuNameBasic,
+			Tier: servicebus.SkuTierBasic,
+		},
+	})
+	utils.ReturnError(err)
+	ctx.Export("ns", ns.Name)
+
+	// Add Queue
+	queue, err := servicebus.NewQueue(ctx, "command-queue", &servicebus.QueueArgs{
+		ResourceGroupName:  rg.Name,
+		EnablePartitioning: pulumi.Bool(true),
+		NamespaceName:      ns.Name,
+	})
+
+	ctx.Export("queueName", queue.Name)
 	return nil
 }
+
 func getReference(stackFQDN string, key string) (output string, err error) {
 	myCmd := fmt.Sprintf("pulumi stack -s %s output %s", stackFQDN, key)
 
