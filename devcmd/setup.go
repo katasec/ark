@@ -7,6 +7,7 @@ var (
 func Setup() {
 	// Create Cloud resources with Pulumi
 	d.Setup()
+
 }
 
 func SetupDelete() {

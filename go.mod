@@ -3,8 +3,10 @@ module github.com/katasec/ark
 go 1.19
 
 require (
+	github.com/briandowns/spinner v1.6.1
 	github.com/dapr/cli v1.9.1
 	github.com/docker/docker v20.10.17+incompatible
+	github.com/hpcloud/tail v1.0.0
 	github.com/katasec/pulumi-runner v0.1.3
 	github.com/mitchellh/go-ps v1.0.0
 	github.com/pulumi/pulumi-azure-native/sdk v1.90.0
@@ -19,7 +21,6 @@ require (
 	github.com/acomagu/bufpipe v1.0.3 // indirect
 	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
 	github.com/blang/semver v3.5.1+incompatible // indirect
-	github.com/briandowns/spinner v1.6.1 // indirect
 	github.com/cheggaaa/pb v1.0.18 // indirect
 	github.com/cloudflare/circl v1.1.0 // indirect
 	github.com/djherbis/times v1.2.0 // indirect
@@ -77,6 +78,7 @@ require (
 	google.golang.org/genproto v0.0.0-20220622171453-ea41d75dfa0f // indirect
 	google.golang.org/grpc v1.48.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
+	gopkg.in/fsnotify.v1 v1.4.7 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

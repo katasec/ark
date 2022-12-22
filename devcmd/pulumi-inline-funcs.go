@@ -11,7 +11,8 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
-func (d *DevCmd) initInlinePulumiStack(pulumiFunc pulumi.RunFunc, stackName string) *pulumirunner.InlineProgram {
+// createInlineProgram Creates an Inline Pulumi Program
+func (d *DevCmd) createInlineProgram(pulumiFunc pulumi.RunFunc, stackName string) *pulumirunner.InlineProgram {
 
 	logger := utils.ConfigureLogger(d.Config.LogFile)
 
@@ -36,10 +37,10 @@ func (d *DevCmd) runWithProgressBar(message string, pulumiFunc pulumi.RunFunc, s
 	var err error
 
 	// Show status
-	stopSpinning := print.Spinner(os.Stdout, message)
+	//stopSpinning := print.Spinner(os.Stdout, message)
 
 	// Initializer an in-line pulumi program with the passed in func
-	p := d.initInlinePulumiStack(pulumiFunc, stackName)
+	p := d.createInlineProgram(pulumiFunc, stackName)
 
 	// Call the appropriate action on the program
 	action = strings.ToLower(action)
@@ -53,11 +54,11 @@ func (d *DevCmd) runWithProgressBar(message string, pulumiFunc pulumi.RunFunc, s
 	}
 
 	// Output graphic status
-	if err != nil {
-		stopSpinning(print.Failure)
-	} else {
-		stopSpinning(print.Success)
-	}
+	// if err != nil {
+	// 	stopSpinning(print.Failure)
+	// } else {
+	// 	stopSpinning(print.Success)
+	// }
 
 	return err
 }
@@ -65,24 +66,24 @@ func (d *DevCmd) runWithProgressBar(message string, pulumiFunc pulumi.RunFunc, s
 func (d *DevCmd) createLocal() error {
 	runSuccess := true
 
-	// Setup Ark Resource Group
-	err := d.runWithProgressBar("Setup Azure resource group", createRgFunc, "dev", "up")
-	if err != nil {
-		runSuccess = false
-	}
-	// Setup Ark  Storage Account
-	err = d.runWithProgressBar("Setup Azure storage account", addStrgFunc, "dev", "up")
-	if err != nil {
-		runSuccess = false
-	}
-	// Setup Ark Service Bus Name Space
-	err = d.runWithProgressBar("Setup Azure Service Bus Namespace", addSbNsFunc, "dev", "up")
-	if err != nil {
-		runSuccess = false
-	}
+	// // Setup Ark Resource Group
+	// err := d.runWithProgressBar("Setup Azure resource group", createRgFunc, "dev", "up")
+	// if err != nil {
+	// 	runSuccess = false
+	// }
+	// // Setup Ark  Storage Account
+	// err = d.runWithProgressBar("Setup Azure storage account", addStrgFunc, "dev", "up")
+	// if err != nil {
+	// 	runSuccess = false
+	// }
+	// // Setup Ark Service Bus Name Space
+	// err = d.runWithProgressBar("Setup Azure Service Bus Namespace", addSbNsFunc, "dev", "up")
+	// if err != nil {
+	// 	runSuccess = false
+	// }
 
 	// Setup Ark Service Bus Name Space
-	err = d.runWithProgressBar("Setup Azure Service Bus Namespace", addSbQueue, "dev", "up")
+	err := d.runWithProgressBar("Setup Azure command queue", setupAzureDeps, "dev", "up")
 	if err != nil {
 		runSuccess = false
 	}
