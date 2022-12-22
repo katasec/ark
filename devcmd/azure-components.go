@@ -48,7 +48,7 @@ func setupAzureDeps(ctx *pulumi.Context) error {
 		},
 	})
 	utils.ReturnError(err)
-	ctx.Export("ns", ns.Name)
+	ctx.Export("ns", ns.ServiceBusEndpoint)
 
 	// Add Queue
 	queue, err := servicebus.NewQueue(ctx, "command-queue", &servicebus.QueueArgs{

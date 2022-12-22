@@ -4,7 +4,8 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/katasec/ark/devcmd"
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +15,7 @@ var startCmd = &cobra.Command{
 	Short: "Starts a local Ark environment",
 	Long:  `Starts a local Ark environment. This includes an API server, a DB server and a worker.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		devcmd.Start()
+		fmt.Println("start dev")
 	},
 }
 

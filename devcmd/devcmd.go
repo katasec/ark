@@ -2,9 +2,7 @@ package devcmd
 
 import (
 	"fmt"
-	"os"
 
-	"github.com/dapr/cli/pkg/print"
 	"github.com/hpcloud/tail"
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/utils"
@@ -26,15 +24,15 @@ func (d *DevCmd) Setup() {
 
 	//checkBeforeCreate()
 
-	// Print link to log file
-	message := fmt.Sprintf("Running Setup, please tail log file for more details %s", d.Config.LogFile)
-	print.InfoStatusEvent(os.Stdout, message)
-
-	// Start spinner
-	note := "Seting up Azure components for dev environment"
+	// Setup spinner
 	spinner := utils.NewArkSpinner()
 
+	// Print link to log file
+	message := fmt.Sprintf("Running Setup, please tail log file for more details %s", d.Config.LogFile)
+	spinner.InfoStatusEvent(message)
+
 	// Run pulumi up to create cloud resources
+	note := "Seting up Azure components for dev environment"
 	spinner.Start(note)
 	pulumi := d.createInlineProgram(setupAzureDeps, "dev")
 	err := pulumi.Up()
@@ -48,15 +46,15 @@ func (d *DevCmd) Setup() {
 
 func (d *DevCmd) Delete() {
 
-	// Print link to log file
-	message := fmt.Sprintf("Running Delete, please tail log file for more details %s", d.Config.LogFile)
-	print.InfoStatusEvent(os.Stdout, message)
-
-	// Start spinner
-	note := "Deleting Azure components from dev environment"
+	// Setup spinner
 	spinner := utils.NewArkSpinner()
 
+	// Print link to log file
+	message := fmt.Sprintf("Running Delete, please tail log file for more details %s", d.Config.LogFile)
+	spinner.InfoStatusEvent(message)
+
 	// Run pulumi destroy to delete cloud resources
+	note := "Deleting Azure components from dev environment"
 	spinner.Start(note)
 	pulumi := d.createInlineProgram(setupAzureDeps, "dev")
 	err := pulumi.Destroy()

@@ -15,7 +15,8 @@ func main() {
 
 	// Run Dev Init function if this program is being called by Pulumi
 	if utils.IsPulumiChild(os.Args) {
-		devcmd.Setup()
+		d := devcmd.NewDevCmd()
+		d.Setup()
 	}
 
 	// Behave as normal cli

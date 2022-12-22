@@ -14,7 +14,8 @@ var deleteCmd = &cobra.Command{
 	Short: "Delete cloud dependencies for ark",
 	Long:  "Delete cloud dependencies for ark",
 	Run: func(cmd *cobra.Command, args []string) {
-		devcmd.SetupDelete()
+		d := devcmd.NewDevCmd()
+		d.Delete()
 	},
 }
 

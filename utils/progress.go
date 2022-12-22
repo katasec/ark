@@ -34,6 +34,10 @@ func (a *ArkSpinner) Stop(err error, message string) {
 	a.spinner.Stop()
 }
 
-func InfoMessage(message string) {
-	fmt.Println("ℹ️ " + message)
+func (a *ArkSpinner) InfoStatusEvent(message string) {
+	fmt.Println("ℹ️  " + message)
+}
+
+func (a *ArkSpinner) SuccessStatusEvent(message string) {
+	fmt.Println("✅  " + message)
 }

@@ -13,7 +13,6 @@ import (
 
 // Returnh true if current process is a child process of pulumi
 func IsPulumiChild(args []string) bool {
-
 	// Get parent pid
 	pid := os.Getppid()
 	proc, err := ps.FindProcess(pid)
@@ -23,7 +22,6 @@ func IsPulumiChild(args []string) bool {
 
 	// Get binary name
 	binName := proc.Executable()
-
 	return strings.Contains(binName, "pulumi-")
 }
 

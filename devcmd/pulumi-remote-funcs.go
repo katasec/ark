@@ -2,6 +2,7 @@ package devcmd
 
 import (
 	"os"
+	"path/filepath"
 
 	"github.com/dapr/cli/pkg/print"
 	pulumirunner "github.com/katasec/pulumi-runner"
@@ -11,7 +12,7 @@ import (
 func initRemoteProgram() *pulumirunner.RemoteProgram {
 
 	homedir, _ := os.UserHomeDir()
-	logger := utils.ConfigureLogger(homedir + "/ark.log")
+	logger := utils.ConfigureLogger(filepath.Join(homedir + "ark.log"))
 
 	args := &pulumirunner.RemoteProgramArgs{
 		ProjectName: "ark-init",

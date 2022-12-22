@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/katasec/ark/utils"
 	"gopkg.in/yaml.v2"
@@ -38,6 +39,32 @@ func check(e error) {
 	}
 }
 
+func NewEmptyConfig() {
+	// Define config dir
+	ArkDir = getArkDir()
+
+	// Create config directory
+	if _, err := os.Stat(ArkDir); errors.Is(err, os.ErrNotExist) {
+		err := os.Mkdir(ArkDir, os.ModePerm)
+		check(err)
+	}
+
+	// Create config yaml
+	myConfig := &Config{
+		LogFile: filepath.Join(ArkDir, "ark.log"),
+	}
+
+	// Convert to yaml
+	yamlData, err := yaml.Marshal(myConfig)
+	check(err)
+
+	// Save file
+	cfgFile = filepath.Join(ArkDir, "config")
+	err = os.WriteFile(cfgFile, yamlData, 0644)
+	check(err)
+
+}
+
 func NewConfig(cloudId string) *Config {
 
 	// Define config dir
@@ -52,14 +79,14 @@ func NewConfig(cloudId string) *Config {
 	// Create config yaml
 	myConfig := &Config{
 		Cloud:   cloudId,
-		LogFile: fmt.Sprintf("%s/ark.log", ArkDir),
+		LogFile: filepath.Join(ArkDir, "ark.log"),
 	}
 
 	yamlData, err := yaml.Marshal(myConfig)
 	check(err)
 
 	// Save file
-	cfgFile = fmt.Sprintf("%s/config", ArkDir)
+	cfgFile = filepath.Join(ArkDir, "config")
 	err = os.WriteFile(cfgFile, yamlData, 0644)
 	check(err)
 
@@ -82,9 +109,9 @@ func ReadConfig() *Config {
 
 	configFile := getConfigFileName()
 
-	// Create config directory
+	// Check confif file exists
 	if _, err := os.Stat(configFile); errors.Is(err, os.ErrNotExist) {
-		utils.ExitOnError(err)
+		NewEmptyConfig()
 	}
 
 	bCfg, err := os.ReadFile(configFile)
