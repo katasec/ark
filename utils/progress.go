@@ -41,3 +41,7 @@ func (a *ArkSpinner) InfoStatusEvent(message string) {
 func (a *ArkSpinner) SuccessStatusEvent(message string) {
 	fmt.Println("✅  " + message)
 }
+
+func (a *ArkSpinner) ErrorStatusEvent(message string) {
+	fmt.Println("❌  " + message)
+}

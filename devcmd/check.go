@@ -41,7 +41,7 @@ func CheckStuff() {
 
 	fmt.Println()
 	if !checksPassed {
-		spinner.InfoStatusEvent("One or more of the above checks failed. Please correct and try again.")
+		spinner.ErrorStatusEvent("One or more of the above checks failed. Please correct and try again.")
 	} else {
 		spinner.SuccessStatusEvent("Pre-flight checks passed!")
 	}
@@ -58,6 +58,9 @@ func isInstalled(cmd string) bool {
 	note := fmt.Sprintf("Verify %s is installed.", cmd)
 	spinner.Start(note)
 	_, err := exec.LookPath(cmd)
+	if err == nil {
+		status = true
+	}
 	spinner.Stop(err, note)
 
 	return status
@@ -83,6 +86,9 @@ func checkDockerStarted() bool {
 	_, err = cli.ContainerList(ctx, types.ContainerListOptions{
 		All: true,
 	})
+	if err == nil {
+		status = true
+	}
 
 	spinner.Stop(err, note)
 
@@ -100,6 +106,10 @@ func isAzLoggedIn() bool {
 
 	shellCmd := "az ad signed-in-user show --query userPrincipalName -o tsv"
 	_, err := utils.ExecShellCmd(shellCmd)
+	if err == nil {
+		status = true
+	}
+
 	spinner.Stop(err, note)
 
 	return status
