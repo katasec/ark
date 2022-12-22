@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dapr/cli/pkg/print"
 	"github.com/katasec/ark/utils"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/servicebus"
@@ -78,12 +77,4 @@ func getDefaultPulumiOrg() (string, error) {
 	value = strings.Trim(value, "\n")
 
 	return value, err
-}
-
-func StopSpinner(spinner func(result print.Result), err error) {
-	if err != nil {
-		spinner(print.Failure)
-	} else {
-		spinner(print.Success)
-	}
 }
