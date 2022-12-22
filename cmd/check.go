@@ -4,7 +4,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/katasec/ark/dev"
+	"github.com/katasec/ark/devcmd"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +14,7 @@ var checkCmd = &cobra.Command{
 	Short: "Check ark's pre requisites have been installed",
 	Long:  `Check ark's pre requisites have been installed.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		dev.CheckStuff()
+		devcmd.CheckStuff()
 	},
 }
 

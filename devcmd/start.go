@@ -1,4 +1,4 @@
-package dev
+package devcmd
 
 import (
 	"fmt"
@@ -38,5 +38,5 @@ func refreshConfig() {
 	cfg.Save()
 
 	// Output config file
-	cfg.Dump()
+	//cfg.Dump()
 }

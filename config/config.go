@@ -18,6 +18,7 @@ type Config struct {
 	Cloud         string `yaml:"cloud"`
 	AzureConfig   AzureConfig
 	StorageConfig StorageConfig
+	LogFile       string
 }
 
 type AzureConfig struct {
@@ -50,8 +51,10 @@ func NewConfig(cloudId string) *Config {
 
 	// Create config yaml
 	myConfig := &Config{
-		Cloud: cloudId,
+		Cloud:   cloudId,
+		LogFile: fmt.Sprintf("%s/ark.log", ArkDir),
 	}
+
 	yamlData, err := yaml.Marshal(myConfig)
 	check(err)
 

@@ -1,4 +1,4 @@
-package dev
+package devcmd
 
 import (
 	"fmt"
@@ -12,7 +12,6 @@ import (
 )
 
 var (
-	arkResourceGroup  *resources.ResourceGroup
 	arkRgName         = "rg-ark-001"
 	arkStgAccountName = "arkstorage"
 	arkSbNameSpace    = "ark"
@@ -93,7 +92,7 @@ func addSbNsFunc(ctx *pulumi.Context) error {
 	return nil
 }
 
-func addSbQueue(ctx *pulumi.Context, namespace string) error {
+func addSbQueue(ctx *pulumi.Context) error {
 
 	// Create RG
 	rg, err := resources.NewResourceGroup(ctx, arkRgName, &resources.ResourceGroupArgs{
@@ -131,6 +130,7 @@ func addSbQueue(ctx *pulumi.Context, namespace string) error {
 		EnablePartitioning: pulumi.Bool(true),
 		NamespaceName:      ns.Name,
 	})
+	utils.ReturnError(err)
 
 	ctx.Export("queueName", queue.Name)
 	return nil
