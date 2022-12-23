@@ -102,7 +102,9 @@ func (cfg *Config) Save() {
 	err = os.WriteFile(cfgFile, yamlData, 0644)
 	utils.ExitOnError(err)
 
-	fmt.Println("Config was saved!")
+	// Setup spinner
+	s := utils.NewArkSpinner()
+	s.InfoStatusEvent("Updated config !")
 }
 
 func ReadConfig() *Config {

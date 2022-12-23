@@ -17,8 +17,8 @@ var (
 	arkSbNameSpace    = "ark"
 )
 
-// setupAzureDeps Sets up Azure Dependencies for Ark
-func setupAzureDeps(ctx *pulumi.Context) error {
+// setupAzureComponents Sets up Azure Components for Ark
+func setupAzureComponents(ctx *pulumi.Context) error {
 
 	// Create RG
 	rg, err := resources.NewResourceGroup(ctx, arkRgName, &resources.ResourceGroupArgs{
@@ -39,7 +39,20 @@ func setupAzureDeps(ctx *pulumi.Context) error {
 	utils.ReturnError(err)
 	ctx.Export("accountName", account.Name)
 
-	// Add SB Namespace
+	// Get Storage Key
+	ctx.Export("primaryStorageKey", pulumi.All(rg.Name, account.Name).ApplyT(func(args []interface{}) (string, error) {
+		accountKeys, err := storage.ListStorageAccountKeys(ctx, &storage.ListStorageAccountKeysArgs{
+			ResourceGroupName: args[0].(string),
+			AccountName:       args[1].(string),
+		})
+		if err != nil {
+			return "", err
+		}
+
+		return accountKeys.Keys[0].Value, nil
+	}))
+
+	// Create ASB Namespace
 	ns, err := servicebus.NewNamespace(ctx, arkSbNameSpace, &servicebus.NamespaceArgs{
 		ResourceGroupName: rg.Name,
 		Sku: servicebus.SBSkuArgs{
@@ -50,15 +63,45 @@ func setupAzureDeps(ctx *pulumi.Context) error {
 	utils.ReturnError(err)
 	ctx.Export("ns", ns.ServiceBusEndpoint)
 
-	// Add Queue
+	// Create New Auth Rule
+	authRuleName := "ReadWrite"
+	authRule, err := servicebus.NewNamespaceAuthorizationRule(ctx, "ReadWrite", &servicebus.NamespaceAuthorizationRuleArgs{
+		AuthorizationRuleName: pulumi.String(authRuleName),
+		NamespaceName:         ns.Name,
+		ResourceGroupName:     rg.Name,
+		Rights: servicebus.AccessRightsArray{
+			servicebus.AccessRightsListen,
+			servicebus.AccessRightsSend,
+		},
+	})
+	utils.ReturnError(err)
+
+	// Export Connection String
+	ctx.Export("ASBPrimaryConnectionString", pulumi.All(rg.Name, ns.Name, authRule.Name).ApplyT(func(args []interface{}) (string, error) {
+		keys, err := servicebus.ListNamespaceKeys(ctx, &servicebus.ListNamespaceKeysArgs{
+			ResourceGroupName:     args[0].(string),
+			NamespaceName:         args[1].(string),
+			AuthorizationRuleName: authRuleName,
+		})
+		if err != nil {
+			return "", err
+		}
+
+		return keys.PrimaryConnectionString, nil
+	}))
+
+	// Create Queue in ASB namespace
 	queue, err := servicebus.NewQueue(ctx, "command-queue", &servicebus.QueueArgs{
 		ResourceGroupName:  rg.Name,
 		EnablePartitioning: pulumi.Bool(true),
 		NamespaceName:      ns.Name,
 	})
 	utils.ReturnError(err)
+	ctx.Export("queueName", queue.Name)
 
-	ctx.Export("queueURN", queue.URN())
+	// Get Connection String
+	// conn, err := servicebus.ListQueueKeys()
+
 	return nil
 }
 

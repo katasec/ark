@@ -83,7 +83,7 @@ func (d *DevCmd) createLocal() error {
 	// }
 
 	// Setup Ark Service Bus Name Space
-	err := d.runWithProgressBar("Setup Azure command queue", setupAzureDeps, "dev", "up")
+	err := d.runWithProgressBar("Setup Azure command queue", setupAzureComponents, "dev", "up")
 	if err != nil {
 		runSuccess = false
 	}

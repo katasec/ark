@@ -34,14 +34,15 @@ func (d *DevCmd) Setup() {
 	// Run pulumi up to create cloud resources
 	note := "Seting up Azure components for dev environment"
 	spinner.Start(note)
-	pulumi := d.createInlineProgram(setupAzureDeps, "dev")
+	pulumi := d.createInlineProgram(setupAzureComponents, "dev")
 	err := pulumi.Up()
 	spinner.Stop(err, note)
 
 	// Update config file with links to new pulumi cloud resources.
-	if err != nil {
+	if err == nil {
 		refreshConfig()
 	}
+
 }
 
 func (d *DevCmd) Delete() {
@@ -56,7 +57,7 @@ func (d *DevCmd) Delete() {
 	// Run pulumi destroy to delete cloud resources
 	note := "Deleting Azure components from dev environment"
 	spinner.Start(note)
-	pulumi := d.createInlineProgram(setupAzureDeps, "dev")
+	pulumi := d.createInlineProgram(setupAzureComponents, "dev")
 	err := pulumi.Destroy()
 	spinner.Stop(err, note)
 
