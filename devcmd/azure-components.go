@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	arkRgName         = "rg-ark-001"
+	// arkRgName         = "rg-ark-001"
 	arkStgAccountName = "arkstorage"
 	arkSbNameSpace    = "ark"
 )
@@ -21,9 +21,7 @@ var (
 func setupAzureComponents(ctx *pulumi.Context) error {
 
 	// Create RG
-	rg, err := resources.NewResourceGroup(ctx, arkRgName, &resources.ResourceGroupArgs{
-		ResourceGroupName: pulumi.String(arkRgName),
-	})
+	rg, err := resources.NewResourceGroup(ctx, ResourceGroupPrefix, nil)
 	utils.ReturnError(err)
 	ctx.Export("rgName", rg.Name)
 
@@ -99,9 +97,7 @@ func setupAzureComponents(ctx *pulumi.Context) error {
 	utils.ReturnError(err)
 	ctx.Export("queueName", queue.Name)
 
-	// Get Connection String
-	// conn, err := servicebus.ListQueueKeys()
-
+	fmt.Println("End")
 	return nil
 }
 
