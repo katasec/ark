@@ -23,7 +23,7 @@ func setupAzureComponents(ctx *pulumi.Context) error {
 	// Create RG
 	rg, err := resources.NewResourceGroup(ctx, ResourceGroupPrefix, nil)
 	utils.ReturnError(err)
-	ctx.Export("rgName", rg.Name)
+	ctx.Export(ResourceGroupName, rg.Name)
 
 	// Add Storage Account
 	account, err := storage.NewStorageAccount(ctx, arkStgAccountName, &storage.StorageAccountArgs{
@@ -35,10 +35,10 @@ func setupAzureComponents(ctx *pulumi.Context) error {
 		Kind: pulumi.String(storage.KindStorageV2),
 	})
 	utils.ReturnError(err)
-	ctx.Export("accountName", account.Name)
+	ctx.Export(LogStorageEndpoint, account.PrimaryEndpoints.Blob())
 
 	// Get Storage Key
-	ctx.Export("primaryStorageKey", pulumi.All(rg.Name, account.Name).ApplyT(func(args []interface{}) (string, error) {
+	ctx.Export(LogStorageKey, pulumi.All(rg.Name, account.Name).ApplyT(func(args []interface{}) (string, error) {
 		accountKeys, err := storage.ListStorageAccountKeys(ctx, &storage.ListStorageAccountKeysArgs{
 			ResourceGroupName: args[0].(string),
 			AccountName:       args[1].(string),
@@ -50,6 +50,22 @@ func setupAzureComponents(ctx *pulumi.Context) error {
 		return accountKeys.Keys[0].Value, nil
 	}))
 
+	// Storage Containers
+	arklogsContainer, err := storage.NewBlobContainer(ctx, "arklogs", &storage.BlobContainerArgs{
+		AccountName:       account.Name,
+		ResourceGroupName: rg.Name,
+	})
+	utils.ReturnError(err)
+	ctx.Export(LogContainerName, arklogsContainer.Name)
+
+	// Storage Containers
+	pulumiStateContainer, err := storage.NewBlobContainer(ctx, "pulumistate", &storage.BlobContainerArgs{
+		AccountName:       account.Name,
+		ResourceGroupName: rg.Name,
+	})
+	utils.ReturnError(err)
+	ctx.Export(PulumiStateContainerName, pulumiStateContainer.Name)
+
 	// Create ASB Namespace
 	ns, err := servicebus.NewNamespace(ctx, arkSbNameSpace, &servicebus.NamespaceArgs{
 		ResourceGroupName: rg.Name,
@@ -59,7 +75,6 @@ func setupAzureComponents(ctx *pulumi.Context) error {
 		},
 	})
 	utils.ReturnError(err)
-	ctx.Export("ns", ns.ServiceBusEndpoint)
 
 	// Create New Auth Rule
 	authRuleName := "ReadWrite"
@@ -75,7 +90,7 @@ func setupAzureComponents(ctx *pulumi.Context) error {
 	utils.ReturnError(err)
 
 	// Export Connection String
-	ctx.Export("ASBPrimaryConnectionString", pulumi.All(rg.Name, ns.Name, authRule.Name).ApplyT(func(args []interface{}) (string, error) {
+	ctx.Export(MqConnectionString, pulumi.All(rg.Name, ns.Name, authRule.Name).ApplyT(func(args []interface{}) (string, error) {
 		keys, err := servicebus.ListNamespaceKeys(ctx, &servicebus.ListNamespaceKeysArgs{
 			ResourceGroupName:     args[0].(string),
 			NamespaceName:         args[1].(string),
@@ -95,9 +110,8 @@ func setupAzureComponents(ctx *pulumi.Context) error {
 		NamespaceName:      ns.Name,
 	})
 	utils.ReturnError(err)
-	ctx.Export("queueName", queue.Name)
+	ctx.Export(CommandQueueName, queue.Name)
 
-	fmt.Println("End")
 	return nil
 }
 

@@ -6,11 +6,19 @@ var (
 	ProjectNamePrefix = "ark-init"
 	StackName         = "dev"
 
-	// Names of Pulumi Exports
-	ResourceGroupPrefix        = "rg-ark-"
-	StgAccountPrefix           = "arkstorage"
-	AsbNsPrefix                = "arkns"
-	PrimaryStorageKey          = "PrimaryStorageKey"
-	AsbPrimaryConnectionString = "AsbPrimaryConnectionString"
-	CommandQueue               = "AsbCommandQueueName"
+	// Azure Resources Names
+	ResourceGroupPrefix = "rg-ark-"
+
+	// Pulumi Export Names
+	ResourceGroupName        = "ResourceGroupName"
+	StgAccountPrefix         = "arkstorage"
+	AsbNsPrefix              = "arkns"
+	PrimaryStorageKey        = "PrimaryStorageKey"
+	MqConnectionString       = "MqConnectionString"
+	CommandQueueName         = "CommandQueueName"
+	LogStorageAccountName    = "LogStorageAccountName"
+	LogStorageEndpoint       = "LogStorageEndpoint"
+	LogStorageKey            = "LogStorageKey"
+	LogContainerName         = "LogContainerName"
+	PulumiStateContainerName = "PulumiStateContainerName"
 )

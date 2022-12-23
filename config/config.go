@@ -16,21 +16,27 @@ var (
 )
 
 type Config struct {
-	Cloud         string `yaml:"cloud"`
-	AzureConfig   AzureConfig
-	StorageConfig StorageConfig
-	LogFile       string
+	CloudId     string
+	AzureConfig AzureConfig
+	LogFile     string
 }
 
 type AzureConfig struct {
-	ResourceGroupName   string
-	StorageConfig       StorageConfig
-	ServiceBusNameSpace string
+	ResourceGroupName string
+	StorageConfig     LogConfig
+	MqConfig          MqConfig
 }
 
-type StorageConfig struct {
-	AccountName      string
-	ConncetionString string
+type LogConfig struct {
+	LogStorageEndpoint   string
+	LogStorageKey        string
+	LogsContainer        string
+	PulumiStateContainer string
+}
+
+type MqConfig struct {
+	MqConnectionString string
+	MqName             string
 }
 
 func check(e error) {
@@ -78,7 +84,7 @@ func NewConfig(cloudId string) *Config {
 
 	// Create config yaml
 	myConfig := &Config{
-		Cloud:   cloudId,
+		CloudId: cloudId,
 		LogFile: filepath.Join(ArkDir, "ark.log"),
 	}
 
