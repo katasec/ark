@@ -7,6 +7,7 @@ import (
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
+	"github.com/katasec/ark/shell"
 	"github.com/katasec/ark/utils"
 )
 
@@ -14,7 +15,7 @@ var (
 	checksPassed = true
 )
 
-func CheckStuff() {
+func CheckSetupPreReqs() bool {
 
 	// Setup spinner
 	spinner := utils.NewArkSpinner()
@@ -45,6 +46,8 @@ func CheckStuff() {
 	} else {
 		spinner.SuccessStatusEvent("Pre-flight checks passed!")
 	}
+
+	return checksPassed
 }
 
 func isInstalled(cmd string) bool {
@@ -105,7 +108,7 @@ func isAzLoggedIn() bool {
 	spinner.Start(note)
 
 	shellCmd := "az ad signed-in-user show --query userPrincipalName -o tsv"
-	_, err := utils.ExecShellCmd(shellCmd)
+	_, err := shell.ExecShellCmd(shellCmd)
 	if err == nil {
 		status = true
 	}

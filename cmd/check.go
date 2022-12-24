@@ -14,7 +14,7 @@ var checkCmd = &cobra.Command{
 	Short: "Check ark's pre requisites have been installed",
 	Long:  `Check ark's pre requisites have been installed.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		devcmd.CheckStuff()
+		devcmd.CheckSetupPreReqs()
 	},
 }
 

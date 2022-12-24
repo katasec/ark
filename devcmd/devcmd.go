@@ -2,6 +2,7 @@ package devcmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/hpcloud/tail"
 	"github.com/katasec/ark/config"
@@ -23,6 +24,10 @@ func NewDevCmd() *DevCmd {
 func (d *DevCmd) Setup() {
 
 	//checkBeforeCreate()
+	fmt.Println("Checking pre-requisites before running setup:")
+	if !CheckSetupPreReqs() {
+		os.Exit(1)
+	}
 
 	// Setup spinner
 	spinner := utils.NewArkSpinner()

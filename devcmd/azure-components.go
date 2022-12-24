@@ -1,9 +1,6 @@
 package devcmd
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/katasec/ark/utils"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
 	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/servicebus"
@@ -113,21 +110,4 @@ func setupAzureComponents(ctx *pulumi.Context) error {
 	ctx.Export(CommandQueueName, queue.Name)
 
 	return nil
-}
-
-func getReference(stackFQDN string, key string) (output string, err error) {
-	myCmd := fmt.Sprintf("pulumi stack -s %s output %s", stackFQDN, key)
-
-	value, err := utils.ExecShellCmd(myCmd)
-	value = strings.Trim(value, "\n")
-
-	return value, err
-}
-
-func getDefaultPulumiOrg() (string, error) {
-
-	value, err := utils.ExecShellCmd("pulumi org get-default")
-	value = strings.Trim(value, "\n")
-
-	return value, err
 }

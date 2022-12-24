@@ -56,6 +56,4 @@ func refreshConfig() {
 	// Save Azure resource details to config file
 	cfg.Save()
 
-	// Output config file
-	cfg.Dump()
 }
