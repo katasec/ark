@@ -39,7 +39,7 @@ func (d *DevCmd) Setup() {
 	// Run pulumi up to create cloud resources
 	note := "Seting up Azure components for dev environment"
 	spinner.Start(note)
-	pulumi := d.createInlineProgram(setupAzureComponents, StackName)
+	pulumi := d.createPulumiProgram(setupAzureComponents, StackName)
 	err := pulumi.Up()
 	spinner.Stop(err, note)
 
@@ -62,7 +62,7 @@ func (d *DevCmd) Delete() {
 	// Run pulumi destroy to delete cloud resources
 	note := "Deleting Azure components from dev environment"
 	spinner.Start(note)
-	pulumi := d.createInlineProgram(setupAzureComponents, "dev")
+	pulumi := d.createPulumiProgram(setupAzureComponents, "dev")
 	err := pulumi.Destroy()
 	spinner.Stop(err, note)
 
@@ -89,7 +89,7 @@ func (d *DevCmd) RefreshConfig() {
 	cfg := config.ReadConfig()
 
 	// Contruct Pulumi Stack FQDN
-	orgName, err := getDefaultPulumiOrg()
+	orgName, err := d.getDefaultPulumiOrg()
 	utils.ExitOnError(err)
 	stackFQDN := fmt.Sprintf("%s/%s/%s", orgName, ProjectNamePrefix, StackName)
 
@@ -98,31 +98,31 @@ func (d *DevCmd) RefreshConfig() {
 	*/
 
 	// Resource Group Name
-	cfg.AzureConfig.ResourceGroupName, err = getReference(stackFQDN, ResourceGroupName)
+	cfg.AzureConfig.ResourceGroupName, err = d.getReference(stackFQDN, ResourceGroupName)
 	utils.ExitOnError(err)
 
 	// Mq Connection String
-	cfg.AzureConfig.MqConfig.MqConnectionString, err = getReference(stackFQDN, MqConnectionString)
+	cfg.AzureConfig.MqConfig.MqConnectionString, err = d.getReference(stackFQDN, MqConnectionString)
 	utils.ExitOnError(err)
 
 	// Mq Connection String
-	cfg.AzureConfig.MqConfig.MqName, err = getReference(stackFQDN, CommandQueueName)
+	cfg.AzureConfig.MqConfig.MqName, err = d.getReference(stackFQDN, CommandQueueName)
 	utils.ExitOnError(err)
 
 	// Log Storage Account Endpoint
-	cfg.AzureConfig.StorageConfig.LogStorageEndpoint, err = getReference(stackFQDN, LogStorageEndpoint)
+	cfg.AzureConfig.StorageConfig.LogStorageEndpoint, err = d.getReference(stackFQDN, LogStorageEndpoint)
 	utils.ExitOnError(err)
 
 	// Log Storage LogStorageKey
-	cfg.AzureConfig.StorageConfig.LogStorageKey, err = getReference(stackFQDN, LogStorageKey)
+	cfg.AzureConfig.StorageConfig.LogStorageKey, err = d.getReference(stackFQDN, LogStorageKey)
 	utils.ExitOnError(err)
 
 	// Log Storage Container
-	cfg.AzureConfig.StorageConfig.LogsContainer, err = getReference(stackFQDN, LogContainerName)
+	cfg.AzureConfig.StorageConfig.LogsContainer, err = d.getReference(stackFQDN, LogContainerName)
 	utils.ExitOnError(err)
 
 	// Pulumi State Container
-	cfg.AzureConfig.StorageConfig.PulumiStateContainer, err = getReference(stackFQDN, PulumiStateContainerName)
+	cfg.AzureConfig.StorageConfig.PulumiStateContainer, err = d.getReference(stackFQDN, PulumiStateContainerName)
 	utils.ExitOnError(err)
 
 	// Save Azure resource details to config file

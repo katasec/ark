@@ -10,8 +10,8 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
-// createInlineProgram Creates an Inline Pulumi Program
-func (d *DevCmd) createInlineProgram(pulumiFunc pulumi.RunFunc, stackName string) *pulumirunner.InlineProgram {
+// createPulumiProgram Creates Pulumi Program using an in-line function passed as a parameter
+func (d *DevCmd) createPulumiProgram(pulumiFn pulumi.RunFunc, stackName string) *pulumirunner.InlineProgram {
 
 	logger := utils.ConfigureLogger(d.Config.LogFile)
 
@@ -25,13 +25,13 @@ func (d *DevCmd) createInlineProgram(pulumiFunc pulumi.RunFunc, stackName string
 			},
 		},
 		Writer:   logger,
-		PulumiFn: pulumiFunc,
+		PulumiFn: pulumiFn,
 	}
 
 	return pulumirunner.NewInlineProgram(args)
 }
 
-func getReference(stackFQDN string, key string) (output string, err error) {
+func (d *DevCmd) getReference(stackFQDN string, key string) (output string, err error) {
 	myCmd := fmt.Sprintf("pulumi stack -s %s output %s", stackFQDN, key)
 
 	value, err := shell.ExecShellCmd(myCmd)
@@ -40,7 +40,7 @@ func getReference(stackFQDN string, key string) (output string, err error) {
 	return value, err
 }
 
-func getDefaultPulumiOrg() (string, error) {
+func (d *DevCmd) getDefaultPulumiOrg() (string, error) {
 
 	value, err := shell.ExecShellCmd("pulumi org get-default")
 	value = strings.Trim(value, "\n")

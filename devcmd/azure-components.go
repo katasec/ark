@@ -17,7 +17,7 @@ func setupAzureComponents(ctx *pulumi.Context) error {
 	ctx.Export(ResourceGroupName, rg.Name)
 
 	// Add Storage Account
-	account, err := storage.NewStorageAccount(ctx, arkStgAccountName, &storage.StorageAccountArgs{
+	account, err := storage.NewStorageAccount(ctx, StgAccountPrefix, &storage.StorageAccountArgs{
 		ResourceGroupName: rg.Name,
 		AccessTier:        storage.AccessTierHot,
 		Sku: &storage.SkuArgs{
@@ -58,7 +58,7 @@ func setupAzureComponents(ctx *pulumi.Context) error {
 	ctx.Export(PulumiStateContainerName, pulumiStateContainer.Name)
 
 	// Create ASB Namespace
-	ns, err := servicebus.NewNamespace(ctx, arkSbNameSpace, &servicebus.NamespaceArgs{
+	ns, err := servicebus.NewNamespace(ctx, AsbNsPrefix, &servicebus.NamespaceArgs{
 		ResourceGroupName: rg.Name,
 		Sku: servicebus.SBSkuArgs{
 			Name: servicebus.SkuNameBasic,

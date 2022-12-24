@@ -6,13 +6,11 @@ import (
 )
 
 var (
-	// arkRgName         = "rg-ark-001"
-	arkStgAccountName = "arkstorage"
-	arkSbNameSpace    = "ark"
 
 	// Used for checking prereqs
 	checksPassed = true
 
+	// Used for managing ark `dev` command
 	d = NewDevCmd()
 
 	// For PGSQL Docker
@@ -29,4 +27,24 @@ var (
 
 	// Spinner for status
 	arkSpinner = utils.NewArkSpinner()
+
+	// Pulumi Stack Details
+	ProjectNamePrefix = "ark-init"
+	StackName         = "dev"
+
+	// Azure Resources Names
+	ResourceGroupPrefix = "rg-ark-"
+
+	// Pulumi Export Names
+	ResourceGroupName        = "ResourceGroupName"
+	StgAccountPrefix         = "arkstorage"
+	AsbNsPrefix              = "arkns"
+	PrimaryStorageKey        = "PrimaryStorageKey"
+	MqConnectionString       = "MqConnectionString"
+	CommandQueueName         = "CommandQueueName"
+	LogStorageAccountName    = "LogStorageAccountName"
+	LogStorageEndpoint       = "LogStorageEndpoint"
+	LogStorageKey            = "LogStorageKey"
+	LogContainerName         = "LogContainerName"
+	PulumiStateContainerName = "PulumiStateContainerName"
 )
