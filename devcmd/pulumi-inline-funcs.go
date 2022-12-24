@@ -16,7 +16,7 @@ func (d *DevCmd) createInlineProgram(pulumiFunc pulumi.RunFunc, stackName string
 	logger := utils.ConfigureLogger(d.Config.LogFile)
 
 	args := &pulumirunner.InlineProgramArgs{
-		ProjectName: "ark-init",
+		ProjectName: ProjectNamePrefix,
 		StackName:   stackName,
 		Config: []map[string]string{
 			{

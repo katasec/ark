@@ -19,7 +19,7 @@ func refreshConfig() {
 	// Contruct Pulumi Stack FQDN
 	orgName, err := getDefaultPulumiOrg()
 	utils.ExitOnError(err)
-	stackFQDN := fmt.Sprintf("%s/ark-init/dev", orgName)
+	stackFQDN := fmt.Sprintf("%s/%s/%s", orgName, ProjectNamePrefix, StackName)
 
 	/*
 	 Extract Azure resource details from Pulumi Exports

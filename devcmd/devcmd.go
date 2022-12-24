@@ -39,7 +39,7 @@ func (d *DevCmd) Setup() {
 	// Run pulumi up to create cloud resources
 	note := "Seting up Azure components for dev environment"
 	spinner.Start(note)
-	pulumi := d.createInlineProgram(setupAzureComponents, "dev")
+	pulumi := d.createInlineProgram(setupAzureComponents, StackName)
 	err := pulumi.Up()
 	spinner.Stop(err, note)
 
