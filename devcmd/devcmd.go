@@ -83,8 +83,7 @@ func (d *DevCmd) Logs() {
 
 func (d *DevCmd) RefreshConfig() {
 
-	note := "Refreshing conig..."
-	arkSpinner.Start(note)
+	arkSpinner.InfoStatusEvent("Refershing config,please wait...")
 
 	// Get config Details
 	cfg := config.ReadConfig()
@@ -128,7 +127,5 @@ func (d *DevCmd) RefreshConfig() {
 
 	// Save Azure resource details to config file
 	cfg.Save()
-
-	arkSpinner.Stop(nil, "Refreshed Config !")
 
 }
