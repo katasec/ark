@@ -11,9 +11,9 @@ import (
 	"github.com/katasec/ark/utils"
 )
 
-var (
-	checksPassed = true
-)
+// var (
+// 	checksPassed = true
+// )
 
 func CheckSetupPreReqs() bool {
 

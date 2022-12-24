@@ -8,12 +8,6 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
-var (
-	// arkRgName         = "rg-ark-001"
-	arkStgAccountName = "arkstorage"
-	arkSbNameSpace    = "ark"
-)
-
 // setupAzureComponents Sets up Azure Components for Ark
 func setupAzureComponents(ctx *pulumi.Context) error {
 
