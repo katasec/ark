@@ -1,8 +1,8 @@
 package devcmd
 
 import (
+	dockerhelper "github.com/katasec/ark/docker-helper"
 	"github.com/katasec/ark/utils"
-	"github.com/katasec/ark/utils/docker"
 )
 
 var (
@@ -23,7 +23,7 @@ var (
 	DevDbPort        = 5432
 
 	// Helps manage docker
-	dh = docker.NewDockerHelper()
+	dh = dockerhelper.NewDockerHelper()
 
 	// Spinner for status
 	arkSpinner = utils.NewArkSpinner()
