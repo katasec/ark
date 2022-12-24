@@ -1,12 +1,12 @@
 package devcmd
 
 func Start() {
-	d.RefreshConfig()
+	//d.RefreshConfig()
 
-	setupDb()
+	startDb()
 }
 
-func setupDb() {
+func startDb() {
 
 	// Start Postgres Container
 	imageName := DEV_PGSQL_IMAGE_NAME
