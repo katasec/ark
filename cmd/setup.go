@@ -14,7 +14,8 @@ var setupCmd = &cobra.Command{
 	Short: "Setup cloud dependencies required for spinning up a local ark environment",
 	Long:  "Setup cloud dependencies required for spinning up a local ark environment.",
 	Run: func(cmd *cobra.Command, args []string) {
-		devcmd := devcmd.NewDevCmd()
+		// devcmd := devcmd.NewDevCmd()
+		// devcmd.Setup()
 		devcmd.Setup()
 	},
 }
