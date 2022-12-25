@@ -19,6 +19,25 @@ var (
 	arkSpinner = utils.NewArkSpinner()
 )
 
+type DockerHelper struct {
+	cli *client.Client
+	ctx context.Context
+}
+
+func NewDockerHelper() *DockerHelper {
+	ctx := context.Background()
+	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
+	if err != nil {
+		panic(err)
+	}
+
+	return &DockerHelper{
+		cli: cli,
+		ctx: ctx,
+	}
+
+}
+
 func (d *DockerHelper) StartContainerUI(imageName string, envVars []string, port string, containerName string, cmd []string) {
 
 	running, _, _ := d.IsRunning(imageName, containerName)
@@ -39,25 +58,6 @@ func (d *DockerHelper) StartContainerUI(imageName string, envVars []string, port
 		note := fmt.Sprintf("%s %s is already running !", containerName, imageName)
 		arkSpinner.InfoStatusEvent(note)
 	}
-}
-
-type DockerHelper struct {
-	cli *client.Client
-	ctx context.Context
-}
-
-func NewDockerHelper() *DockerHelper {
-	ctx := context.Background()
-	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
-	if err != nil {
-		panic(err)
-	}
-
-	return &DockerHelper{
-		cli: cli,
-		ctx: ctx,
-	}
-
 }
 
 func (d *DockerHelper) ListContainers() (containers []types.Container, err error) {
