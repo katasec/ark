@@ -2,9 +2,10 @@ package devcmd
 
 import (
 	"github.com/katasec/ark/utils"
-	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/resources"
-	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/servicebus"
-	"github.com/pulumi/pulumi-azure-native/sdk/go/azure/storage"
+	"github.com/pulumi/pulumi-azure-native-sdk/resources"
+	"github.com/pulumi/pulumi-azure-native-sdk/servicebus"
+	"github.com/pulumi/pulumi-azure-native-sdk/storage"
+
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 

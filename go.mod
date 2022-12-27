@@ -6,9 +6,13 @@ require (
 	github.com/briandowns/spinner v1.6.1
 	github.com/dapr/cli v1.9.1
 	github.com/docker/docker v20.10.17+incompatible
+	github.com/docker/go-connections v0.4.0
 	github.com/hpcloud/tail v1.0.0
 	github.com/katasec/pulumi-runner v0.1.3
 	github.com/mitchellh/go-ps v1.0.0
+	github.com/pulumi/pulumi-azure-native-sdk/resources v1.90.0
+	github.com/pulumi/pulumi-azure-native-sdk/servicebus v1.90.0
+	github.com/pulumi/pulumi-azure-native-sdk/storage v1.90.0
 	github.com/pulumi/pulumi-azure-native/sdk v1.90.0
 	github.com/pulumi/pulumi/sdk/v3 v3.49.0
 	github.com/spf13/cobra v1.6.1
@@ -25,7 +29,6 @@ require (
 	github.com/cloudflare/circl v1.1.0 // indirect
 	github.com/djherbis/times v1.2.0 // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
-	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
@@ -56,6 +59,7 @@ require (
 	github.com/pjbgf/sha1cd v0.2.3 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pkg/term v1.1.0 // indirect
+	github.com/pulumi/pulumi-azure-native-sdk v1.90.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/sabhiram/go-gitignore v0.0.0-20180611051255-d3107576ba94 // indirect
