@@ -184,8 +184,6 @@ github.com/pulumi/pulumi-azure-native-sdk/servicebus v1.90.0 h1:zIYhRExsyteOE/YA
 github.com/pulumi/pulumi-azure-native-sdk/servicebus v1.90.0/go.mod h1:WlpczSvK1NZ+NpoT+Vo5w2ZFAi2INrLd0ihGAR1TZsg=
 github.com/pulumi/pulumi-azure-native-sdk/storage v1.90.0 h1:Ca2FuyCs4c0eeaao2xzKyEY1MYSE8gqpDJu8DoiAiRw=
 github.com/pulumi/pulumi-azure-native-sdk/storage v1.90.0/go.mod h1:xafJRKCjmhrXxbezI5xeneHQFwnqR9cuEk4syRP4brI=
-github.com/pulumi/pulumi-azure-native/sdk v1.90.0 h1:16Oj5WMDxWFxyl9UmFYqww6eXedFkK0pO3czf7xcZbM=
-github.com/pulumi/pulumi-azure-native/sdk v1.90.0/go.mod h1:56Ew/yXdAteE9HIBQkkjn1qvNsHkbIhgfNLKHEfB+nY=
 github.com/pulumi/pulumi/sdk/v3 v3.49.0 h1:DSIeLJVPj7H+9fWjx/LguqDclzhiz90uhxERbMiHM+A=
 github.com/pulumi/pulumi/sdk/v3 v3.49.0/go.mod h1:58NOiU6vEdA0S8KFiFt4/eqH7vKtWhDFsEGCUFRBovw=
 github.com/rivo/uniseg v0.2.0 h1:S1pD9weZBuJdFmowNwbpi7BJ8TNftyUImj/0WQi72jY=

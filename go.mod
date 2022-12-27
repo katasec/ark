@@ -13,7 +13,6 @@ require (
 	github.com/pulumi/pulumi-azure-native-sdk/resources v1.90.0
 	github.com/pulumi/pulumi-azure-native-sdk/servicebus v1.90.0
 	github.com/pulumi/pulumi-azure-native-sdk/storage v1.90.0
-	github.com/pulumi/pulumi-azure-native/sdk v1.90.0
 	github.com/pulumi/pulumi/sdk/v3 v3.49.0
 	github.com/spf13/cobra v1.6.1
 	gopkg.in/yaml.v2 v2.4.0
