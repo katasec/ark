@@ -7,10 +7,11 @@ type AzureConfig struct {
 }
 
 type AzureLogConfig struct {
-	LogStorageEndpoint   string
-	LogStorageKey        string
-	LogsContainer        string
-	PulumiStateContainer string
+	LogStorageAccountName string
+	LogStorageEndpoint    string
+	LogStorageKey         string
+	LogsContainer         string
+	PulumiStateContainer  string
 }
 
 type AzureMqConfig struct {

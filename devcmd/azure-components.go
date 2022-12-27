@@ -28,6 +28,7 @@ func setupAzureComponents(ctx *pulumi.Context) error {
 	})
 	utils.ReturnError(err)
 	ctx.Export(LogStorageEndpoint, account.PrimaryEndpoints.Blob())
+	ctx.Export(LogStorageAccountName, account.Name)
 
 	// Get Storage Key
 	ctx.Export(LogStorageKey, pulumi.All(rg.Name, account.Name).ApplyT(func(args []interface{}) (string, error) {

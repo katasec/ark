@@ -1,15 +1,27 @@
 package devcmd
 
 import (
+	"fmt"
 	"log"
+	"time"
 
+	"github.com/katasec/ark/logs"
 	"github.com/katasec/ark/messaging"
 )
 
 func Start() {
 	//d.RefreshConfig()
 
-	testMq()
+	accountName := d.Config.AzureConfig.StorageConfig.LogStorageAccountName
+	containerName := d.Config.AzureConfig.StorageConfig.LogsContainer
+	accountKey := d.Config.AzureConfig.StorageConfig.LogStorageKey
+	w := logs.NewAzureWriter(accountName, containerName, accountKey, "testfile.txt")
+
+	_, err := fmt.Fprintln(w, "Hi this is a test")
+	if err != nil {
+		log.Println("error:" + err.Error())
+	}
+
 }
 
 func startDb() {
@@ -25,6 +37,9 @@ func startDb() {
 	dh.StartContainerUI(imageName, envVars, port, "arkdb", nil)
 }
 
+func timething() {
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
+}
 func testMq() {
 
 	connectionString := d.Config.AzureConfig.MqConfig.MqConnectionString

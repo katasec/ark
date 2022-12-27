@@ -109,6 +109,10 @@ func (d *DevCmd) RefreshConfig() {
 	cfg.AzureConfig.MqConfig.MqName, err = d.getReference(stackFQDN, CommandQueueName)
 	utils.ExitOnError(err)
 
+	// Log Storage Account Name
+	cfg.AzureConfig.StorageConfig.LogStorageAccountName, err = d.getReference(stackFQDN, LogStorageAccountName)
+	utils.ExitOnError(err)
+
 	// Log Storage Account Endpoint
 	cfg.AzureConfig.StorageConfig.LogStorageEndpoint, err = d.getReference(stackFQDN, LogStorageEndpoint)
 	utils.ExitOnError(err)

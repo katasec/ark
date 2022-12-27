@@ -36,9 +36,9 @@ func CheckSetupPreReqs() bool {
 		checksPassed = false
 	}
 
-	if !checkDockerStarted() {
-		checksPassed = false
-	}
+	// if !checkDockerStarted() {
+	// 	checksPassed = false
+	// }
 
 	fmt.Println()
 	if !checksPassed {
