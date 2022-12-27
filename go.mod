@@ -3,6 +3,7 @@ module github.com/katasec/ark
 go 1.19
 
 require (
+	github.com/Azure/azure-sdk-for-go/sdk/messaging/azservicebus v1.1.3
 	github.com/briandowns/spinner v1.6.1
 	github.com/dapr/cli v1.9.1
 	github.com/docker/docker v20.10.17+incompatible
@@ -19,6 +20,8 @@ require (
 )
 
 require (
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.0.0 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/internal v1.0.0 // indirect
 	github.com/Microsoft/go-winio v0.5.2 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20221026131551-cf6655e29de4 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect

@@ -18,25 +18,8 @@ var (
 type Config struct {
 	CloudId     string
 	AzureConfig AzureConfig
+	AwsConfig   AwsConfig
 	LogFile     string
-}
-
-type AzureConfig struct {
-	ResourceGroupName string
-	StorageConfig     LogConfig
-	MqConfig          MqConfig
-}
-
-type LogConfig struct {
-	LogStorageEndpoint   string
-	LogStorageKey        string
-	LogsContainer        string
-	PulumiStateContainer string
-}
-
-type MqConfig struct {
-	MqConnectionString string
-	MqName             string
 }
 
 func check(e error) {

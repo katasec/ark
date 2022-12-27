@@ -2,7 +2,7 @@ package messaging
 
 // Generic Messenger Interface
 type Messenger interface {
-	Send(queueName string, message string) error
-	Receive(queueName string) (string, error)
+	Send(message string) error
+	Receive() (string, error)
 	Complete() error
 }
