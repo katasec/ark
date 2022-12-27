@@ -10,6 +10,10 @@ require (
 	github.com/dapr/cli v1.9.1
 	github.com/docker/docker v20.10.17+incompatible
 	github.com/docker/go-connections v0.4.0
+	github.com/go-chi/chi v1.5.4
+	github.com/go-chi/chi/v5 v5.0.8
+	github.com/gorilla/handlers v1.5.1
+	github.com/gorilla/mux v1.8.0
 	github.com/hpcloud/tail v1.0.0
 	github.com/katasec/pulumi-runner v0.1.3
 	github.com/mitchellh/go-ps v1.0.0
@@ -35,6 +39,7 @@ require (
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
+	github.com/felixge/httpsnoop v1.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-git/gcfg v1.5.0 // indirect
 	github.com/go-git/go-billy/v5 v5.3.1 // indirect
