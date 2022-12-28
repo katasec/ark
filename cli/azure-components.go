@@ -1,4 +1,4 @@
-package devcmd
+package cli
 
 import (
 	"github.com/katasec/ark/utils"

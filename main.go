@@ -6,16 +6,16 @@ package main
 import (
 	"os"
 
+	"github.com/katasec/ark/cli"
 	"github.com/katasec/ark/cmd"
-	"github.com/katasec/ark/devcmd"
 	"github.com/katasec/ark/utils"
 )
 
 func main() {
 
-	// Run Dev Init function if this program is being called by Pulumi
+	// Run if this program is being called from Pulumi
 	if utils.IsPulumiChild(os.Args) {
-		d := devcmd.NewDevCmd()
+		d := cli.NewDevCmd()
 		d.Setup()
 	}
 

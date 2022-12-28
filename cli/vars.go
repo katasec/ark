@@ -1,4 +1,4 @@
-package devcmd
+package cli
 
 import (
 	dockerhelper "github.com/katasec/ark/docker-helper"

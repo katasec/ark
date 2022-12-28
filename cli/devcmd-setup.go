@@ -1,4 +1,4 @@
-package devcmd
+package cli
 
 // var (
 // 	d = NewDevCmd()

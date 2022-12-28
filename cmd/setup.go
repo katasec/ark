@@ -4,7 +4,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/katasec/ark/devcmd"
+	"github.com/katasec/ark/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +16,7 @@ var setupCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// devcmd := devcmd.NewDevCmd()
 		// devcmd.Setup()
-		devcmd.Setup()
+		cli.Setup()
 	},
 }
 
