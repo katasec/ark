@@ -1,7 +1,7 @@
 package cli
 
-import "github.com/katasec/ark/arkserver"
+import "github.com/katasec/ark/server"
 
 func Start() {
-	arkserver.Start()
+	server.Start()
 }

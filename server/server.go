@@ -1,23 +1,23 @@
-package arkserver
+package server
 
 import (
 	"fmt"
 	"net/http"
 
-	"github.com/katasec/ark/arkrouter"
 	"github.com/katasec/ark/config"
+	"github.com/katasec/ark/router"
 )
 
 // Server struct models the wire serer and its dependencies
 type Server struct {
 	// config       config.Config
-	router *arkrouter.ArkRouter
+	router *router.ArkRouter
 	config *config.Config
 }
 
 func NewServer() *Server {
 
-	router := arkrouter.NewChiRouter()
+	router := router.NewChiRouter()
 	cfg := config.ReadConfig()
 
 	return &Server{
@@ -28,7 +28,7 @@ func NewServer() *Server {
 
 func Start() {
 
-	r := arkrouter.NewChiRouter()
+	r := router.NewChiRouter()
 
 	r.GET("/", home)
 
