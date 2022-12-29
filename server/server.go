@@ -8,9 +8,8 @@ import (
 	"github.com/katasec/ark/router"
 )
 
-// Server struct models the wire serer and its dependencies
+// Server struct models the ark server and its dependencies
 type Server struct {
-	// config       config.Config
 	router *router.ArkRouter
 	config *config.Config
 }
