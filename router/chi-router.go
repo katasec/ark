@@ -20,17 +20,17 @@ func NewChiRouter() ArkRouter {
 }
 
 // GET implements ArkRouter
-func (*chiRouter) GET(path string, f func(w http.ResponseWriter, r *http.Request)) {
+func (*chiRouter) GET(path string, f http.HandlerFunc) {
 	chiDispatcher.Get(path, f)
 }
 
 // POST implements ArkRouter
-func (*chiRouter) POST(path string, f func(w http.ResponseWriter, r *http.Request)) {
+func (*chiRouter) POST(path string, f http.HandlerFunc) {
 	chiDispatcher.Post(path, f)
 }
 
 // SERVE implements ArkRouter
 func (*chiRouter) LISTEN(port string) {
 	log.Printf("Chi router running on port %s \n", port)
-	http.ListenAndServe(port, chiDispatcher)
+	log.Fatal(http.ListenAndServe(port, chiDispatcher))
 }

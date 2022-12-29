@@ -20,12 +20,12 @@ func NewMuxRouter() ArkRouter {
 }
 
 // GET implements ArkRouter
-func (*muxRouter) GET(path string, f func(w http.ResponseWriter, r *http.Request)) {
+func (*muxRouter) GET(path string, f http.HandlerFunc) {
 	r.HandleFunc(path, f).Methods("GET")
 }
 
 // POST implements ArkRouter
-func (*muxRouter) POST(path string, f func(w http.ResponseWriter, r *http.Request)) {
+func (*muxRouter) POST(path string, f http.HandlerFunc) {
 	r.HandleFunc(path, f).Methods("POST")
 }
 
@@ -33,5 +33,5 @@ func (*muxRouter) POST(path string, f func(w http.ResponseWriter, r *http.Reques
 func (*muxRouter) LISTEN(port string) {
 	loggedRouter := handlers.LoggingHandler(os.Stdout, r)
 	log.Println("Starting Mux server")
-	http.ListenAndServe(port, loggedRouter)
+	log.Fatal(http.ListenAndServe(port, loggedRouter))
 }

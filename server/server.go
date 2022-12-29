@@ -1,39 +1,35 @@
 package server
 
 import (
-	"fmt"
-	"net/http"
-
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/router"
 )
 
 // Server struct models the ark server and its dependencies
 type Server struct {
-	router *router.ArkRouter
+	router router.ArkRouter
 	config *config.Config
 }
 
 func NewServer() *Server {
 
-	router := router.NewChiRouter()
+	// Read from local config  file
 	cfg := config.ReadConfig()
 
+	// Return server with local config
 	return &Server{
-		router: &router,
 		config: cfg,
 	}
 }
 
-func (*Server) Start() {
+func (s *Server) Start() {
 
-	r := router.NewChiRouter()
+	// Select Router type (For e.g. Chi vs. Gorilla mux)
+	s.router = router.NewChiRouter()
 
-	r.GET("/", home)
+	// Initialize Routes
+	s.initaliseRoutes()
 
-	r.LISTEN(ListenPort)
-}
-
-func home(resp http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(resp, "Hello World!")
+	// Start Listening
+	s.router.LISTEN(ListenPort)
 }
