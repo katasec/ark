@@ -14,7 +14,8 @@ var startCmd = &cobra.Command{
 	Short: "Starts a local Ark environment",
 	Long:  `Starts a local Ark environment. This includes an API server, a DB server and a worker.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cli.Start()
+		devcmd := cli.NewDevCmd()
+		devcmd.Start()
 	},
 }
 

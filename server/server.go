@@ -25,7 +25,7 @@ func NewServer() *Server {
 	}
 }
 
-func Start() {
+func (*Server) Start() {
 
 	r := router.NewChiRouter()
 

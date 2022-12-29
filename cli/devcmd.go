@@ -6,6 +6,7 @@ import (
 
 	"github.com/hpcloud/tail"
 	"github.com/katasec/ark/config"
+	"github.com/katasec/ark/server"
 	"github.com/katasec/ark/utils"
 )
 
@@ -132,4 +133,13 @@ func (d *DevCmd) RefreshConfig() {
 	// Save Azure resource details to config file
 	cfg.Save()
 
+}
+
+func (d *DevCmd) Start() {
+	server := server.NewServer()
+	server.Start()
+}
+
+func (d *DevCmd) Check() bool {
+	return CheckSetupPreReqs()
 }
