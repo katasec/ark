@@ -24,15 +24,15 @@ func CheckSetupPreReqs() bool {
 		checksPassed = false
 	}
 
+	if !isAzLoggedIn() {
+		checksPassed = false
+	}
+
 	if !isInstalled("docker") {
 		checksPassed = false
 	}
 
 	if !isInstalled("pulumi") {
-		checksPassed = false
-	}
-
-	if !isAzLoggedIn() {
 		checksPassed = false
 	}
 
