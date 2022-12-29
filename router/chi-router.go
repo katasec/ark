@@ -30,7 +30,7 @@ func (*chiRouter) POST(path string, f func(w http.ResponseWriter, r *http.Reques
 }
 
 // SERVE implements ArkRouter
-func (*chiRouter) SERVE(port string) {
+func (*chiRouter) LISTEN(port string) {
 	log.Printf("Chi router running on port %s \n", port)
 	http.ListenAndServe(port, chiDispatcher)
 }

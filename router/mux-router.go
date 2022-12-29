@@ -30,7 +30,7 @@ func (*muxRouter) POST(path string, f func(w http.ResponseWriter, r *http.Reques
 }
 
 // SERVER implements ArkRouter
-func (*muxRouter) SERVE(port string) {
+func (*muxRouter) LISTEN(port string) {
 	loggedRouter := handlers.LoggingHandler(os.Stdout, r)
 	log.Println("Starting Mux server")
 	http.ListenAndServe(port, loggedRouter)

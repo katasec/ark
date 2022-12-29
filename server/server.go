@@ -31,7 +31,7 @@ func (*Server) Start() {
 
 	r.GET("/", home)
 
-	r.SERVE(":8080")
+	r.LISTEN(":8080")
 }
 
 func home(resp http.ResponseWriter, req *http.Request) {
