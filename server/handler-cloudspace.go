@@ -9,29 +9,23 @@ import (
 )
 
 type CloudSpaceService interface {
-	Create(c resources.CloudspaceRequest) (id string, err error)
-	Delete(c resources.CloudspaceRequest) (err error)
+	Create(c resources.CloudSpace) (id string, err error)
+	Read(c resources.CloudSpace) (id string, err error)
+	Update(c resources.CloudSpace) (id string, err error)
+	Delete(c resources.CloudSpace) (err error)
 }
 
 type JsonCloudSpaceService struct {
 }
 
-func (s *JsonCloudSpaceService) Create(c resources.CloudspaceRequest) (string, error) {
+func (s *JsonCloudSpaceService) Create(c resources.CloudSpace) (string, error) {
 	return "", nil
-}
-
-type JsonDB struct {
-	cloudspaces []resources.CloudspaceRequest
-}
-
-func JsonRepository(c resources.CloudspaceRequest) {
-
 }
 
 func (s *Server) postCloudspace() http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		request := &resources.CloudspaceRequest{}
+		request := &resources.CloudSpace{}
 
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {

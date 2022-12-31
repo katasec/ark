@@ -30,13 +30,19 @@ func check(e error) {
 
 func NewEmptyConfig() {
 	// Define config dir
-	ArkDir = getArkDir()
+	ArkDir = GetArkDir()
 
 	// Create config directory
-	if _, err := os.Stat(ArkDir); errors.Is(err, os.ErrNotExist) {
-		err := os.Mkdir(ArkDir, os.ModePerm)
-		check(err)
-	}
+	createDir(ArkDir)
+	createDir(GetDbDir())
+
+	// if _, err := os.Stat(ArkDir); errors.Is(err, os.ErrNotExist) {
+	// 	err := os.Mkdir(ArkDir, os.ModePerm)
+	// 	check(err)
+
+	// 	err = os.Mkdir(GetDbDir(), os.ModePerm)
+	// 	check(err)
+	// }
 
 	// Create config yaml
 	myConfig := &Config{
@@ -57,13 +63,21 @@ func NewEmptyConfig() {
 func NewConfig(cloudId string) *Config {
 
 	// Define config dir
-	ArkDir = getArkDir()
+	ArkDir = GetArkDir()
 
 	// Create config directory
-	if _, err := os.Stat(ArkDir); errors.Is(err, os.ErrNotExist) {
-		err := os.Mkdir(ArkDir, os.ModePerm)
-		check(err)
-	}
+	createDir(ArkDir)
+	createDir(GetDbDir())
+
+	// if _, err := os.Stat(ArkDir); errors.Is(err, os.ErrNotExist) {
+	// 	err := os.Mkdir(ArkDir, os.ModePerm)
+	// 	check(err)
+
+	// 	fmt.Println("I am here")
+	// 	err = os.Mkdir(GetDbDir(), os.ModePerm)
+	// 	check(err)
+
+	// }
 
 	// Create config yaml
 	myConfig := &Config{
@@ -114,16 +128,24 @@ func ReadConfig() *Config {
 	return cfg
 }
 
-func getArkDir() string {
+func GetArkDir() string {
 	// Define config dir
 	homeDir, _ := os.UserHomeDir()
-	ArkDir = homeDir + "/.ark"
+	ArkDir = filepath.Join(homeDir, ".ark")
 
 	return ArkDir
 }
 
+func GetDbDir() string {
+	// Define config dir
+	homeDir, _ := os.UserHomeDir()
+	dbDir := filepath.Join(homeDir, ".ark", "db/")
+
+	return dbDir
+}
+
 func getConfigFileName() string {
-	return fmt.Sprintf("%s/config", getArkDir())
+	return fmt.Sprintf("%s/config", GetArkDir())
 }
 
 func (cfg *Config) Dump() {
@@ -131,4 +153,10 @@ func (cfg *Config) Dump() {
 	utils.ExitOnError(err)
 
 	fmt.Println(string(yamlData))
+}
+
+func createDir(dir string) {
+	if _, err := os.Stat(dir); errors.Is(err, os.ErrNotExist) {
+		os.Mkdir(dir, os.ModePerm)
+	}
 }

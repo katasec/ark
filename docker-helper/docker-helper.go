@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/dapr/cli/pkg/print"
@@ -92,7 +93,14 @@ func (d *DockerHelper) Pull(imageName string) (err error) {
 	return err
 }
 
-func (d *DockerHelper) IsRunning(imageName string, name string) (running bool, state string, id string) {
+func (d *DockerHelper) IsRunning(imageName string, name string, status ...string) (running bool, state string, id string) {
+
+	var checkingFor string
+	if len(status) == 0 {
+		checkingFor = "running"
+	} else {
+		checkingFor = strings.ToLower(status[0])
+	}
 
 	// init locals
 	running = false
@@ -104,9 +112,9 @@ func (d *DockerHelper) IsRunning(imageName string, name string) (running bool, s
 
 	// Iterate to find container with imageName
 	for _, container := range containers {
-
 		// Check & return container state
-		if container.Image == imageName && container.State == "running" && container.Names[0] == "/"+name {
+		if container.Image == imageName && container.State == checkingFor && container.Names[0] == "/"+name {
+			fmt.Println("The status was:" + container.State)
 			id = container.ID[:12]
 			running = true
 			state = container.State
@@ -151,7 +159,10 @@ func (d *DockerHelper) RunContainer(imageName string, envvars []string, port str
 	resp, err := d.cli.ContainerCreate(d.ctx, containerConfig, hostConfig, nil, nil, containerName)
 	if err != nil {
 		fmt.Printf("Error: %s\n", err.Error())
+
 	}
+
+	//d.cli.ContainerRemove()
 
 	// Start the container
 	containerID := resp.ID

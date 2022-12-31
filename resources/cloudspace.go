@@ -1,8 +1,8 @@
-package cloudspace
+package resources
 
-type CloudspaceRequest struct {
+type CloudSpace struct {
 	Id          int
-	ProjectName string
 	Name        string
 	Tags        map[string]string
+	ProjectName string
 }

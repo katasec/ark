@@ -1,6 +1,6 @@
-package cloudspace
+package resources
 
-type Vms struct {
+type Vm struct {
 	Id          int
 	ProjectName string
 	Name        string

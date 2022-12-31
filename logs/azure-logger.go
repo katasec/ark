@@ -13,6 +13,8 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
 )
 
+// AzureWriter is an implementation of io.Writer. The logs.NewAzureWriter(..) func returns
+// an AzureWriter that can be used with standard cmds like fmt.Fprintf() to write logs
 type AzureWriter struct {
 	ctx context.Context
 	w   *appendblob.Client
