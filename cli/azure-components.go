@@ -43,7 +43,7 @@ func setupAzureComponents(ctx *pulumi.Context) error {
 		return accountKeys.Keys[0].Value, nil
 	}))
 
-	// Storage Containers
+	// Ark logs storage container
 	arklogsContainer, err := storage.NewBlobContainer(ctx, "arklogs", &storage.BlobContainerArgs{
 		AccountName:       account.Name,
 		ResourceGroupName: rg.Name,
@@ -51,13 +51,21 @@ func setupAzureComponents(ctx *pulumi.Context) error {
 	utils.ReturnError(err)
 	ctx.Export(LogContainerName, arklogsContainer.Name)
 
-	// Storage Containers
+	// Pulumi state storage container
 	pulumiStateContainer, err := storage.NewBlobContainer(ctx, "pulumistate", &storage.BlobContainerArgs{
 		AccountName:       account.Name,
 		ResourceGroupName: rg.Name,
 	})
 	utils.ReturnError(err)
 	ctx.Export(PulumiStateContainerName, pulumiStateContainer.Name)
+
+	// Db storage container
+	dbContainer, err := storage.NewBlobContainer(ctx, "arkdb", &storage.BlobContainerArgs{
+		AccountName:       account.Name,
+		ResourceGroupName: rg.Name,
+	})
+	utils.ReturnError(err)
+	ctx.Export(PulumiDbContainerName, dbContainer.Name)
 
 	// Create ASB Namespace
 	ns, err := servicebus.NewNamespace(ctx, AsbNsPrefix, &servicebus.NamespaceArgs{

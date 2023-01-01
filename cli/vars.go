@@ -47,4 +47,5 @@ var (
 	LogStorageKey            = "LogStorageKey"
 	LogContainerName         = "LogContainerName"
 	PulumiStateContainerName = "PulumiStateContainerName"
+	PulumiDbContainerName    = "PulumiDbContainerName"
 )
