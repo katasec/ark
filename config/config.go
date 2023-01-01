@@ -34,15 +34,6 @@ func NewEmptyConfig() {
 
 	// Create config directory
 	createDir(ArkDir)
-	createDir(GetDbDir())
-
-	// if _, err := os.Stat(ArkDir); errors.Is(err, os.ErrNotExist) {
-	// 	err := os.Mkdir(ArkDir, os.ModePerm)
-	// 	check(err)
-
-	// 	err = os.Mkdir(GetDbDir(), os.ModePerm)
-	// 	check(err)
-	// }
 
 	// Create config yaml
 	myConfig := &Config{
@@ -67,17 +58,6 @@ func NewConfig(cloudId string) *Config {
 
 	// Create config directory
 	createDir(ArkDir)
-	createDir(GetDbDir())
-
-	// if _, err := os.Stat(ArkDir); errors.Is(err, os.ErrNotExist) {
-	// 	err := os.Mkdir(ArkDir, os.ModePerm)
-	// 	check(err)
-
-	// 	fmt.Println("I am here")
-	// 	err = os.Mkdir(GetDbDir(), os.ModePerm)
-	// 	check(err)
-
-	// }
 
 	// Create config yaml
 	myConfig := &Config{

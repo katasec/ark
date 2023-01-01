@@ -1,71 +1,93 @@
 package database
 
 import (
-	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"path"
-	"strings"
 
 	"github.com/katasec/ark/config"
 	resources "github.com/katasec/ark/resources"
 )
 
+type JsonFileNames struct {
+	Vms         string
+	CloudSpaces string
+}
+
+var JsonFile = &JsonFileNames{
+	Vms:         path.Join(config.GetDbDir(), "vms.json"),
+	CloudSpaces: path.Join(config.GetDbDir(), "cloudspaces.json"),
+}
+
 type JsonRepository struct {
 	cloudspaces []resources.CloudSpace
 	vms         []resources.Vm
-	vmFile      string
+	dbFiles     map[string]string
 }
-
-// func JsonRepository(c resources.CloudspaceRequest) {
-
-// }
 
 func NewJsonRepository() *JsonRepository {
 
-	// dir := config.GetArkDir()
-	// dbDir := path.Join(config.ArkDir, "db")
-	vmFile := path.Join(config.GetDbDir(), "vm.json")
-
-	return &JsonRepository{
+	repo := &JsonRepository{
 		cloudspaces: []resources.CloudSpace{},
 		vms:         []resources.Vm{},
-		vmFile:      vmFile,
-	}
-}
-
-func (j *JsonRepository) AddVm(vm resources.Vm) resources.Vm {
-	j.vms = append(j.vms, vm)
-	return vm
-}
-
-func (j *JsonRepository) SaveVms() error {
-	jsonInBytes, err := json.MarshalIndent(j.vms, "", "  ")
-	if err != nil {
-		return err
 	}
 
-	f, err := os.Create(j.vmFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer f.Close()
+	repo.InitDb()
 
-	f.WriteString(string(jsonInBytes))
-
-	return nil
+	return repo
 }
 
-func (j *JsonRepository) GetVm(name string) (resources.Vm, error) {
-	for _, vm := range j.vms {
-		if strings.ToLower(vm.Name) == name {
-			return vm, nil
+func (j *JsonRepository) InitDb() {
+
+	// Define DB file names
+	j.dbFiles = map[string]string{
+		"vm":         JsonFile.Vms,
+		"cloudspace": JsonFile.CloudSpaces,
+	}
+
+	// Make DB folder
+	createDir(config.GetDbDir())
+
+	// Create files
+	for _, fileName := range j.dbFiles {
+		f := j.OpenFile(fileName)
+		f.Close()
+	}
+
+}
+
+func (j *JsonRepository) OpenFile(filename string) *os.File {
+	var f *os.File
+
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		fmt.Println("Creating db file...")
+		// Create file if not exist
+		f, err = os.Create(filename)
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		fmt.Println("Opening db file...")
+		// Else open file
+		f, err = os.OpenFile(filename, os.O_RDWR, 0644)
+		if err != nil {
+			panic(err)
 		}
 	}
-	return resources.Vm{}, errors.New("VM not found")
+
+	return f
 }
 
-func (j *JsonRepository) ListVms() []resources.Vm {
-	return j.vms
+func logError(err error) {
+	if err != nil {
+		log.Printf("%+v\n", err.Error())
+	}
+}
+
+func createDir(dir string) {
+	if _, err := os.Stat(dir); errors.Is(err, os.ErrNotExist) {
+		os.Mkdir(dir, os.ModePerm)
+	}
 }

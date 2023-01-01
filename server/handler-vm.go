@@ -8,20 +8,21 @@ import (
 	resources "github.com/katasec/ark/resources"
 )
 
-func (s *Server) postCloudspace() http.HandlerFunc {
+func (s *Server) postVm() http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		cloudspace := resources.CloudSpace{}
+		vm := resources.Vm{}
 
-		err := json.NewDecoder(r.Body).Decode(&cloudspace)
+		err := json.NewDecoder(r.Body).Decode(&vm)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		fmt.Fprintf(w, "Cloud Space: %+v", cloudspace)
+		fmt.Fprintf(w, "Vm: %+v", vm)
 
-		db.AddCloudSpace(cloudspace)
-		db.SaveCloudSpaces()
+		db.AddVm(vm) // Add to memory
+		db.SaveVms() // Write to disk
+
 	})
 }
