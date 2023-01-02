@@ -10,19 +10,17 @@ import (
 	resources "github.com/katasec/ark/resources"
 )
 
+// GetVm returns a vm if it exists
 func (j *JsonRepository) GetVm(name string) (resources.Vm, error) {
 	for _, vm := range j.vms {
-		if strings.ToLower(vm.Name) == name {
+		if strings.EqualFold(vm.Name, name) {
 			return vm, nil
 		}
 	}
 	return resources.Vm{}, errors.New("VM not found")
 }
 
-func (j *JsonRepository) ListVms() []resources.Vm {
-	return j.vms
-}
-
+// AddVm Adds Vm
 func (j *JsonRepository) AddVm(vm resources.Vm) resources.Vm {
 
 	var myvm resources.Vm
@@ -37,6 +35,7 @@ func (j *JsonRepository) AddVm(vm resources.Vm) resources.Vm {
 	return myvm
 }
 
+// SaveVms saves VMs to local file
 func (j *JsonRepository) SaveVms() {
 
 	fmt.Println("Saving VM")
@@ -52,8 +51,6 @@ func (j *JsonRepository) SaveVms() {
 
 	// Save json to file
 	_, err = fmt.Fprintln(f, string(jsonData))
-
-	//_, err = f.WriteString(string(jsonData))
 	if err == nil {
 		log.Println("Info: Saved!")
 	} else {
@@ -61,4 +58,8 @@ func (j *JsonRepository) SaveVms() {
 		logError(err)
 	}
 	defer f.Close()
+}
+
+func (j *JsonRepository) ListVms() []resources.Vm {
+	return j.vms
 }
