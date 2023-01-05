@@ -15,9 +15,9 @@ type AsbMessenger struct {
 
 	queueName string
 
-	sender   *azservicebus.Sender
-	receiver *azservicebus.Receiver
-	message  interface{}
+	sender          *azservicebus.Sender
+	receiver        *azservicebus.Receiver
+	ReceivedMessage *azservicebus.ReceivedMessage
 }
 
 // NewAsbMessenger Creates a new AsbMessenger which implements the Messenger interface
@@ -56,22 +56,22 @@ func (m *AsbMessenger) Send(message string) error {
 	return nil
 }
 
-func (m *AsbMessenger) Receive() (string, error) {
+func (m *AsbMessenger) Receive() (string, string, error) {
 
 	message, messageBody, err := receiveMessage(m.ctx, m.receiver)
 
-	m.message = message
+	m.ReceivedMessage = message
 
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	return messageBody, err
+	return messageBody, *message.Subject, err
 }
 
 func (m *AsbMessenger) Complete() error {
 
-	err := m.receiver.CompleteMessage(m.ctx, m.message.(*azservicebus.ReceivedMessage), nil)
+	err := m.receiver.CompleteMessage(m.ctx, m.ReceivedMessage, nil)
 
 	if err != nil {
 		var sbErr *azservicebus.Error

@@ -38,7 +38,7 @@ func testMq() {
 	}
 
 	log.Println("Receiving message")
-	rmessage, err := mq.Receive()
+	rmessage, _, err := mq.Receive()
 	if err != nil {
 		log.Fatalf(err.Error())
 	} else {
