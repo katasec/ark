@@ -59,14 +59,21 @@ func (m *AsbMessenger) Send(message string) error {
 func (m *AsbMessenger) Receive() (string, string, error) {
 
 	message, messageBody, err := receiveMessage(m.ctx, m.receiver)
-
-	m.ReceivedMessage = message
-
 	if err != nil {
 		return "", "", err
 	}
 
-	return messageBody, *message.Subject, err
+	m.ReceivedMessage = message
+
+	var subject string
+
+	if message.Subject == nil {
+		subject = ""
+	} else {
+		subject = *message.Subject
+	}
+
+	return messageBody, subject, err
 }
 
 func (m *AsbMessenger) Complete() error {

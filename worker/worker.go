@@ -1,6 +1,7 @@
 package worker
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
@@ -27,6 +28,7 @@ func NewWorker() *Worker {
 	// Create an mq client
 	var mq messaging.Messenger = messaging.NewAsbMessenger(connectionString, queueName)
 
+	fmt.Println("queueName is:" + queueName)
 	// Return worker with local config
 	return &Worker{
 		config: cfg,
@@ -55,6 +57,9 @@ func (w *Worker) Start() {
 		switch strings.ToLower(subject) {
 		case "cloudspacerequest":
 			go w.CloudSpaceRequestHandler(message)
+		default:
+			log.Println("Unrecognised subject: '" + subject + "', completing message.")
+			w.mq.Complete()
 		}
 
 		//go w.processMessage(req)
