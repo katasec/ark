@@ -1,6 +1,7 @@
 package worker
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"strings"
@@ -9,6 +10,9 @@ import (
 
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/messaging"
+	"github.com/katasec/ark/sdk/v0/resources"
+	pulumirunner "github.com/katasec/pulumi-runner"
+	"github.com/pulumi/pulumi/sdk/v3/go/auto"
 )
 
 type Worker struct {
@@ -52,33 +56,71 @@ func (w *Worker) Start() {
 		// Log Message
 		log.Println("The subject was:" + subject)
 
-		log.Println("The message was:" + message)
-
 		// Route the message
-		log.Println("Routing message to handler")
-		switch strings.ToLower(subject) {
-		case "azurecloudspacerequest":
-			go w.CloudSpaceRequestHandler(message)
-		default:
-			log.Println("Unrecognised subject: '" + subject + "', completing message.")
-			w.mq.Complete()
-		}
+		subject = strings.ToLower(subject)
 
-		//go w.processMessage(req)
+		switch subject {
+		case "azurecloudspace":
+			go runAzureCloudspace(subject, message)
+			//w.mq.Complete()
+		default:
+			log.Printf("subject: %s", subject)
+			log.Println("Unrecognized message, skipping")
+			//w.mq.Complete()
+		}
 
 	}
 }
 
-func (w *Worker) CloudSpaceRequestHandler(message string) {
+func runAzureCloudspace(subject string, message string) {
 
-	log.Println("CloudSpaceRequestHandler handling message")
+	// Convert request to struct
+	msg := resources.AzureCloudspace{}
+	json.Unmarshal([]byte(message), &msg)
 
-	c := &CloudSpaceRequest{}
-	json.Unmarshal([]byte(message), c)
+	// Output for debug purposes
+	log.Printf("Hub Name:" + msg.Hub.Name)
 
-	log.Printf("The project name is:" + c.ProjectName)
-	log.Printf("The date  is:" + c.DtTimeStamp.Format("2006-01-02 15:04:05"))
+	// Create a pulumi program to handle this message
+	p := createPulumiProgram(subject, resources.Runtimes.Dotnet)
 
-	log.Printf("Completing message")
-	w.mq.Complete()
+	// Inject message details as input for pulumi program
+	ctx := context.Background()
+	p.Stack.SetConfig(ctx, "arkdata", auto.ConfigValue{Value: string(message)})
+
+	// Need code to check if another pulumi update is running
+	// If yes then kill message and reject update.
+
+	//p.Stack.
+	p.Up()
+
+}
+func createPulumiProgram(subject string, runtime string) *pulumirunner.RemoteProgram {
+
+	projectPath := fmt.Sprintf("%s-handler", subject)
+
+	log.Println("Project path:" + projectPath)
+	args := &pulumirunner.RemoteProgramArgs{
+		ProjectName: "katasec-go-helloworld",
+		GitURL:      "https://github.com/katasec/library.git",
+		Branch:      "refs/remotes/origin/main",
+		ProjectPath: projectPath,
+		StackName:   "dev",
+		Plugins: []map[string]string{
+			{
+				"name":    "azure-native",
+				"version": "v1.89.1",
+			},
+		},
+		Config: []map[string]string{
+			{
+				"name":  "azure-native:location",
+				"value": "westus2",
+			},
+		},
+		Runtime: runtime,
+	}
+
+	// Create a new pulumi program
+	return pulumirunner.NewRemoteProgram(args)
 }

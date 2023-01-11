@@ -2,7 +2,6 @@ package messaging
 
 import (
 	"context"
-	"errors"
 	"log"
 
 	"github.com/Azure/azure-sdk-for-go/sdk/messaging/azservicebus"
@@ -78,23 +77,34 @@ func (m *AsbMessenger) Receive() (string, string, error) {
 
 func (m *AsbMessenger) Complete() error {
 
-	err := m.receiver.CompleteMessage(m.ctx, m.ReceivedMessage, nil)
+	// err := m.receiver.RenewMessageLock(m.ctx, m.ReceivedMessage, nil)
+	// if err != nil {
+	// 	log.Println("Error renewing message lock:")
+	// 	log.Println(err.Error())
+	// 	return err
+	// }
+	// err = m.receiver.CompleteMessage(m.ctx, m.ReceivedMessage, nil)
+	// if err != nil {
+	// 	log.Println("Error completing message")
+	// 	log.Println(err.Error())
+	// 	return err
+	// }
 
-	if err != nil {
-		var sbErr *azservicebus.Error
+	// if err != nil {
+	// 	var sbErr *azservicebus.Error
 
-		if errors.As(err, &sbErr) && sbErr.Code == azservicebus.CodeLockLost {
-			// The message lock has expired. This isn't fatal for the client, but it does mean
-			// that this message can be received by another Receiver (or potentially this one!).
-			log.Printf("Message lock expired\n")
+	// 	if errors.As(err, &sbErr) && sbErr.Code == azservicebus.CodeLockLost {
+	// 		// The message lock has expired. This isn't fatal for the client, but it does mean
+	// 		// that this message can be received by another Receiver (or potentially this one!).
+	// 		log.Printf("Message lock expired\n")
+	// 		m.receiver.RenewMessageLock(m.ctx, m.ReceivedMessage, nil)
+	// 		// You can extend the message lock by calling receiver.RenewMessageLock(msg) before the
+	// 		// message lock has expired.
+	// 	}
 
-			// You can extend the message lock by calling receiver.RenewMessageLock(msg) before the
-			// message lock has expired.
-		}
-
-		log.Println()
-		return err
-	}
+	// 	log.Println()
+	// 	return err
+	// }
 
 	return nil
 }
@@ -138,7 +148,7 @@ getAsbReceiver Generates a Service Bus receiver via the asb client
 func getAsbReceiver(ctx context.Context, client *azservicebus.Client, queueName string) *azservicebus.Receiver {
 
 	options := &azservicebus.ReceiverOptions{
-		ReceiveMode: azservicebus.ReceiveModePeekLock,
+		ReceiveMode: azservicebus.ReceiveModeReceiveAndDelete,
 	}
 
 	receiver, err := client.NewReceiverForQueue(queueName, options)
