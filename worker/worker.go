@@ -52,10 +52,12 @@ func (w *Worker) Start() {
 		// Log Message
 		log.Println("The subject was:" + subject)
 
+		log.Println("The message was:" + message)
+
 		// Route the message
 		log.Println("Routing message to handler")
 		switch strings.ToLower(subject) {
-		case "cloudspacerequest":
+		case "azurecloudspacerequest":
 			go w.CloudSpaceRequestHandler(message)
 		default:
 			log.Println("Unrecognised subject: '" + subject + "', completing message.")
