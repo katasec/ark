@@ -12,6 +12,7 @@ import (
 	"github.com/katasec/ark/messaging"
 	"github.com/katasec/ark/sdk/v0/resources"
 	pulumirunner "github.com/katasec/pulumi-runner"
+	"github.com/katasec/pulumi-runner/utils"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto"
 )
 
@@ -61,7 +62,7 @@ func (w *Worker) Start() {
 
 		switch subject {
 		case "azurecloudspace":
-			go runAzureCloudspace(subject, message)
+			go w.runAzureCloudspace(subject, message)
 			//w.mq.Complete()
 		default:
 			log.Printf("subject: %s", subject)
@@ -70,9 +71,10 @@ func (w *Worker) Start() {
 		}
 
 	}
+
 }
 
-func runAzureCloudspace(subject string, message string) {
+func (w *Worker) runAzureCloudspace(subject string, message string) {
 
 	// Convert request to struct
 	msg := resources.AzureCloudspace{}
@@ -82,7 +84,7 @@ func runAzureCloudspace(subject string, message string) {
 	log.Printf("Hub Name:" + msg.Hub.Name)
 
 	// Create a pulumi program to handle this message
-	p := createPulumiProgram(subject, resources.Runtimes.Dotnet)
+	p := w.createPulumiProgram(subject, resources.Runtimes.Dotnet)
 
 	// Inject message details as input for pulumi program
 	ctx := context.Background()
@@ -95,8 +97,9 @@ func runAzureCloudspace(subject string, message string) {
 	p.Up()
 
 }
-func createPulumiProgram(subject string, runtime string) *pulumirunner.RemoteProgram {
+func (w *Worker) createPulumiProgram(subject string, runtime string) *pulumirunner.RemoteProgram {
 
+	logger := utils.ConfigureLogger(w.config.LogFile)
 	projectPath := fmt.Sprintf("%s-handler", subject)
 
 	log.Println("Project path:" + projectPath)
@@ -119,6 +122,7 @@ func createPulumiProgram(subject string, runtime string) *pulumirunner.RemotePro
 			},
 		},
 		Runtime: runtime,
+		Writer:  logger,
 	}
 
 	// Create a new pulumi program
