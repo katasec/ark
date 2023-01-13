@@ -100,29 +100,6 @@ func (w *Worker) runAzureCloudspace(subject string, message string) {
 
 }
 
-func (w *Worker) DeleteAzureCloudspace(subject string, message string) {
-
-	// Convert request to struct
-	msg := resources.AzureCloudspace{}
-	json.Unmarshal([]byte(message), &msg)
-
-	// Output for debug purposes
-	log.Printf("Hub Name:" + msg.Hub.Name)
-
-	// Create a pulumi program to handle this message
-	p := w.createPulumiProgram(subject, resources.Runtimes.Dotnet)
-
-	// Inject message details as input for pulumi program
-	ctx := context.Background()
-	p.Stack.SetConfig(ctx, "arkdata", auto.ConfigValue{Value: string(message)})
-
-	// Need code to check if another pulumi update is running
-	// If yes then kill message and reject update.
-
-	//p.Stack.
-	p.Destroy()
-
-}
 func (w *Worker) createPulumiProgram(subject string, runtime string) *pulumirunner.RemoteProgram {
 
 	logger := utils.ConfigureLogger(w.config.LogFile)
