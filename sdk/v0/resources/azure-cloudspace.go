@@ -1,9 +1,10 @@
 package resources
 
 type AzureCloudspace struct {
-	Name string `json:"Name"`
-	Env  []Hub  `json:"Env"`
-	Hub  Hub    `json:"Hub"`
+	Action string `json:Action`
+	Name   string `json:"Name"`
+	Env    []Hub  `json:"Env"`
+	Hub    Hub    `json:"Hub"`
 }
 
 type Hub struct {

@@ -55,7 +55,7 @@ func (w *Worker) Start() {
 		}
 
 		// Log Message
-		log.Println("The subject was:" + subject)
+		log.Println("***********************************\nThe subject was:" + subject)
 
 		// Route the message
 		subject = strings.ToLower(subject)
@@ -63,11 +63,9 @@ func (w *Worker) Start() {
 		switch subject {
 		case "azurecloudspace":
 			go w.runAzureCloudspace(subject, message)
-			//w.mq.Complete()
 		default:
 			log.Printf("subject: %s", subject)
 			log.Println("Unrecognized message, skipping")
-			//w.mq.Complete()
 		}
 
 	}
@@ -93,8 +91,36 @@ func (w *Worker) runAzureCloudspace(subject string, message string) {
 	// Need code to check if another pulumi update is running
 	// If yes then kill message and reject update.
 
+	// Run pulumi up or destroy
+	if msg.Action == "delete" {
+		p.Destroy()
+	} else {
+		p.Up()
+	}
+
+}
+
+func (w *Worker) DeleteAzureCloudspace(subject string, message string) {
+
+	// Convert request to struct
+	msg := resources.AzureCloudspace{}
+	json.Unmarshal([]byte(message), &msg)
+
+	// Output for debug purposes
+	log.Printf("Hub Name:" + msg.Hub.Name)
+
+	// Create a pulumi program to handle this message
+	p := w.createPulumiProgram(subject, resources.Runtimes.Dotnet)
+
+	// Inject message details as input for pulumi program
+	ctx := context.Background()
+	p.Stack.SetConfig(ctx, "arkdata", auto.ConfigValue{Value: string(message)})
+
+	// Need code to check if another pulumi update is running
+	// If yes then kill message and reject update.
+
 	//p.Stack.
-	p.Up()
+	p.Destroy()
 
 }
 func (w *Worker) createPulumiProgram(subject string, runtime string) *pulumirunner.RemoteProgram {
