@@ -1,4 +1,4 @@
-package resources
+package requests
 
 type AzureCloudspace struct {
 	Action string `json:Action`

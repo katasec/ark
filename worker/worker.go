@@ -10,7 +10,7 @@ import (
 
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/messaging"
-	"github.com/katasec/ark/sdk/v0/resources"
+	"github.com/katasec/ark/sdk/v0/requests"
 	pulumirunner "github.com/katasec/pulumi-runner"
 	"github.com/katasec/pulumi-runner/utils"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto"
@@ -55,14 +55,18 @@ func (w *Worker) Start() {
 		}
 
 		// Log Message
-		log.Println("***********************************\nThe subject was:" + subject)
+		fmt.Println("**************************************")
+		log.Println("The subject was:" + subject)
+		fmt.Println("**************************************")
 
 		// Route the message
 		subject = strings.ToLower(subject)
 
 		switch subject {
-		case "azurecloudspace":
-			go w.runAzureCloudspace(subject, message)
+		case "createazurecloudspacerequest":
+			go w.AzureCloudspaceHandler(subject, message)
+		case "deleteazurecloudspacerequest":
+			go w.AzureCloudspaceHandler(subject, message)
 		default:
 			log.Printf("subject: %s", subject)
 			log.Println("Unrecognized message, skipping")
@@ -72,17 +76,21 @@ func (w *Worker) Start() {
 
 }
 
-func (w *Worker) runAzureCloudspace(subject string, message string) {
+func (w *Worker) AzureCloudspaceHandler(subject string, message string) {
 
 	// Convert request to struct
-	msg := resources.AzureCloudspace{}
-	json.Unmarshal([]byte(message), &msg)
+	msg := requests.AzureCloudspace{}
+	err := json.Unmarshal([]byte(message), &msg)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
 	// Output for debug purposes
 	log.Printf("Hub Name:" + msg.Hub.Name)
 
 	// Create a pulumi program to handle this message
-	p := w.createPulumiProgram(subject, resources.Runtimes.Dotnet)
+	resourceName := "azurecloudspace"
+	p := w.createPulumiProgram(resourceName, requests.Runtimes.Dotnet)
 
 	// Inject message details as input for pulumi program
 	ctx := context.Background()
@@ -92,7 +100,7 @@ func (w *Worker) runAzureCloudspace(subject string, message string) {
 	// If yes then kill message and reject update.
 
 	// Run pulumi up or destroy
-	if msg.Action == "delete" {
+	if subject == "deleteazurecloudspacerequest" {
 		p.Destroy()
 	} else {
 		p.Up()
@@ -100,10 +108,10 @@ func (w *Worker) runAzureCloudspace(subject string, message string) {
 
 }
 
-func (w *Worker) createPulumiProgram(subject string, runtime string) *pulumirunner.RemoteProgram {
+func (w *Worker) createPulumiProgram(resourceName string, runtime string) *pulumirunner.RemoteProgram {
 
 	logger := utils.ConfigureLogger(w.config.LogFile)
-	projectPath := fmt.Sprintf("%s-handler", subject)
+	projectPath := fmt.Sprintf("%s-handler", resourceName)
 
 	log.Println("Project path:" + projectPath)
 	args := &pulumirunner.RemoteProgramArgs{
