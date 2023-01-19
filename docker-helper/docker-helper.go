@@ -11,6 +11,7 @@ import (
 	"github.com/dapr/cli/pkg/print"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
 	"github.com/katasec/ark/utils"
@@ -39,7 +40,7 @@ func NewDockerHelper() *DockerHelper {
 
 }
 
-func (d *DockerHelper) StartContainerUI(imageName string, envVars []string, port string, containerName string, cmd []string) {
+func (d *DockerHelper) StartContainerUI(imageName string, envVars []string, port string, containerName string, cmd []string, volumemounts ...string) {
 
 	running, _, _ := d.IsRunning(imageName, containerName)
 
@@ -51,9 +52,15 @@ func (d *DockerHelper) StartContainerUI(imageName string, envVars []string, port
 		arkSpinner.Stop(err, note)
 
 		// Run Image
-		note = "Running " + containerName + " :" + imageName
+		note = "Running" + containerName + ": " + imageName
 		arkSpinner.Start(note)
-		d.RunContainer(imageName, envVars, port, containerName, cmd)
+
+		if volumemounts == nil {
+			d.RunContainer(imageName, envVars, port, containerName, cmd)
+		} else {
+			d.RunContainer(imageName, envVars, port, containerName, cmd, volumemounts[0])
+		}
+
 		arkSpinner.Stop(err, note)
 	} else {
 		note := fmt.Sprintf("%s %s is already running !", containerName, imageName)
@@ -114,7 +121,7 @@ func (d *DockerHelper) IsRunning(imageName string, name string, status ...string
 	for _, container := range containers {
 		// Check & return container state
 		if container.Image == imageName && container.State == checkingFor && container.Names[0] == "/"+name {
-			fmt.Println("The status was:" + container.State)
+			//fmt.Println("The status was:" + container.State)
 			id = container.ID[:12]
 			running = true
 			state = container.State
@@ -126,7 +133,7 @@ func (d *DockerHelper) IsRunning(imageName string, name string, status ...string
 	return running, state, id
 }
 
-func (d *DockerHelper) RunContainer(imageName string, envvars []string, port string, containerName string, cmd []string) (err error) {
+func (d *DockerHelper) RunContainer(imageName string, envvars []string, port string, containerName string, cmd []string, volumemounts ...string) (err error) {
 
 	//fmt.Println(envvars)
 
@@ -143,6 +150,22 @@ func (d *DockerHelper) RunContainer(imageName string, envvars []string, port str
 		Cmd: cmd,
 	}
 
+	var mounts []mount.Mount
+
+	if len(volumemounts) == 1 {
+		source := strings.Split(volumemounts[0], ":")[0]
+		target := strings.Split(volumemounts[0], ":")[1]
+		mounts = []mount.Mount{
+			{
+				Type:   mount.TypeBind,
+				Source: source,
+				Target: target,
+			},
+		}
+	} else {
+		mounts = nil
+	}
+
 	// Define container->host port map
 	hostConfig := &container.HostConfig{
 		PortBindings: nat.PortMap{
@@ -153,6 +176,7 @@ func (d *DockerHelper) RunContainer(imageName string, envvars []string, port str
 				},
 			},
 		},
+		Mounts: mounts,
 	}
 
 	// Create container
@@ -171,15 +195,16 @@ func (d *DockerHelper) RunContainer(imageName string, envvars []string, port str
 	}
 
 	// Loop until container starts
-	var state string
+	//var state string
 	var running bool
 	for i := 1; i <= 10; i++ {
-		running, state, _ = d.IsRunning(imageName, containerName)
+		//running, state, _ = d.IsRunning(imageName, containerName)
+		running, _, _ = d.IsRunning(imageName, containerName)
 		if running {
 			break
 		}
 
-		fmt.Printf("Container state is :%v\n", state)
+		//fmt.Printf("Container state is :%v\n", state)
 		time.Sleep(5 * time.Second)
 	}
 

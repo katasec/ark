@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/hpcloud/tail"
@@ -135,18 +136,28 @@ func (d *DevCmd) RefreshConfig() {
 }
 
 func (d *DevCmd) Start() {
-	fmt.Println("Starting awesomeness!")
 
-	// Start Ark Container
-	imageName := DEV_ARK_IMAGE_NAME
+	arkSpinner.InfoStatusEvent("Starting Ark...")
+
+	/*
+		START ARK SERVER
+	*/
+	// Setup volume mount for ark
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatal(err)
+	}
+	arkVolumeMount := fmt.Sprintf("%v/.ark:/root/.ark", homeDir)
+
+	// Start Ark Server
+	dh.ContainerRemove("/arkserver")
+	dh.StartContainerUI(DEV_ARK_IMAGE_NAME, nil, "80", "arkserver", nil, arkVolumeMount)
+
 	// envVars := []string{
 	// 	"POSTGRES_USER=" + DevDbDefaultUser,
 	// 	"POSTGRES_PASSWORD=" + DevDbDefaultPass,
 	// }
 	// port := "5432"
-
-	dh.ContainerRemove("/arkserver")
-	dh.StartContainerUI(imageName, nil, "", "arkserver", nil)
 }
 
 func (d *DevCmd) Check() bool {
