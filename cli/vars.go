@@ -15,7 +15,7 @@ var (
 
 	// For PGSQL Docker
 	DEV_PGSQL_IMAGE_NAME = "postgres:14.2-alpine"
-
+	DEV_ARK_IMAGE_NAME   = "ghcr.io/katasec/arkserver:v0.0.1"
 	// Dev Instance defaults
 	DevDbDefaultUser = "postgres"
 	DevDbDefaultPass = "postgres"

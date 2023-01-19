@@ -6,7 +6,6 @@ import (
 
 	"github.com/hpcloud/tail"
 	"github.com/katasec/ark/config"
-	"github.com/katasec/ark/server"
 	"github.com/katasec/ark/utils"
 )
 
@@ -136,8 +135,18 @@ func (d *DevCmd) RefreshConfig() {
 }
 
 func (d *DevCmd) Start() {
-	server := server.NewServer()
-	server.Start()
+	fmt.Println("Starting awesomeness!")
+
+	// Start Ark Container
+	imageName := DEV_ARK_IMAGE_NAME
+	// envVars := []string{
+	// 	"POSTGRES_USER=" + DevDbDefaultUser,
+	// 	"POSTGRES_PASSWORD=" + DevDbDefaultPass,
+	// }
+	// port := "5432"
+
+	dh.ContainerRemove("/arkserver")
+	dh.StartContainerUI(imageName, nil, "", "arkserver", nil)
 }
 
 func (d *DevCmd) Check() bool {

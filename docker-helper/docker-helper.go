@@ -185,3 +185,16 @@ func (d *DockerHelper) RunContainer(imageName string, envvars []string, port str
 
 	return err
 }
+
+// ContainerRemove kills and removes a container from the docker host.
+func (d *DockerHelper) ContainerRemove(containerID string) error {
+	options := types.ContainerRemoveOptions{
+		RemoveVolumes: true,
+		Force:         true,
+	}
+	err := d.cli.ContainerRemove(d.ctx, "/"+containerID, options)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return err
+}
