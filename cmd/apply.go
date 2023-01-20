@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var applyFile string
+
 // applyCmd represents the apply command
 var applyCmd = &cobra.Command{
 	Use:   "apply",
@@ -19,7 +21,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		apply.DoStuff()
+		apply.DoStuff(applyFile)
 	},
 }
 
@@ -35,4 +37,7 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// applyCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	applyCmd.Flags().StringVarP(&applyFile, "filename", "f", applyFile, "Name of yaml file with configuration to apply")
+	applyCmd.MarkFlagRequired("filename")
 }
