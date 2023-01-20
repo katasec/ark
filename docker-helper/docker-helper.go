@@ -45,6 +45,10 @@ func (d *DockerHelper) StartContainerUI(imageName string, envVars []string, port
 	running, _, _ := d.IsRunning(imageName, containerName)
 
 	if !running {
+
+		// Force container remove
+		d.ContainerRemove("/" + containerName)
+
 		// Pull Image
 		note := "Download docker image for " + containerName + ": " + imageName
 		arkSpinner.Start(note)
@@ -52,13 +56,14 @@ func (d *DockerHelper) StartContainerUI(imageName string, envVars []string, port
 		arkSpinner.Stop(err, note)
 
 		// Run Image
-		note = "Running" + containerName + ": " + imageName
+		note = "Running " + containerName + ": " + imageName
 		arkSpinner.Start(note)
 
+		// Pass volumemounts if any and run container
 		if volumemounts == nil {
 			d.RunContainer(imageName, envVars, port, containerName, cmd)
 		} else {
-			d.RunContainer(imageName, envVars, port, containerName, cmd, volumemounts[0])
+			d.RunContainer(imageName, envVars, port, containerName, cmd, volumemounts...)
 		}
 
 		arkSpinner.Stop(err, note)
@@ -135,8 +140,6 @@ func (d *DockerHelper) IsRunning(imageName string, name string, status ...string
 
 func (d *DockerHelper) RunContainer(imageName string, envvars []string, port string, containerName string, cmd []string, volumemounts ...string) (err error) {
 
-	//fmt.Println(envvars)
-
 	// Create port spec for e.g "tcp/80"
 	portSpec, _ := nat.NewPort("tcp", port)
 
@@ -150,33 +153,42 @@ func (d *DockerHelper) RunContainer(imageName string, envvars []string, port str
 		Cmd: cmd,
 	}
 
-	var mounts []mount.Mount
-
-	if len(volumemounts) == 1 {
-		source := strings.Split(volumemounts[0], ":")[0]
-		target := strings.Split(volumemounts[0], ":")[1]
-		mounts = []mount.Mount{
-			{
+	// Genrate bind mounts
+	mounts := []mount.Mount{}
+	if len(volumemounts) > 0 {
+		for _, vmount := range volumemounts {
+			source := strings.Split(vmount, ":")[0]
+			target := strings.Split(vmount, ":")[1]
+			myMount := mount.Mount{
 				Type:   mount.TypeBind,
 				Source: source,
 				Target: target,
-			},
+			}
+			mounts = append(mounts, myMount)
 		}
 	} else {
 		mounts = nil
 	}
 
 	// Define container->host port map
-	hostConfig := &container.HostConfig{
-		PortBindings: nat.PortMap{
+	var portBindings nat.PortMap
+	if port != "0" {
+		portBindings = nat.PortMap{
 			portSpec: []nat.PortBinding{
 				{
 					HostIP:   "0.0.0.0",
 					HostPort: port,
 				},
 			},
-		},
-		Mounts: mounts,
+		}
+	} else {
+		portBindings = nil
+	}
+
+	// Setup ports, mounts etc
+	hostConfig := &container.HostConfig{
+		PortBindings: portBindings,
+		Mounts:       mounts,
 	}
 
 	// Create container
@@ -185,8 +197,6 @@ func (d *DockerHelper) RunContainer(imageName string, envvars []string, port str
 		fmt.Printf("Error: %s\n", err.Error())
 
 	}
-
-	//d.cli.ContainerRemove()
 
 	// Start the container
 	containerID := resp.ID
@@ -218,7 +228,7 @@ func (d *DockerHelper) ContainerRemove(containerID string) error {
 		Force:         true,
 	}
 	err := d.cli.ContainerRemove(d.ctx, "/"+containerID, options)
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "No such container") {
 		fmt.Println(err.Error())
 	}
 	return err

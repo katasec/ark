@@ -17,8 +17,13 @@ func IsPulumiChild(args []string) bool {
 		panic(err)
 	}
 
+	if proc == nil {
+		return false
+	}
+
 	// Get binary name
 	binName := proc.Executable()
+
 	return strings.Contains(binName, "pulumi-")
 }
 

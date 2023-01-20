@@ -137,21 +137,36 @@ func (d *DevCmd) RefreshConfig() {
 
 func (d *DevCmd) Start() {
 
+	config := config.ReadConfig()
+
+	var mounts []string
 	arkSpinner.InfoStatusEvent("Starting Ark...")
 
-	/*
-		START ARK SERVER
-	*/
-	// Setup volume mount for ark
+	// Determine home folder path (for volume mounts)
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		log.Fatal(err)
 	}
-	arkVolumeMount := fmt.Sprintf("%v/.ark:/root/.ark", homeDir)
 
+	// ***************************************
 	// Start Ark Server
-	dh.ContainerRemove("/arkserver")
-	dh.StartContainerUI(DEV_ARK_IMAGE_NAME, nil, "80", "arkserver", nil, arkVolumeMount)
+	// ***************************************
+	containerName := "arkserver"
+	mounts = []string{
+		fmt.Sprintf("%v/.ark:/root/.ark", homeDir),
+	}
+	dh.StartContainerUI(DEV_ARK_SERVER_IMAGE_NAME, nil, config.ApiServer.Port, containerName, nil, mounts...)
+
+	// ***************************************
+	// Start Ark worker
+	// ***************************************
+	containerName = "arkworker"
+	mounts = []string{
+		fmt.Sprintf("%v/.ark:/root/.ark", homeDir),
+		fmt.Sprintf("%v/.pulumi:/root/.pulumi", homeDir),
+		fmt.Sprintf("%v/.azure:/root/.azure", homeDir),
+	}
+	dh.StartContainerUI(DEV_ARK_WORKER_IMAGE_NAME, nil, "0", containerName, []string{"/ark", "worker", "start"}, mounts...)
 
 	// envVars := []string{
 	// 	"POSTGRES_USER=" + DevDbDefaultUser,

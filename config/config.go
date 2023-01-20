@@ -3,7 +3,9 @@ package config
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
+	"path"
 	"path/filepath"
 
 	"github.com/katasec/ark/utils"
@@ -20,6 +22,7 @@ type Config struct {
 	AzureConfig AzureConfig
 	AwsConfig   AwsConfig
 	LogFile     string
+	ApiServer   ApiServer
 }
 
 func check(e error) {
@@ -48,7 +51,6 @@ func NewEmptyConfig() {
 	cfgFile = filepath.Join(ArkDir, "config")
 	err = os.WriteFile(cfgFile, yamlData, 0644)
 	check(err)
-
 }
 
 func NewConfig(cloudId string) *Config {
@@ -63,6 +65,10 @@ func NewConfig(cloudId string) *Config {
 	myConfig := &Config{
 		CloudId: cloudId,
 		LogFile: filepath.Join(ArkDir, "ark.log"),
+		ApiServer: ApiServer{
+			Host: "localhost",
+			Port: "5067",
+		},
 	}
 
 	yamlData, err := yaml.Marshal(myConfig)
@@ -103,7 +109,18 @@ func ReadConfig() *Config {
 	utils.ExitOnError(err)
 
 	cfg := &Config{}
+
+	// Get home dir
+	dirname, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
 	yaml.Unmarshal(bCfg, cfg)
+
+	// Override log file
+	cfg.LogFile = path.Join(dirname, ".ark", "ark.log")
+	fmt.Println("The Logfile was:" + cfg.LogFile)
 
 	return cfg
 }
