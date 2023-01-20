@@ -6,7 +6,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/katasec/ark/cli"
+	"github.com/katasec/ark/dev"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +16,7 @@ var logsCmd = &cobra.Command{
 	Short: "Logs from ark dev installation",
 	Long:  `Logs from ark dev installation`,
 	Run: func(cmd *cobra.Command, args []string) {
-		d := cli.NewDevCmd()
+		d := dev.NewDevCmd()
 		d.Logs()
 		fmt.Println("logs called!")
 	},

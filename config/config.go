@@ -13,8 +13,12 @@ import (
 )
 
 var (
-	ArkDir  string
-	cfgFile = fmt.Sprintf("%s/config", ArkDir)
+	ArkDir    string
+	cfgFile   = fmt.Sprintf("%s/config", ArkDir)
+	apiServer = ApiServer{
+		Host: "0.0.0.0",
+		Port: "5067",
+	}
 )
 
 type Config struct {
@@ -40,7 +44,8 @@ func NewEmptyConfig() {
 
 	// Create config yaml
 	myConfig := &Config{
-		LogFile: filepath.Join(ArkDir, "ark.log"),
+		LogFile:   filepath.Join(ArkDir, "ark.log"),
+		ApiServer: apiServer,
 	}
 
 	// Convert to yaml
@@ -63,12 +68,9 @@ func NewConfig(cloudId string) *Config {
 
 	// Create config yaml
 	myConfig := &Config{
-		CloudId: cloudId,
-		LogFile: filepath.Join(ArkDir, "ark.log"),
-		ApiServer: ApiServer{
-			Host: "localhost",
-			Port: "5067",
-		},
+		CloudId:   cloudId,
+		LogFile:   filepath.Join(ArkDir, "ark.log"),
+		ApiServer: apiServer,
 	}
 
 	yamlData, err := yaml.Marshal(myConfig)
@@ -120,7 +122,6 @@ func ReadConfig() *Config {
 
 	// Override log file
 	cfg.LogFile = path.Join(dirname, ".ark", "ark.log")
-	fmt.Println("The Logfile was:" + cfg.LogFile)
 
 	return cfg
 }

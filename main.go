@@ -6,8 +6,8 @@ package main
 import (
 	"os"
 
-	"github.com/katasec/ark/cli"
 	"github.com/katasec/ark/cmd"
+	"github.com/katasec/ark/dev"
 	"github.com/katasec/ark/utils"
 )
 
@@ -15,7 +15,7 @@ func main() {
 
 	// Run if this program is being called from Pulumi
 	if utils.IsPulumiChild(os.Args) {
-		d := cli.NewDevCmd()
+		d := dev.NewDevCmd()
 		d.Setup()
 	}
 

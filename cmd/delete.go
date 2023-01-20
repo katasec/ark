@@ -4,7 +4,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/katasec/ark/cli"
+	"github.com/katasec/ark/dev"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +14,7 @@ var deleteCmd = &cobra.Command{
 	Short: "Delete cloud dependencies for ark",
 	Long:  "Delete cloud dependencies for ark",
 	Run: func(cmd *cobra.Command, args []string) {
-		d := cli.NewDevCmd()
+		d := dev.NewDevCmd()
 		d.Delete()
 	},
 }

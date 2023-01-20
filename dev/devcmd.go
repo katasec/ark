@@ -1,4 +1,4 @@
-package cli
+package dev
 
 import (
 	"fmt"
@@ -155,7 +155,10 @@ func (d *DevCmd) Start() {
 	mounts = []string{
 		fmt.Sprintf("%v/.ark:/root/.ark", homeDir),
 	}
-	dh.StartContainerUI(DEV_ARK_SERVER_IMAGE_NAME, nil, config.ApiServer.Port, containerName, nil, mounts...)
+	envVars := []string{
+		fmt.Sprintf("ASPNETCORE_URLS=http://%s:%s", config.ApiServer.Host, config.ApiServer.Port),
+	}
+	dh.StartContainerUI(DEV_ARK_SERVER_IMAGE_NAME, envVars, config.ApiServer.Port, containerName, nil, mounts...)
 
 	// ***************************************
 	// Start Ark worker

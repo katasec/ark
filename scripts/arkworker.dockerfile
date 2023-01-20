@@ -19,6 +19,7 @@ RUN go mod download && \
 # FROM bash:5.2.15-alpine3.16
 
 FROM mcr.microsoft.com/azure-cli:latest
+RUN apk add dotnet7-sdk
 COPY --from=build /go/bin/ark /
 COPY --from=build /go/bin/ark /usr/local/bin
 COPY --from=build /tmp/pulumi/pulumi /usr/local/bin/pulumi

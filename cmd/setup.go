@@ -4,7 +4,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/katasec/ark/cli"
+	"github.com/katasec/ark/dev"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +14,7 @@ var setupCmd = &cobra.Command{
 	Short: "Setup cloud dependencies required for spinning up a local ark environment",
 	Long:  "Setup cloud dependencies required for spinning up a local ark environment.",
 	Run: func(cmd *cobra.Command, args []string) {
-		d := cli.NewDevCmd()
+		d := dev.NewDevCmd()
 		d.Setup()
 	},
 }
