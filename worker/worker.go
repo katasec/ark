@@ -10,7 +10,7 @@ import (
 
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/messaging"
-	"github.com/katasec/ark/sdk/v0/requests"
+	"github.com/katasec/ark/sdk/v0/messages"
 	pulumirunner "github.com/katasec/pulumi-runner"
 	"github.com/katasec/pulumi-runner/utils"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto"
@@ -79,7 +79,7 @@ func (w *Worker) Start() {
 func (w *Worker) AzureCloudspaceHandler(subject string, message string) {
 
 	// Convert request to struct
-	msg := requests.AzureCloudspace{}
+	msg := messages.AzureCloudspace{}
 	err := json.Unmarshal([]byte(message), &msg)
 	if err != nil {
 		log.Fatal(err.Error())
@@ -90,7 +90,7 @@ func (w *Worker) AzureCloudspaceHandler(subject string, message string) {
 
 	// Create a pulumi program to handle this message
 	resourceName := "azurecloudspace"
-	p := w.createPulumiProgram(resourceName, requests.Runtimes.Dotnet)
+	p := w.createPulumiProgram(resourceName, messages.Runtimes.Dotnet)
 
 	// Inject message details as input for pulumi program
 	ctx := context.Background()
