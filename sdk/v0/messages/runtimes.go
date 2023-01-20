@@ -1,4 +1,4 @@
-package requests
+package messages
 
 type RuntimeSpec struct {
 	Go         string
