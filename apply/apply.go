@@ -24,14 +24,14 @@ func DoStuff(fileName string) {
 
 	// Get resource name
 	resource, _ := getResource(data)
-	fmt.Println(resource)
-
-	// Convert request to yaml for the API Server
-	request, jsonContent, _ := yaml2json(data)
 
 	// The kind argument in the file specified the resource
 	// user wants to create
-	kind := request.Kind
+	kind := resource.Kind
+	fmt.Printf("Starting apply for: %s\n", resource.Kind)
+
+	// Convert request to yaml for the API Server
+	request, jsonContent, _ := yaml2json(data)
 
 	switch kind {
 	case "azure/cloudspace":
@@ -71,7 +71,6 @@ func createCloudspace(request Cloudspace, jsonContent string) {
 }
 
 func yaml2json(content []byte) (Cloudspace, string, error) {
-	fmt.Println("Apply Started")
 
 	// convert to struct
 	request := Cloudspace{}
