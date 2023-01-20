@@ -1,6 +1,10 @@
 package apply
 
 type Cloudspace struct {
-	Resource     string
+	Kind         string
 	Environments []string
+}
+
+type Resource struct {
+	Kind string
 }

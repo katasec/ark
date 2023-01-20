@@ -1,4 +1,4 @@
 ---
-resource: /azure/cloudspace
+kind: azure/cloudspace
 environments:
 - brian

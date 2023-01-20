@@ -3,39 +3,59 @@ package apply
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
-	"os"
 
 	"github.com/katasec/ark/config"
 	"gopkg.in/yaml.v2"
 )
 
+var (
+	arkConfig = config.ReadConfig()
+)
+
 func DoStuff(fileName string) {
 
 	// Exit if file doesn't exist
-	if _, err := os.Stat(fileName); errors.Is(err, os.ErrNotExist) {
-		log.Println(fileName + " does not exist")
-		os.Exit(1)
-	}
+	data := readFile(fileName)
 
-	// ready file
-	data, err := os.ReadFile(fileName)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// Get resource name
+	resource, _ := getResource(data)
+	fmt.Println(resource)
+
+	// Convert request to yaml for the API Server
 	request, jsonContent, _ := yaml2json(data)
-	fmt.Println(request.Resource)
 
-	// post data to apiserver
-	arkConfig := config.ReadConfig()
+	// The kind argument in the file specified the resource
+	// user wants to create
+	kind := request.Kind
 
+	switch kind {
+	case "azure/cloudspace":
+		createCloudspace(request, jsonContent)
+	default:
+		fmt.Println("Didn't recognize request")
+	}
+
+}
+
+func getResource(data []byte) (Resource, error) {
+	// convert to struct
+	request := Resource{}
+	err := yaml.Unmarshal(data, &request)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return request, err
+}
+
+func createCloudspace(request Cloudspace, jsonContent string) {
 	endpoint, err := url.Parse(fmt.Sprintf("http://%s:%s/", arkConfig.ApiServer.Host, arkConfig.ApiServer.Port))
-	endpoint.Path = request.Resource
+	endpoint.Path = request.Kind
 	if err != nil {
 		log.Fatal(err)
 	}
