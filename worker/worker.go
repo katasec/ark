@@ -1,6 +1,7 @@
 package worker
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"strings"
@@ -100,10 +101,8 @@ func (w *Worker) AzureCloudspaceHandler(subject string, message string) {
 
 	if err != nil {
 		// Inject message details as input for pulumi program
-		//ctx := context.Background()
-		//p.Stack.SetConfig(ctx, "arkdata", auto.ConfigValue{Value: string(message)})
-		//p.Stack.SetConfig(ctx, "arkdata", auto.ConfigValue{Value: string(yamlconfig)})
-		p.SetConfig(auto.ConfigValue{Value: string(yamlconfig)})
+		ctx := context.Background()
+		p.Stack.SetConfig(ctx, "arkdata", auto.ConfigValue{Value: string(yamlconfig)})
 		p.FixConfig()
 		// Need code to check if another pulumi update is running
 		// If yes then kill message and reject update.
