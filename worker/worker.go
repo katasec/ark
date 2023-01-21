@@ -1,7 +1,6 @@
 package worker
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"strings"
@@ -14,6 +13,7 @@ import (
 	pulumirunner "github.com/katasec/pulumi-runner"
 	"github.com/katasec/pulumi-runner/utils"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto"
+	"gopkg.in/yaml.v2"
 )
 
 type Worker struct {
@@ -88,27 +88,39 @@ func (w *Worker) AzureCloudspaceHandler(subject string, message string) {
 	// Output for debug purposes
 	log.Printf("Hub Name:" + msg.Hub.Name)
 
+	// Convert message into yaml
+	yamlconfig, err := yaml.Marshal(msg)
+	if err != nil {
+		fmt.Println("Could not covert request to yaml config data")
+	}
+
 	// Create a pulumi program to handle this message
 	resourceName := "azurecloudspace"
-	p := w.createPulumiProgram(resourceName, messages.Runtimes.Dotnet)
+	p, err := w.createPulumiProgram(resourceName, messages.Runtimes.Dotnet)
 
-	// Inject message details as input for pulumi program
-	ctx := context.Background()
-	p.Stack.SetConfig(ctx, "arkdata", auto.ConfigValue{Value: string(message)})
+	if err != nil {
+		// Inject message details as input for pulumi program
+		//ctx := context.Background()
+		//p.Stack.SetConfig(ctx, "arkdata", auto.ConfigValue{Value: string(message)})
+		//p.Stack.SetConfig(ctx, "arkdata", auto.ConfigValue{Value: string(yamlconfig)})
+		p.SetConfig(auto.ConfigValue{Value: string(yamlconfig)})
+		p.FixConfig()
+		// Need code to check if another pulumi update is running
+		// If yes then kill message and reject update.
 
-	// Need code to check if another pulumi update is running
-	// If yes then kill message and reject update.
-
-	// Run pulumi up or destroy
-	if subject == "deleteazurecloudspacerequest" {
-		p.Destroy()
+		// Run pulumi up or destroy
+		if subject == "deleteazurecloudspacerequest" {
+			p.Destroy()
+		} else {
+			p.Up()
+		}
 	} else {
-		p.Up()
+		log.Printf("Error creating pulumi program: %+v\n", err.Error())
 	}
 
 }
 
-func (w *Worker) createPulumiProgram(resourceName string, runtime string) *pulumirunner.RemoteProgram {
+func (w *Worker) createPulumiProgram(resourceName string, runtime string) (*pulumirunner.RemoteProgram, error) {
 
 	logger := utils.ConfigureLogger(w.config.LogFile)
 	projectPath := fmt.Sprintf("%s-handler", resourceName)

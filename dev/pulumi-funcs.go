@@ -2,6 +2,7 @@ package dev
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/katasec/ark/shell"
@@ -28,7 +29,12 @@ func (d *DevCmd) createPulumiProgram(pulumiFn pulumi.RunFunc, stackName string) 
 		PulumiFn: pulumiFn,
 	}
 
-	return pulumirunner.NewInlineProgram(args)
+	p, err := pulumirunner.NewInlineProgram(args)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	return p
 }
 
 func (d *DevCmd) getReference(stackFQDN string, key string) (output string, err error) {

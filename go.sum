@@ -148,8 +148,8 @@ github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 h1:BQSFePA1RWJOl
 github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99/go.mod h1:1lJo3i6rXxKeerYnT8Nvf0QmHCRC1n8sfWVwXF2Frvo=
 github.com/jessevdk/go-flags v1.5.0/go.mod h1:Fw0T6WPc1dYxT4mKEZRfG5kJhaTDP9pj1c2EWnYs/m4=
 github.com/joho/godotenv v1.3.0 h1:Zjp+RcGpHhGlrMbJzXTrZZPrWj+1vfm90La1wgB6Bhc=
-github.com/katasec/pulumi-runner v0.1.11 h1:rj1AThqZfq9A/G3gOyfVGxxw7iiW/9XK2kP7QgFSFi4=
-github.com/katasec/pulumi-runner v0.1.11/go.mod h1:8oqIIpltFsXd1XupBUu3wWcHxf4LlB4KaFHLgfQSX+E=
+github.com/katasec/pulumi-runner v0.1.13 h1:89RhK+lWIDo5rXlyW0unkgjPpQKyZrhJw4LsYYbrPBc=
+github.com/katasec/pulumi-runner v0.1.13/go.mod h1:9UilVyD+OxpJ+llRf2yvp5mNbqW7qm38qEHU5pJ9Xes=
 github.com/kevinburke/ssh_config v1.2.0 h1:x584FjTGwHzMwvHx18PXxbBVzfnxogHaAReU4gf13a4=
 github.com/kevinburke/ssh_config v1.2.0/go.mod h1:CT57kijsi8u/K/BOFA39wgDQJ9CxiF4nAY/ojJ6r6mM=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
