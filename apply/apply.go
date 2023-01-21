@@ -2,19 +2,12 @@ package apply
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 
-	"github.com/katasec/ark/config"
-	"gopkg.in/yaml.v2"
-)
-
-var (
-	arkConfig = config.ReadConfig()
+	"github.com/katasec/ark/filecommand"
 )
 
 func DoStuff(fileName string) {
@@ -23,7 +16,7 @@ func DoStuff(fileName string) {
 	data := readFile(fileName)
 
 	// Get resource name
-	resource, _ := getResource(data)
+	resource, _ := filecommand.GetResource(data)
 
 	// The kind argument in the file specified the resource
 	// user wants to create
@@ -31,7 +24,7 @@ func DoStuff(fileName string) {
 	fmt.Printf("Starting apply for: %s\n", resource.Kind)
 
 	// Convert request to yaml for the API Server
-	request, jsonContent, _ := yaml2json(data)
+	request, jsonContent, _ := filecommand.Yaml2json(data)
 
 	switch kind {
 	case "azure/cloudspace":
@@ -42,50 +35,19 @@ func DoStuff(fileName string) {
 
 }
 
-func getResource(data []byte) (Resource, error) {
-	// convert to struct
-	request := Resource{}
-	err := yaml.Unmarshal(data, &request)
-	if err != nil {
-		log.Println(err)
-	}
+func createCloudspace(request filecommand.Cloudspace, jsonContent string) {
 
-	return request, err
-}
+	// Get API endpoint
+	endpoint := filecommand.GetApiEndpoint(request)
 
-func createCloudspace(request Cloudspace, jsonContent string) {
-	endpoint, err := url.Parse(fmt.Sprintf("http://%s:%s/", arkConfig.ApiServer.Host, arkConfig.ApiServer.Port))
-	endpoint.Path = request.Kind
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	resp, err := http.Post(endpoint.String(), "application/json", bytes.NewBuffer([]byte(jsonContent)))
+	// Send request to endpoint
+	resp, err := http.Post(endpoint, "application/json", bytes.NewBuffer([]byte(jsonContent)))
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
 
+	// Output response and status
 	fmt.Println(resp.Status)
 	body, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println(string(body))
-}
-
-func yaml2json(content []byte) (Cloudspace, string, error) {
-
-	// convert to struct
-	request := Cloudspace{}
-	err := yaml.Unmarshal(content, &request)
-	if err != nil {
-		log.Println(err)
-		return request, "", err
-	}
-
-	// convert to json
-	requestBytes, err := json.Marshal(request)
-	if err != nil {
-		log.Println("Error converting string to json")
-		return request, "", err
-	}
-
-	return request, string(requestBytes), nil
 }
