@@ -12,7 +12,6 @@ import (
 	"github.com/katasec/ark/messaging"
 	"github.com/katasec/ark/sdk/v0/messages"
 	pulumirunner "github.com/katasec/pulumi-runner"
-	"github.com/katasec/pulumi-runner/utils"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto"
 	"gopkg.in/yaml.v2"
 )
@@ -83,7 +82,7 @@ func (w *Worker) AzureCloudspaceHandler(subject string, message string) {
 	msg := messages.AzureCloudspace{}
 	err := json.Unmarshal([]byte(message), &msg)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Println("Invalid message:" + err.Error())
 	}
 
 	// Output for debug purposes
@@ -99,11 +98,11 @@ func (w *Worker) AzureCloudspaceHandler(subject string, message string) {
 	resourceName := "azurecloudspace"
 	p, err := w.createPulumiProgram(resourceName, messages.Runtimes.Dotnet)
 
-	if err != nil {
+	if err == nil {
 		// Inject message details as input for pulumi program
-		ctx := context.Background()
-		p.Stack.SetConfig(ctx, "arkdata", auto.ConfigValue{Value: string(yamlconfig)})
+		p.Stack.SetConfig(context.Background(), "arkdata", auto.ConfigValue{Value: string(yamlconfig)})
 		p.FixConfig()
+
 		// Need code to check if another pulumi update is running
 		// If yes then kill message and reject update.
 
@@ -114,14 +113,14 @@ func (w *Worker) AzureCloudspaceHandler(subject string, message string) {
 			p.Up()
 		}
 	} else {
-		log.Printf("Error creating pulumi program: %+v\n", err.Error())
+		log.Println("Error creating pulumi program:" + err.Error())
 	}
 
 }
 
 func (w *Worker) createPulumiProgram(resourceName string, runtime string) (*pulumirunner.RemoteProgram, error) {
 
-	logger := utils.ConfigureLogger(w.config.LogFile)
+	//logger := utils.ConfigureLogger(w.config.LogFile)
 	projectPath := fmt.Sprintf("%s-handler", resourceName)
 
 	log.Println("Project path:" + projectPath)
@@ -144,7 +143,7 @@ func (w *Worker) createPulumiProgram(resourceName string, runtime string) (*pulu
 			},
 		},
 		Runtime: runtime,
-		Writer:  logger,
+		Writer:  nil,
 	}
 
 	// Create a new pulumi program
