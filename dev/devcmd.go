@@ -153,7 +153,7 @@ func (d *DevCmd) Start() {
 	// ***************************************
 	containerName := "arkserver"
 	mounts = []string{
-		fmt.Sprintf("%v/.ark:/root/.ark", homeDir),
+		fmt.Sprintf("%v/.ark:/home/app/.ark", homeDir),
 	}
 	envVars := []string{
 		fmt.Sprintf("ASPNETCORE_URLS=http://%s:%s", config.ApiServer.Host, config.ApiServer.Port),
