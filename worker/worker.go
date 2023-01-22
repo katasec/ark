@@ -126,7 +126,7 @@ func (w *Worker) createPulumiProgram(resourceName string, runtime string) (*pulu
 
 	log.Println("Project path:" + projectPath)
 	args := &pulumirunner.RemoteProgramArgs{
-		ProjectName: "katasec-go-helloworld",
+		ProjectName: "azurecloudspace", // This is also in the Pulumi.yaml in the repo
 		GitURL:      "https://github.com/katasec/library.git",
 		Branch:      "refs/remotes/origin/main",
 		ProjectPath: projectPath,
