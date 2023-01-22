@@ -140,5 +140,6 @@ func ReadFile(fileName string) []byte {
 		log.Fatal(err)
 	}
 
+	fmt.Println(string(data))
 	return data
 }

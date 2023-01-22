@@ -1,26 +1,26 @@
 package messages
 
 type AzureCloudspace struct {
-	Action string `json:Action`
-	Name   string `json:"Name"`
-	Env    []Hub  `json:"Env"`
-	Hub    Hub    `json:"Hub"`
+	Action string     `json:"Action" yaml:"Action"`
+	Name   string     `json:"Name" yaml:"Name"`
+	Spokes []VNETInfo `json:"Spokes" yaml:"Spokes"`
+	Hub    VNETInfo   `json:"Hub" yaml:"Hub"`
 }
 
-type Hub struct {
-	Name          string        `json:"Name"`
-	AddressPrefix *string       `json:"AddressPrefix,omitempty"`
-	SubnetsInfo   []SubnetsInfo `json:"SubnetsInfo,omitempty"`
+type VNETInfo struct {
+	Name          string        `json:"Name" yaml:"Name"`
+	AddressPrefix *string       `json:"AddressPrefix,omitempty" yaml:"AddressPrefix"`
+	SubnetsInfo   []SubnetsInfo `json:"SubnetsInfo,omitempty" yaml:"SubnetsInfo"`
 }
 
 type SubnetsInfo struct {
-	AddressPrefix string `json:"AddressPrefix"`
-	Description   string `json:"Description"`
-	Name          string `json:"Name"`
-	Tags          Tags   `json:"Tags"`
+	AddressPrefix string `json:"AddressPrefix" yaml:"AddressPrefix"`
+	Description   string `json:"Description" yaml:"Description"`
+	Name          string `json:"Name" yaml:"Name"`
+	Tags          Tags   `json:"Tags" yaml:"Tags"`
 }
 
 type Tags struct {
-	Key   *string `json:"Key"`
-	Value *string `json:"Value"`
+	Key   *string `json:"Key" yaml:"Key"`
+	Value *string `json:"Value" yaml:"Value"`
 }

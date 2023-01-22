@@ -2,3 +2,4 @@
 kind: azure/cloudspace
 environments:
 - brian
+- ameer
