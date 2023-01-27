@@ -153,6 +153,10 @@ func (w *Worker) Start() {
 		// This is a blocking receive
 		log.Println("Waiting for message...")
 		message, subject, err := w.mq.Receive()
+
+		fmt.Println("Received Subject:" + subject)
+		fmt.Println("Received Message:" + message)
+
 		subject = strings.ToLower(subject)
 		if err != nil {
 			log.Println("In loop, error:" + err.Error())
