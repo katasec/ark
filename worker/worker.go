@@ -43,9 +43,9 @@ func NewWorker() *Worker {
 }
 
 // Unmarshals a string to the provided type 'V'
-func jsonUnmarshall[V any](message string) (V, error) {
+func jsonUnmarshall[T any](message string) (T, error) {
 	log.Println("The message was:" + message)
-	var msg V
+	var msg T
 	err := json.Unmarshal([]byte(message), &msg)
 	if err != nil {
 		log.Println("Invalid message:" + err.Error())
@@ -55,7 +55,7 @@ func jsonUnmarshall[V any](message string) (V, error) {
 }
 
 // Marshals a struct of type 'V' to a yaml string
-func yamlMarshall[V any](message V) (string, error) {
+func yamlMarshall[T any](message T) (string, error) {
 	// Convert message into yaml
 	b, err := yaml.Marshal(message)
 	if err != nil {
@@ -64,6 +64,17 @@ func yamlMarshall[V any](message V) (string, error) {
 	}
 
 	return string(b), err
+}
+
+func jsonToYaml[T any](message string) (string, error) {
+
+	myStruct, _ := jsonUnmarshall[T](message)
+	yamlString, err := yamlMarshall(myStruct)
+	if err != nil {
+		fmt.Printf("There were errors, this message will not be processed. Message: %s\n", message)
+	}
+
+	return yamlString, err
 }
 
 // For e.g from subject  'createazurecloudspacerequest' or 'deleteazurecloudspacerequest', returns 'azurecloudspace'
@@ -142,6 +153,7 @@ func (w *Worker) Start() {
 		// This is a blocking receive
 		log.Println("Waiting for message...")
 		message, subject, err := w.mq.Receive()
+		subject = strings.ToLower(subject)
 		if err != nil {
 			log.Println("In loop, error:" + err.Error())
 			continue
@@ -150,22 +162,19 @@ func (w *Worker) Start() {
 		// Log Message
 		log.Println("The subject was:" + subject)
 
-		// Route the message
-		subject = strings.ToLower(subject)
+		// Route the message by resource name
 		resourceName := w.getResourceName(subject)
-
 		switch resourceName {
 		case "azurecloudspace":
 			// Convert json -> struct -> yaml and pass yaml as input to pulumi program
-			msgStruct, _ := jsonUnmarshall[messages.AzureCloudspace](message)
-			yamlConfig, _ := yamlMarshall(msgStruct)
-			go w.messageHandler(subject, resourceName, yamlConfig)
-
+			if yamlConfig, err := jsonToYaml[messages.AzureCloudspace](message); err == nil {
+				go w.messageHandler(subject, resourceName, yamlConfig)
+			}
 		case "hellosuccess":
 			// Convert json -> struct -> yaml and pass yaml as input to pulumi program
-			msgStruct, _ := jsonUnmarshall[messages.HelloSuccess](message)
-			yamlConfig, _ := yamlMarshall(msgStruct)
-			go w.messageHandler(subject, resourceName, yamlConfig)
+			if yamlConfig, err := jsonToYaml[messages.HelloSuccess](message); err == nil {
+				go w.messageHandler(subject, resourceName, yamlConfig)
+			}
 
 		default:
 			log.Printf("subject: %s", subject)
