@@ -42,22 +42,25 @@ func NewWorker() *Worker {
 	}
 }
 
+// Unmarshals a string to the provided type 'V'
 func jsonUnmarshall[V any](message string) (V, error) {
+	log.Println("The message was:" + message)
 	var msg V
 	err := json.Unmarshal([]byte(message), &msg)
 	if err != nil {
 		log.Println("Invalid message:" + err.Error())
-		log.Println("Bad message:" + message)
+		log.Println("jsonUnmarshall error:" + message)
 	}
 	return msg, err
 }
 
+// Marshals a struct of type 'V' to a yaml string
 func yamlMarshall[V any](message V) (string, error) {
 	// Convert message into yaml
 	b, err := yaml.Marshal(message)
 	if err != nil {
 		fmt.Println("Could not covert request to yaml config data")
-		log.Printf("Bad message: %v\n", message)
+		log.Printf("yamlMarshall error: %v\n", message)
 	}
 
 	return string(b), err
@@ -140,13 +143,12 @@ func (w *Worker) Start() {
 		log.Println("Waiting for message...")
 		message, subject, err := w.mq.Receive()
 		if err != nil {
-			log.Println(err.Error())
+			log.Println("In loop, error:" + err.Error())
 			continue
 		}
 
 		// Log Message
 		log.Println("The subject was:" + subject)
-		fmt.Println("**************************************")
 
 		// Route the message
 		subject = strings.ToLower(subject)
@@ -154,13 +156,15 @@ func (w *Worker) Start() {
 
 		switch resourceName {
 		case "azurecloudspace":
-
-			// Subject could be 'createazurecloudspacerequest' or 'deleteazurecloudspacerequest'
-
 			// Convert json -> struct -> yaml and pass yaml as input to pulumi program
 			msgStruct, _ := jsonUnmarshall[messages.AzureCloudspace](message)
 			yamlConfig, _ := yamlMarshall(msgStruct)
-			fmt.Println(yamlConfig)
+			go w.messageHandler(subject, resourceName, yamlConfig)
+
+		case "hellosuccess":
+			// Convert json -> struct -> yaml and pass yaml as input to pulumi program
+			msgStruct, _ := jsonUnmarshall[messages.HelloSuccess](message)
+			yamlConfig, _ := yamlMarshall(msgStruct)
 			go w.messageHandler(subject, resourceName, yamlConfig)
 
 		default:

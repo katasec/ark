@@ -4,7 +4,7 @@ type Base struct {
 	Id string
 }
 
-type HelloGood struct {
+type HelloSuccess struct {
 	Base
 	Message string
 }
