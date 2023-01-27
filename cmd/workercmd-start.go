@@ -25,6 +25,7 @@ to quickly create a Cobra application.`,
 
 		w := worker.NewWorker()
 		w.Start()
+
 	},
 }
 
