@@ -1,7 +1,8 @@
 package messages
 
 type Base struct {
-	Id string
+	UpdateID string
+	Id       string
 }
 
 type HelloSuccess struct {

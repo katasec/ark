@@ -1,11 +1,14 @@
 package utils
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
 	ps "github.com/mitchellh/go-ps"
+	"gopkg.in/yaml.v2"
 )
 
 // Returnh true if current process is a child process of pulumi
@@ -40,4 +43,27 @@ func ExitOnError(err error) {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
+}
+
+// Marshals a struct of type 'V' to a yaml string
+func YamlMarshall[T any](message T) (string, error) {
+	// Convert message into yaml
+	b, err := yaml.Marshal(message)
+	if err != nil {
+		fmt.Println("Could not covert request to yaml config data")
+		log.Printf("yamlMarshall error: %v\n", message)
+	}
+
+	return string(b), err
+}
+
+// Unmarshals a string to the provided type 'V'
+func JsonUnmarshall[T any](message string) (T, error) {
+	var msg T
+	err := json.Unmarshal([]byte(message), &msg)
+	if err != nil {
+		log.Println("Invalid message:" + err.Error())
+		log.Println("jsonUnmarshall error:" + message)
+	}
+	return msg, err
 }

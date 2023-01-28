@@ -14,10 +14,12 @@ require (
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/gorilla/handlers v1.5.1
 	github.com/gorilla/mux v1.8.0
+	github.com/hashicorp/go-retryablehttp v0.5.4
 	github.com/hpcloud/tail v1.0.0
 	github.com/katasec/pulumi-runner v0.1.13
 	github.com/lib/pq v1.10.6
 	github.com/mitchellh/go-ps v1.0.0
+	github.com/olekukonko/tablewriter v0.0.5
 	github.com/pulumi/pulumi-azure-native-sdk/resources v1.90.0
 	github.com/pulumi/pulumi-azure-native-sdk/servicebus v1.90.0
 	github.com/pulumi/pulumi-azure-native-sdk/storage v1.90.0
@@ -51,6 +53,7 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/grpc-ecosystem/grpc-opentracing v0.0.0-20180507213350-8e809c8a8645 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
+	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
