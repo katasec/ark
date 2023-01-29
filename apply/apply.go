@@ -21,7 +21,7 @@ func DoStuff(fileName string) {
 
 	// Convert request to yaml for the API Server
 	request, jsonContent, _ := filecommand.Yaml2json(data)
-	fmt.Println(jsonContent)
+	//fmt.Println(jsonContent)
 
 	switch kind {
 	case "azure/cloudspace":

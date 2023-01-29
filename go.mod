@@ -6,6 +6,7 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.1.4
 	github.com/Azure/azure-sdk-for-go/sdk/messaging/azservicebus v1.1.3
 	github.com/Azure/azure-sdk-for-go/sdk/storage/azblob v0.6.1
+	github.com/andanhm/go-prettytime v1.1.0
 	github.com/briandowns/spinner v1.6.1
 	github.com/dapr/cli v1.9.1
 	github.com/docker/docker v20.10.17+incompatible
@@ -19,7 +20,6 @@ require (
 	github.com/katasec/pulumi-runner v0.1.13
 	github.com/lib/pq v1.10.6
 	github.com/mitchellh/go-ps v1.0.0
-	github.com/olekukonko/tablewriter v0.0.5
 	github.com/pulumi/pulumi-azure-native-sdk/resources v1.90.0
 	github.com/pulumi/pulumi-azure-native-sdk/servicebus v1.90.0
 	github.com/pulumi/pulumi-azure-native-sdk/storage v1.90.0

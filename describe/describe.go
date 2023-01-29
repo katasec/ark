@@ -4,76 +4,78 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/utils"
-	"github.com/olekukonko/tablewriter"
+	//"github.com/olekukonko/tablewriter"
 )
 
 var (
 	arkConfig = config.ReadConfig()
+	dtLayout  = "2006-01-02 15:04:05"
 )
 
 func Start(cloudspace string) {
 
-	client := retryablehttp.NewClient()
-	client.RetryMax = 10
-	client.Logger = nil
+	cmd := NewDescribeCmd()
+	resp := cmd.DescribeAzureCloudSpace()
+
+	resp.printTable()
+
+}
+
+type DescribeCmd struct {
+	response *AzureCsStatusResponse
+	client   *retryablehttp.Client
+}
+
+func NewDescribeCmd() *DescribeCmd {
+
+	// Create retryable client with 10 retries and suppress debug log
+	c := retryablehttp.NewClient()
+	c.RetryMax = 10
+	c.Logger = nil
+
+	return &DescribeCmd{
+		client:   c,
+		response: &AzureCsStatusResponse{},
+	}
+}
+
+func (d DescribeCmd) DescribeAzureCloudSpace() AzureCsStatusResponse {
 
 	org := "katasec"
 	stack := "dev"
 	resource := "azurecloudspace"
+
+	// Construct Url
 	url := fmt.Sprintf("http://localhost:%s/status/%s/%s/%s", arkConfig.ApiServer.Port, org, resource, stack)
 
-	resp, err := client.Get(url)
+	// Create make GET request
+	resp, err := d.client.Get(url)
 	if err != nil {
 		fmt.Println(err)
-		return
+		os.Exit(1)
 	}
 
+	// Read response
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 
-	r, _ := utils.JsonUnmarshall[StatusResponse](string(body))
-
-	table1 := tablewriter.NewWriter(os.Stdout)
-	fmt.Println("Result:")
-	table1.SetHeader([]string{"Result", "StartTime", "EndTime"})
-
-	data1 := []string{r.Result, r.StartTime.String(), r.EndTime.String()}
-
-	table1.Append(data1)
-	table1.Render()
-
-	fmt.Println("Resource Details:")
-	table2 := tablewriter.NewWriter(os.Stdout)
-	table2.SetHeader([]string{"DeleteCount", "CreateCount", "SameCount", "UpdateCount", "UpdateUrl"})
-
-	data2 := []string{
-		strconv.Itoa(r.DeleteCount),
-		strconv.Itoa(r.CreateCount),
-		strconv.Itoa(r.SameCount),
-		strconv.Itoa(r.UpdateCount),
-		r.UpdateUrl,
+	// Save response
+	status, err := utils.JsonUnmarshall[AzureCsStatusResponse](string(body))
+	if err != nil {
+		fmt.Println("error, could not get response")
 	}
+	*d.response = status
 
-	table2.Append(data2)
-	table2.Render()
+	return *d.response
 }
 
-type StatusResponse struct {
-	UpdateID    string
-	StartTime   time.Time
-	EndTime     time.Time
-	Result      string
-	DeleteCount int
-	CreateCount int
-	SameCount   int
-	UpdateCount int
-	UpdateUrl   string
+func fmtTime(theTime time.Time) string {
+	return theTime.Local().Format(dtLayout)
 }
