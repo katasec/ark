@@ -32,12 +32,14 @@ func (resp AzureCsStatusResponse) printTable() {
 
 	if resp.Result == inProgress {
 		// Include normal date/time and pretty time
+		fmt.Println()
 		fmt.Fprint(w, "Result\tStart time\tEndTime\tUpdateUrl\n")
 		fmt.Fprint(w, "------\t----------\t-------\t---------\n")
 		fmt.Fprintf(w, "%s\t%s (%s)\t(%s)\t%s\n", resp.Result, fmtTime(resp.StartTime), prettytime.Format(resp.StartTime), inProgress, resp.UpdateUrl)
 
 	} else {
 		// Include normal date/time and pretty time
+		fmt.Println()
 		fmt.Fprint(w, "Result\tStart time\tEndTime\tUpdateUrl\n")
 		fmt.Fprint(w, "------\t----------\t-------\t---------\n")
 		fmt.Fprintf(w, "%s\t%s (%s)\t%s (%s)\t%s\n", resp.Result, fmtTime(resp.StartTime), prettytime.Format(resp.StartTime), fmtTime(resp.EndTime), prettytime.Format(resp.EndTime), resp.UpdateUrl)

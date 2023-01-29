@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/katasec/ark/filecommand"
+	"github.com/katasec/ark/utils"
 )
 
 func DoStuff(fileName string) {
@@ -16,7 +17,13 @@ func DoStuff(fileName string) {
 	// The kind argument in the file specified the resource
 	// user wants to create
 	kind := resource.Kind
-	fmt.Printf("Starting apply for: %s\n", resource.Kind)
+
+	// Setup spinner
+	s := utils.NewArkSpinner()
+	msg := fmt.Sprintf("Starting delete for: %s\n", resource.Kind)
+	s.InfoStatusEvent(msg)
+
+	// fmt.Printf("Starting delete for: %s\n", resource.Kind)
 
 	// Convert request to yaml for the API Server
 	request, jsonContent, _ := filecommand.Yaml2json(data)

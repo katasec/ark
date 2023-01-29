@@ -113,16 +113,16 @@ func CreateCloudspace(request Cloudspace, jsonContent string, method ...string) 
 		defer resp.Body.Close()
 
 		// Read Response Body
-		respBody, err := ioutil.ReadAll(resp.Body)
+		_, err = ioutil.ReadAll(resp.Body)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 
-		// Display Results
-		fmt.Println("response Status : ", resp.Status)
-		fmt.Println("response Headers : ", resp.Header)
-		fmt.Println("response Body : ", string(respBody))
+		// // Display Results
+		// fmt.Println("response Status : ", resp.Status)
+		// fmt.Println("response Headers : ", resp.Header)
+		// fmt.Println("response Body : ", string(respBody))
 	}
 
 }
@@ -140,6 +140,6 @@ func ReadFile(fileName string) []byte {
 		log.Fatal(err)
 	}
 
-	fmt.Println(string(data))
+	// fmt.Println(string(data))
 	return data
 }
