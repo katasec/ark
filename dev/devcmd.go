@@ -164,9 +164,6 @@ func (d *DevCmd) Start() {
 		config.Save()
 	}
 
-	// fmt.Println("worker image:" + strings.Split(DEV_ARK_WORKER_IMAGE_NAME, ":")[0])
-	// fmt.Println("worker version:" + strings.Split(DEV_ARK_WORKER_IMAGE_NAME, ":")[1])
-	// os.Exit(0)
 	var mounts []string
 	arkSpinner.InfoStatusEvent("Starting Ark...")
 
