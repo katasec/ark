@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/hpcloud/tail"
 	"github.com/katasec/ark/config"
@@ -139,6 +140,33 @@ func (d *DevCmd) Start() {
 
 	config := config.ReadConfig()
 
+	// Use version in vars.go if unspecified in config file
+	if config.ImageVersions.ServerImageName == "" {
+		config.ImageVersions.ServerImageName = strings.Split(DEV_ARK_SERVER_IMAGE_NAME, ":")[0]
+		config.Save()
+	}
+
+	// Use version in vars.go if unspecified in config file
+	if config.ImageVersions.ServerImageVersion == "" {
+		config.ImageVersions.ServerImageName = strings.Split(DEV_ARK_SERVER_IMAGE_NAME, ":")[1]
+		config.Save()
+	}
+
+	// Use version in vars.go if unspecified in config file
+	if config.ImageVersions.WorkerImageName == "" {
+		config.ImageVersions.WorkerImageName = strings.Split(DEV_ARK_WORKER_IMAGE_NAME, ":")[0]
+		config.Save()
+	}
+
+	// Use version in vars.go if unspecified in config file
+	if config.ImageVersions.WorkerImageVersion == "" {
+		config.ImageVersions.WorkerImageVersion = strings.Split(DEV_ARK_WORKER_IMAGE_NAME, ":")[1]
+		config.Save()
+	}
+
+	// fmt.Println("worker image:" + strings.Split(DEV_ARK_WORKER_IMAGE_NAME, ":")[0])
+	// fmt.Println("worker version:" + strings.Split(DEV_ARK_WORKER_IMAGE_NAME, ":")[1])
+	// os.Exit(0)
 	var mounts []string
 	arkSpinner.InfoStatusEvent("Starting Ark...")
 
@@ -158,7 +186,8 @@ func (d *DevCmd) Start() {
 	envVars := []string{
 		fmt.Sprintf("ASPNETCORE_URLS=http://%s:%s", config.ApiServer.Host, config.ApiServer.Port),
 	}
-	dh.StartContainerUI(DEV_ARK_SERVER_IMAGE_NAME, envVars, config.ApiServer.Port, containerName, nil, mounts...)
+	serverImage := fmt.Sprintf("%s:%s", config.ImageVersions.ServerImageName, config.ImageVersions.ServerImageVersion)
+	dh.StartContainerUI(serverImage, envVars, config.ApiServer.Port, containerName, nil, mounts...)
 
 	// ***************************************
 	// Start Ark worker
@@ -169,7 +198,8 @@ func (d *DevCmd) Start() {
 		fmt.Sprintf("%v/.pulumi:/root/.pulumi", homeDir),
 		fmt.Sprintf("%v/.azure:/root/.azure", homeDir),
 	}
-	dh.StartContainerUI(DEV_ARK_WORKER_IMAGE_NAME, nil, "0", containerName, []string{"/ark", "worker", "start"}, mounts...)
+	workerImage := fmt.Sprintf("%s:%s", config.ImageVersions.WorkerImageName, config.ImageVersions.WorkerImageVersion)
+	dh.StartContainerUI(workerImage, nil, "0", containerName, []string{"/ark", "worker", "start"}, mounts...)
 
 	// envVars := []string{
 	// 	"POSTGRES_USER=" + DevDbDefaultUser,

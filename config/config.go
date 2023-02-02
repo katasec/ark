@@ -22,11 +22,12 @@ var (
 )
 
 type Config struct {
-	CloudId     string
-	AzureConfig AzureConfig
-	AwsConfig   AwsConfig
-	LogFile     string
-	ApiServer   ApiServer
+	CloudId       string
+	AzureConfig   AzureConfig
+	AwsConfig     AwsConfig
+	LogFile       string
+	ApiServer     ApiServer
+	ImageVersions ImageVersions
 }
 
 func check(e error) {
