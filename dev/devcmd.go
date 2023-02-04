@@ -138,7 +138,9 @@ func (d *DevCmd) RefreshConfig() {
 
 func (d *DevCmd) Start() {
 
+	// Load config file and ensure any dirs are setup
 	config := config.ReadConfig()
+	config.SetupDirectories()
 
 	// Use version in vars.go if unspecified in config file
 	if config.ImageVersions.ServerImageName == "" {

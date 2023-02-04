@@ -156,6 +156,11 @@ func (cfg *Config) Dump() {
 
 func createDir(dir string) {
 	if _, err := os.Stat(dir); errors.Is(err, os.ErrNotExist) {
-		os.Mkdir(dir, os.ModePerm)
+		os.Mkdir(dir, 0777)
 	}
+}
+
+func (cfg *Config) SetupDirectories() {
+	createDir(GetArkDir())
+	createDir(GetDbDir())
 }
