@@ -73,6 +73,14 @@ func (d *DockerHelper) StartContainerUI(imageName string, envVars []string, port
 	}
 }
 
+func (d *DockerHelper) StopContainerUI(imageName string, containerName string) {
+	note := "Stopping " + containerName + ": " + imageName
+	arkSpinner.Start(note)
+
+	err := d.ContainerRemove("/" + containerName)
+	arkSpinner.Stop(err, note)
+}
+
 func (d *DockerHelper) ListContainers() (containers []types.Container, err error) {
 	// Get list of containers
 	containers, err = d.cli.ContainerList(d.ctx, types.ContainerListOptions{

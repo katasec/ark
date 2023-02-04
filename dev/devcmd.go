@@ -185,13 +185,19 @@ func (d *DevCmd) Start() {
 	}
 	dh.StartContainerUI(config.DockerImages.Worker, nil, "0", containerName, []string{"/ark", "worker", "start"}, mounts...)
 
-	// envVars := []string{
-	// 	"POSTGRES_USER=" + DevDbDefaultUser,
-	// 	"POSTGRES_PASSWORD=" + DevDbDefaultPass,
-	// }
-	// port := "5432"
 }
 
+func (d *DevCmd) Stop() {
+	// Load config file
+	config := config.ReadConfig()
+
+	// Stop Server
+	dh.StopContainerUI(config.DockerImages.Server, "arkserver")
+
+	// Stop worker
+	dh.StopContainerUI(config.DockerImages.Worker, "arkworker")
+
+}
 func (d *DevCmd) Check() bool {
 	return CheckSetupPreReqs()
 }
