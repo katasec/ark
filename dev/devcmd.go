@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
 
 	"github.com/hpcloud/tail"
 	"github.com/katasec/ark/config"
@@ -143,26 +142,14 @@ func (d *DevCmd) Start() {
 	config.SetupDirectories()
 
 	// Use version in vars.go if unspecified in config file
-	if config.ImageVersions.ServerImageName == "" {
-		config.ImageVersions.ServerImageName = strings.Split(DEV_ARK_SERVER_IMAGE_NAME, ":")[0]
+	if config.DockerImages.Server == "" {
+		config.DockerImages.Server = DEV_ARK_SERVER_IMAGE_NAME
 		config.Save()
 	}
 
 	// Use version in vars.go if unspecified in config file
-	if config.ImageVersions.ServerImageVersion == "" {
-		config.ImageVersions.ServerImageName = strings.Split(DEV_ARK_SERVER_IMAGE_NAME, ":")[1]
-		config.Save()
-	}
-
-	// Use version in vars.go if unspecified in config file
-	if config.ImageVersions.WorkerImageName == "" {
-		config.ImageVersions.WorkerImageName = strings.Split(DEV_ARK_WORKER_IMAGE_NAME, ":")[0]
-		config.Save()
-	}
-
-	// Use version in vars.go if unspecified in config file
-	if config.ImageVersions.WorkerImageVersion == "" {
-		config.ImageVersions.WorkerImageVersion = strings.Split(DEV_ARK_WORKER_IMAGE_NAME, ":")[1]
+	if config.DockerImages.Worker == "" {
+		config.DockerImages.Worker = DEV_ARK_WORKER_IMAGE_NAME
 		config.Save()
 	}
 
@@ -185,8 +172,7 @@ func (d *DevCmd) Start() {
 	envVars := []string{
 		fmt.Sprintf("ASPNETCORE_URLS=http://%s:%s", config.ApiServer.Host, config.ApiServer.Port),
 	}
-	serverImage := fmt.Sprintf("%s:%s", config.ImageVersions.ServerImageName, config.ImageVersions.ServerImageVersion)
-	dh.StartContainerUI(serverImage, envVars, config.ApiServer.Port, containerName, nil, mounts...)
+	dh.StartContainerUI(config.DockerImages.Server, envVars, config.ApiServer.Port, containerName, nil, mounts...)
 
 	// ***************************************
 	// Start Ark worker
@@ -197,8 +183,7 @@ func (d *DevCmd) Start() {
 		fmt.Sprintf("%v/.pulumi:/root/.pulumi", homeDir),
 		fmt.Sprintf("%v/.azure:/root/.azure", homeDir),
 	}
-	workerImage := fmt.Sprintf("%s:%s", config.ImageVersions.WorkerImageName, config.ImageVersions.WorkerImageVersion)
-	dh.StartContainerUI(workerImage, nil, "0", containerName, []string{"/ark", "worker", "start"}, mounts...)
+	dh.StartContainerUI(config.DockerImages.Worker, nil, "0", containerName, []string{"/ark", "worker", "start"}, mounts...)
 
 	// envVars := []string{
 	// 	"POSTGRES_USER=" + DevDbDefaultUser,

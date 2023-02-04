@@ -1,8 +1,6 @@
 package config
 
-type ImageVersions struct {
-	ServerImageName    string
-	ServerImageVersion string
-	WorkerImageName    string
-	WorkerImageVersion string
+type DockerImages struct {
+	Server string
+	Worker string
 }

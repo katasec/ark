@@ -19,15 +19,17 @@ var (
 		Host: "0.0.0.0",
 		Port: "5067",
 	}
+	DEV_ARK_SERVER_IMAGE_NAME = "ghcr.io/katasec/arkserver:v0.0.3"
+	DEV_ARK_WORKER_IMAGE_NAME = "ghcr.io/katasec/arkworker:v0.0.4"
 )
 
 type Config struct {
-	CloudId       string
-	AzureConfig   AzureConfig
-	AwsConfig     AwsConfig
-	LogFile       string
-	ApiServer     ApiServer
-	ImageVersions ImageVersions
+	CloudId      string
+	AzureConfig  AzureConfig
+	AwsConfig    AwsConfig
+	LogFile      string
+	ApiServer    ApiServer
+	DockerImages DockerImages
 }
 
 func check(e error) {
@@ -47,6 +49,10 @@ func NewEmptyConfig() {
 	myConfig := &Config{
 		LogFile:   filepath.Join(ArkDir, "ark.log"),
 		ApiServer: apiServer,
+		DockerImages: DockerImages{
+			Server: DEV_ARK_SERVER_IMAGE_NAME,
+			Worker: DEV_ARK_WORKER_IMAGE_NAME,
+		},
 	}
 
 	// Convert to yaml
