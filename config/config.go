@@ -44,6 +44,7 @@ func NewEmptyConfig() {
 
 	// Create config directory
 	createDir(ArkDir)
+	createDir(GetDbDir())
 
 	// Create config yaml
 	myConfig := &Config{
@@ -72,6 +73,7 @@ func NewConfig(cloudId string) *Config {
 
 	// Create config directory
 	createDir(ArkDir)
+	createDir(GetDbDir())
 
 	// Create config yaml
 	myConfig := &Config{
@@ -161,6 +163,7 @@ func (cfg *Config) Dump() {
 }
 
 func createDir(dir string) {
+	fmt.Println("creating:" + dir)
 	if _, err := os.Stat(dir); errors.Is(err, os.ErrNotExist) {
 		os.Mkdir(dir, 0777)
 	}
