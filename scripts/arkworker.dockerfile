@@ -9,8 +9,8 @@ COPY . .
 
 RUN go mod download && \
     CGO_ENABLED=0 go build -o /go/bin/ark &&\
-    wget https://get.pulumi.com/releases/sdk/pulumi-v3.52.0-linux-x64.tar.gz && \
-    tar -xzvf pulumi-v3.52.0-linux-x64.tar.gz --directory /tmp/ 
+    wget https://get.pulumi.com/releases/sdk/pulumi-v3.53.1-linux-x64.tar.gz && \
+    tar -xzvf pulumi-v3.53.1-linux-x64.tar.gz --directory /tmp/ 
 
 # ------------------------------------------------------------------------------------------
 # Copy compiled binaries on to run container.
