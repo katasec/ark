@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
+	"strings"
 
 	"github.com/hpcloud/tail"
 	"github.com/katasec/ark/config"
@@ -137,20 +139,20 @@ func (d *DevCmd) RefreshConfig() {
 
 func (d *DevCmd) Start() {
 
-	// Load config file and ensure any dirs are setup
-	config := config.ReadConfig()
-	config.SetupDirectories()
+	// Load cfg file and ensure any dirs are setup
+	cfg := config.ReadConfig()
+	cfg.SetupDirectories()
 
 	// Use version in vars.go if unspecified in config file
-	if config.DockerImages.Server == "" {
-		config.DockerImages.Server = DEV_ARK_SERVER_IMAGE_NAME
-		config.Save()
+	if cfg.DockerImages.Server == "" {
+		cfg.DockerImages.Server = DEV_ARK_SERVER_IMAGE_NAME
+		cfg.Save()
 	}
 
 	// Use version in vars.go if unspecified in config file
-	if config.DockerImages.Worker == "" {
-		config.DockerImages.Worker = DEV_ARK_WORKER_IMAGE_NAME
-		config.Save()
+	if cfg.DockerImages.Worker == "" {
+		cfg.DockerImages.Worker = DEV_ARK_WORKER_IMAGE_NAME
+		cfg.Save()
 	}
 
 	var mounts []string
@@ -162,28 +164,35 @@ func (d *DevCmd) Start() {
 		log.Fatal(err)
 	}
 
+	// if runtime.GOOS == "windows" {
+	// 	homeDir = winHomeDir(homeDir)
+	// }
+
 	// ***************************************
 	// Start Ark Server
 	// ***************************************
 	containerName := "arkserver"
+
+	// using pipe as a separator for source and destination
 	mounts = []string{
-		fmt.Sprintf("%v/.ark:/home/app/.ark", homeDir),
+		fmt.Sprintf("%v|/home/app/.ark", config.GetArkDir()),
 	}
+
 	envVars := []string{
-		fmt.Sprintf("ASPNETCORE_URLS=http://%s:%s", config.ApiServer.Host, config.ApiServer.Port),
+		fmt.Sprintf("ASPNETCORE_URLS=http://%s:%s", cfg.ApiServer.Host, cfg.ApiServer.Port),
 	}
-	dh.StartContainerUI(config.DockerImages.Server, envVars, config.ApiServer.Port, containerName, nil, mounts...)
+	dh.StartContainerUI(cfg.DockerImages.Server, envVars, cfg.ApiServer.Port, containerName, nil, mounts...)
 
 	// ***************************************
 	// Start Ark worker
 	// ***************************************
 	containerName = "arkworker"
 	mounts = []string{
-		fmt.Sprintf("%v/.ark:/root/.ark", homeDir),
-		fmt.Sprintf("%v/.pulumi:/root/.pulumi", homeDir),
-		fmt.Sprintf("%v/.azure:/root/.azure", homeDir),
+		fmt.Sprintf("%v/.ark|/root/.ark", homeDir),
+		fmt.Sprintf("%v/.pulumi|/root/.pulumi", homeDir),
+		fmt.Sprintf("%v/.azure|/root/.azure", homeDir),
 	}
-	dh.StartContainerUI(config.DockerImages.Worker, nil, "0", containerName, []string{"/ark", "worker", "start"}, mounts...)
+	dh.StartContainerUI(cfg.DockerImages.Worker, nil, "0", containerName, []string{"/ark", "worker", "start"}, mounts...)
 
 }
 
@@ -200,4 +209,18 @@ func (d *DevCmd) Stop() {
 }
 func (d *DevCmd) Check() bool {
 	return CheckSetupPreReqs()
+}
+
+func winHomeDir(homeDir string) string {
+	// switch backslash to frontslash
+	winDir := strings.Replace(homeDir, "\\", "/", -1)
+
+	// remove colons
+	winDir = strings.Replace(winDir, ":", "", -1)
+
+	// And an "/mnt" in front
+	winDir = path.Join("/mnt", winDir)
+	fmt.Println(winDir)
+
+	return winDir
 }

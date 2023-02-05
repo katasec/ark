@@ -163,10 +163,11 @@ func (d *DockerHelper) RunContainer(imageName string, envvars []string, port str
 
 	// Genrate bind mounts
 	mounts := []mount.Mount{}
+
 	if len(volumemounts) > 0 {
 		for _, vmount := range volumemounts {
-			source := strings.Split(vmount, ":")[0]
-			target := strings.Split(vmount, ":")[1]
+			source := strings.Split(vmount, "|")[0]
+			target := strings.Split(vmount, "|")[1]
 			myMount := mount.Mount{
 				Type:   mount.TypeBind,
 				Source: source,
