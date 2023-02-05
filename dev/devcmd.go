@@ -5,10 +5,12 @@ import (
 	"log"
 	"os"
 	"path"
+	"runtime"
 	"strings"
 
 	"github.com/hpcloud/tail"
 	"github.com/katasec/ark/config"
+	"github.com/katasec/ark/shell"
 	"github.com/katasec/ark/utils"
 )
 
@@ -164,6 +166,11 @@ func (d *DevCmd) Start() {
 		log.Fatal(err)
 	}
 
+	// TODOS: Temporary hack, find alternative
+	if runtime.GOOS != "windows" {
+		shell.ExecShellCmd("chmod -R 644 " + path.Join(homeDir, ".pulumi", "credentials.json"))
+	}
+
 	// if runtime.GOOS == "windows" {
 	// 	homeDir = winHomeDir(homeDir)
 	// }
@@ -176,6 +183,8 @@ func (d *DevCmd) Start() {
 	// using pipe as a separator for source and destination
 	mounts = []string{
 		fmt.Sprintf("%v|/home/app/.ark", config.GetArkDir()),
+		fmt.Sprintf("%v/.pulumi|/home/app/.pulumi", homeDir),
+		fmt.Sprintf("%v/.azure|/home/app/.azure", homeDir),
 	}
 
 	envVars := []string{
