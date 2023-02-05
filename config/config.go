@@ -7,8 +7,10 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"runtime"
 
 	"github.com/katasec/ark/utils"
+	"golang.org/x/sys/unix"
 	"gopkg.in/yaml.v2"
 )
 
@@ -165,10 +167,26 @@ func (cfg *Config) Dump() {
 func createDir(dir string) {
 	fmt.Println("creating:" + dir)
 	if _, err := os.Stat(dir); errors.Is(err, os.ErrNotExist) {
+		// Create dir & setup perms
 		os.Mkdir(dir, 0777)
+		setPerms(dir)
 	}
 }
 
+func setPerms(dir string) {
+	// Set umask for non windows OS to allo "777"
+	if runtime.GOOS != "windows" {
+		fmt.Println("doing umask")
+	}
+
+	// Set world writeable for docker container
+	os.Chmod(dir, 0777)
+
+	// Reset Set umask for non windows OS
+	if runtime.GOOS != "windows" {
+		unix.Umask(002)
+	}
+}
 func (cfg *Config) SetupDirectories() {
 	createDir(GetArkDir())
 	createDir(GetDbDir())
