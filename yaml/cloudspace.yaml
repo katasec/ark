@@ -2,3 +2,4 @@
 kind: azure/cloudspace
 environments:
 - prod
+- ameer

@@ -27,12 +27,16 @@ func DoStuff(fileName string) {
 	// fmt.Printf("Starting apply for: %s\n", resource.Kind)
 
 	// Convert request to yaml for the API Server
-	request, jsonContent, _ := filecommand.Yaml2json(data)
-	//fmt.Println(jsonContent)
+	request, jsonContent, err := filecommand.Yaml2json(data)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 
 	switch kind {
 	case "azure/cloudspace":
 		filecommand.CreateCloudspace(request, jsonContent)
+		fmt.Println(jsonContent)
 	default:
 		fmt.Println("Didn't recognize request")
 	}
