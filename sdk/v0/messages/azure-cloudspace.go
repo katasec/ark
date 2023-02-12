@@ -1,10 +1,12 @@
 package messages
 
 type AzureCloudspace struct {
-	Action string     `json:"Action" yaml:"Action"`
-	Name   string     `json:"Name" yaml:"Name"`
-	Spokes []VNETInfo `json:"Spokes" yaml:"Spokes"`
-	Hub    VNETInfo   `json:"Hub" yaml:"Hub"`
+	Name     string     `json:"Name" yaml:"Name"`
+	Hub      VNETInfo   `json:"Hub" yaml:"Hub"`
+	Spokes   []VNETInfo `json:"Spokes" yaml:"Spokes"`
+	Status   string
+	Id       string
+	UpdateId string
 }
 
 type VNETInfo struct {
