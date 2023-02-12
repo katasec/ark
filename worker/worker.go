@@ -3,6 +3,7 @@ package worker
 import (
 	"context"
 	"fmt"
+	"github.com/katasec/ark/client"
 	"log"
 	"strings"
 
@@ -87,7 +88,7 @@ func (w *Worker) getResourceName(subject string) string {
 }
 
 // messageHandler Creates a pulumi program and injects the message as pulumi config
-func (w *Worker) messageHandler(subject string, resourceName string, yamlconfig string) {
+func (w *Worker) messageHandler(subject string, resourceName string, yamlconfig string, c chan error) {
 
 	// Create a pulumi program to handle this message
 	p, err := w.createPulumiProgram(resourceName, messages.Runtimes.Dotnet)
@@ -97,19 +98,17 @@ func (w *Worker) messageHandler(subject string, resourceName string, yamlconfig 
 		p.Stack.SetConfig(context.Background(), "arkdata", auto.ConfigValue{Value: yamlconfig})
 		p.FixConfig()
 
-		// Need code to check if another pulumi update is running
-		// If yes then kill message and reject update.
-
 		// Run pulumi up or destroy
 		if strings.HasPrefix(strings.ToLower(subject), "delete") {
 			p.Destroy()
+			c <- p.Up()
 		} else {
-			p.Up()
+			c <- p.Up()
 		}
 	} else {
 		log.Println("Error creating pulumi program:" + err.Error())
+		c <- p.Up()
 	}
-
 }
 
 // createPulumiProgram creates a pulumi program from a git remote resource for the given resource name
@@ -172,12 +171,23 @@ func (w *Worker) Start() {
 		case "azurecloudspace":
 			// Convert json -> struct -> yaml and pass yaml as input to pulumi program
 			if yamlConfig, err := jsonToYaml[messages.AzureCloudspace](message); err == nil {
-				go w.messageHandler(subject, resourceName, yamlConfig)
+				c := make(chan error)
+				go w.messageHandler(subject, resourceName, yamlConfig, c)
+				arkClient := client.NewArkClient()
+
+				// Convert nmessage to Azurecloudspace
+				cs, err := jsonUnmarshall[messages.AzureCloudspace](message)
+				if err != nil {
+					break
+				}
+
+				arkClient.AddCloudSpaces(cs)
 			}
 		case "hellosuccess":
 			// Convert json -> struct -> yaml and pass yaml as input to pulumi program
 			if yamlConfig, err := jsonToYaml[messages.HelloSuccess](message); err == nil {
-				go w.messageHandler(subject, resourceName, yamlConfig)
+				c := make(chan error)
+				go w.messageHandler(subject, resourceName, yamlConfig, c)
 			}
 
 		default:
