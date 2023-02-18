@@ -3,10 +3,11 @@ package client
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/sdk/v0/messages"
-	"io"
 )
 
 var (
@@ -15,7 +16,7 @@ var (
 )
 
 func init() {
-	fmt.Println("This is init()")
+	//fmt.Println("This is init()")
 }
 
 func Start() {
