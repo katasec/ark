@@ -8,6 +8,7 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/katasec/ark/shell"
 	"github.com/katasec/ark/utils"
@@ -26,12 +27,13 @@ var (
 )
 
 type Config struct {
-	CloudId      string
-	AzureConfig  AzureConfig
-	AwsConfig    AwsConfig
-	LogFile      string
-	ApiServer    ApiServer
-	DockerImages DockerImages
+	CloudId         string
+	AzureConfig     AzureConfig
+	AwsConfig       AwsConfig
+	LogFile         string
+	ApiServer       ApiServer
+	DockerImages    DockerImages
+	PulumiDefultOrg string
 }
 
 func check(e error) {
@@ -48,6 +50,10 @@ func NewEmptyConfig() {
 	createDir(ArkDir)
 	createDir(GetDbDir())
 
+	// Get Pulumi Default Org
+	org, err := GetDefaultPulumiOrg()
+	utils.ExitOnError(err)
+
 	// Create config yaml
 	myConfig := &Config{
 		LogFile:   filepath.Join(ArkDir, "ark.log"),
@@ -56,6 +62,7 @@ func NewEmptyConfig() {
 			Server: DEV_ARK_SERVER_IMAGE_NAME,
 			Worker: DEV_ARK_WORKER_IMAGE_NAME,
 		},
+		PulumiDefultOrg: org,
 	}
 
 	// Convert to yaml
@@ -77,11 +84,16 @@ func NewConfig(cloudId string) *Config {
 	createDir(ArkDir)
 	createDir(GetDbDir())
 
+	// Get Pulumi Default Org
+	org, err := GetDefaultPulumiOrg()
+	utils.ExitOnError(err)
+
 	// Create config yaml
 	myConfig := &Config{
-		CloudId:   cloudId,
-		LogFile:   filepath.Join(ArkDir, "ark.log"),
-		ApiServer: apiServer,
+		CloudId:         cloudId,
+		LogFile:         filepath.Join(ArkDir, "ark.log"),
+		ApiServer:       apiServer,
+		PulumiDefultOrg: org,
 	}
 
 	yamlData, err := yaml.Marshal(myConfig)
@@ -184,4 +196,29 @@ func setUnixPerms() {
 func (cfg *Config) SetupDirectories() {
 	createDir(GetArkDir())
 	createDir(GetDbDir())
+}
+
+func GetDefaultPulumiOrg() (string, error) {
+
+	value, err := shell.ExecShellCmd("pulumi org get-default")
+	utils.ExitOnError(err)
+
+	// If no default org was set, then set current user
+	// as default org
+	if strings.Contains(value, "No Default") {
+
+		// Get pulumi user
+		whoami, err := shell.ExecShellCmd("pulumi whoami")
+		utils.ExitOnError(err)
+		whoami = strings.TrimSpace(whoami)
+
+		// Set as default org
+		cmd := fmt.Sprintf("pulumi org set-default %s", whoami)
+		shell.ExecShellCmd(cmd)
+		value = whoami
+	}
+
+	value = strings.TrimSpace(value)
+
+	return value, err
 }

@@ -88,14 +88,23 @@ func (d *DevCmd) Logs() {
 
 func (d *DevCmd) RefreshConfig() {
 
+	var err error
+
 	arkSpinner.InfoStatusEvent("Refershing config,please wait...")
 
 	// Get config Details
 	cfg := config.ReadConfig()
 
+	// Set pulumi default org if not set
+	if cfg.PulumiDefultOrg == "" {
+		orgName, err := d.getDefaultPulumiOrg()
+		utils.ExitOnError(err)
+		cfg.PulumiDefultOrg = orgName
+		cfg.Save()
+	}
+
 	// Contruct Pulumi Stack FQDN
-	orgName, err := d.getDefaultPulumiOrg()
-	utils.ExitOnError(err)
+	orgName := cfg.PulumiDefultOrg
 	stackFQDN := fmt.Sprintf("%s/%s/%s", orgName, ProjectNamePrefix, StackName)
 
 	/*
