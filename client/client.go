@@ -45,7 +45,7 @@ func NewArkClient() *ArkClient {
 	}
 }
 
-func (c *ArkClient) AddCloudSpaces(cs messages.AzureCloudspace) error {
+func (c *ArkClient) AddCloudSpace(cs messages.AzureCloudspace) error {
 
 	// Construct Url
 	url := fmt.Sprintf("http://localhost:%s/azure/cloudspaces/%s", arkConfig.ApiServer.Port, cs.Name)
@@ -62,7 +62,7 @@ func (c *ArkClient) AddCloudSpaces(cs messages.AzureCloudspace) error {
 	// Post to ArkServer
 	resp, err := c.client.Post(url, "application/json", postBody)
 	if err != nil {
-		fmt.Println("Error posting data to crete cloudspace", err)
+		fmt.Println("Error posting data to create cloudspace", err)
 		return err
 	}
 
@@ -74,4 +74,35 @@ func (c *ArkClient) AddCloudSpaces(cs messages.AzureCloudspace) error {
 	}
 
 	return nil
+}
+
+func (c *ArkClient) DeleteCloudSpace(cs messages.AzureCloudspace) error {
+
+	// Construct Url
+	url := fmt.Sprintf("http://localhost:%s/azure/cloudspaces/%s", arkConfig.ApiServer.Port, cs.Name)
+
+	fmt.Println("The url is:" + url)
+
+	// Convert to json
+	postBody, err := json.Marshal(cs)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	fmt.Println(string(postBody))
+	// Post to ArkServer
+	resp, err := retryablehttp.NewRequest("DELETE", url, postBody)
+	if err != nil {
+		fmt.Println("Error posting data to delete cloudspace", err)
+		return err
+	} else {
+		fmt.Println("Sent delete request!")
+	}
+
+	// Read response
+	if resp != nil && resp.Response != nil {
+		fmt.Printf("Delete request, Response Status Code: %d\n", resp.Response.StatusCode)
+	}
+
+	return err
 }
