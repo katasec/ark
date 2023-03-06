@@ -1,19 +1,17 @@
 package messages
 
-type AzureAks struct {
+type AzureManagedCluster struct {
 	VnetResourceGroup string
 	SubNetName        string
 	VnetName          string
-
-	Aks AksConfig
+	Aks               Aks
 }
 
-type AksConfig struct {
+type Aks struct {
 	Name                 string
 	ResourceGroup        string
 	ServicePrincipal     string
-	VmSize               string
-	DnsPrefix            string
+	VMSize               string
 	EnablePrivateCluster bool
 	NetworkProfile       NetworkProfile
 }
@@ -21,5 +19,5 @@ type AksConfig struct {
 type NetworkProfile struct {
 	NetworkPlugin    string
 	NetworkPolicy    string
-	DockerBridgeCidr string
+	DockerBridgeCIDR string
 }

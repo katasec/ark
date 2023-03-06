@@ -62,6 +62,10 @@ func (m *AsbMessenger) Receive() (string, string, error) {
 		return "", "", err
 	}
 
+	if message == nil {
+		return "", "", err
+	}
+
 	m.ReceivedMessage = message
 
 	var subject string
