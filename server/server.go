@@ -1,6 +1,8 @@
 package server
 
 import (
+	"fmt"
+
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/database"
 	"github.com/katasec/ark/router"
@@ -25,6 +27,7 @@ func NewServer() *Server {
 
 func (s *Server) Start() {
 
+	fmt.Println("Starting server")
 	// Select Router type (For e.g. Chi vs. Gorilla mux)
 	s.router = router.NewChiRouter()
 

@@ -1,2 +1,3 @@
-# ark
-A cli tool for creating securre cloud infrastructure
+![Ark](./images/ark.svg)
+
+A cli tool for creating secure cloud infrastructure
