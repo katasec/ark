@@ -5,8 +5,6 @@ import (
 )
 
 func init() {
-	// Register the driver.
-	//	sql.Register("dbtest", &Driver{})
 	fmt.Println("This is init")
 }
 
