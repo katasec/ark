@@ -89,6 +89,11 @@ func (w *Worker) getResourceName(subject string) string {
 	return resourceName
 }
 
+type autoResult struct {
+	result any
+	err    error
+}
+
 // messageHandler Creates a pulumi program and injects the message as pulumi config
 func (w *Worker) messageHandler(subject string, resourceName string, yamlconfig string, c chan error) {
 
@@ -102,10 +107,11 @@ func (w *Worker) messageHandler(subject string, resourceName string, yamlconfig 
 
 		// Run pulumi up or destroy
 		if strings.HasPrefix(strings.ToLower(subject), "delete") {
-			p.Destroy()
-			c <- p.Destroy()
+			_, err := p.Destroy()
+			c <- err
 		} else {
-			c <- p.Up()
+			_, err := p.Up()
+			c <- err
 		}
 	} else {
 		log.Println("Error creating pulumi program:" + err.Error())
