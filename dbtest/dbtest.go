@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/katasec/ark/repositories"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -14,17 +15,21 @@ func init() {
 func Start() {
 	fmt.Println("This is start!")
 
-	acs := genCloudSpace()
-	fmt.Println(acs)
 	DbStuff()
 }
 
 func DbStuff() {
+	db := OpenDb()
+	defer db.Close()
 
-	db, err := sql.Open("sqlite3", "./test.db")
-	if err != nil {
-		fmt.Println(err)
-	}
+	repo := repositories.NewAzureCloudSpaceRepository(db)
+	acs := genCloudSpace()
+
+	repo.CreateCloudSpace(acs)
+}
+func CreateTable() {
+
+	db := OpenDb()
 	defer db.Close()
 
 	// Create table
@@ -35,5 +40,19 @@ func DbStuff() {
 		cloudspace text
 	);
 	`
-	_, err = db.Exec(sql_table)
+	_, err := db.Exec(sql_table)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+//NewAzureCloudSpaceRepository
+
+func OpenDb() *sql.DB {
+	db, err := sql.Open("sqlite3", "./test.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return db
 }

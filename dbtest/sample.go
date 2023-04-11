@@ -6,7 +6,7 @@ import (
 	"github.com/katasec/ark/sdk/v0/messages"
 )
 
-func genCloudSpace() string {
+func genCloudSpace() messages.AzureCloudspace {
 	referenceHubSubnets := []messages.SubnetsInfo{
 		{
 			Name:          "AzureFirewallSubnet",
@@ -59,6 +59,12 @@ func genCloudSpace() string {
 		},
 	}
 
-	jsonb, _ := json.MarshalIndent(azureCloudspace, "", "\t")
+	return azureCloudspace
+}
+
+func genCloudSpaceJson() string {
+	acs := genCloudSpace()
+
+	jsonb, _ := json.MarshalIndent(acs, "", "\t")
 	return string(jsonb)
 }
