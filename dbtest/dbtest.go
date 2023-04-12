@@ -23,6 +23,9 @@ func DbStuff() {
 	defer db.Close()
 
 	repo := repositories.NewAzureCloudSpaceRepository(db)
+
+	//repo.DropTable(db)
+	repo.CreateTable(db)
 	acs := genCloudSpace()
 
 	repo.CreateCloudSpace(acs)

@@ -26,8 +26,33 @@ func NewAzureCloudSpaceRepository(db *sql.DB) *AzureCloudSpaceRepository {
 	}
 }
 
-// func (acs *AzureCloudSpaceRepository) GetCloudSpace(id int) (CloudSpace, error) {
-// }
+func (acs *AzureCloudSpaceRepository) CreateTable(db *sql.DB) {
+
+	// Create table
+	sql_table := `
+	CREATE TABLE IF NOT EXISTS cloudspaces(
+		id INTEGER NOT NULL PRIMARY KEY,
+		name TEXT UNIQUE,
+		data text
+	);
+	`
+	_, err := db.Exec(sql_table)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func (acs *AzureCloudSpaceRepository) DropTable(db *sql.DB) {
+
+	// Create table
+	sql_table := `
+	DROP TABLE IF EXISTS cloudspaces;
+	`
+	_, err := db.Exec(sql_table)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
 
 func (acs *AzureCloudSpaceRepository) CreateCloudSpace(cs messages.AzureCloudspace) (messages.AzureCloudspace, error) {
 
@@ -35,7 +60,7 @@ func (acs *AzureCloudSpaceRepository) CreateCloudSpace(cs messages.AzureCloudspa
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	sqlCmd := fmt.Sprintf("insert into cloudspaces(name, cloudspace) values('%s', '%s')", cs.Name, acsJson)
+	sqlCmd := fmt.Sprintf("insert into cloudspaces(name, data) values('%s', '%s')", cs.Name, acsJson)
 	_, err = acs.db.Exec(sqlCmd)
 	if err != nil {
 		fmt.Println(err.Error())
