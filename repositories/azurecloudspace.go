@@ -56,12 +56,54 @@ func (acs *AzureCloudSpaceRepository) DropTable(db *sql.DB) {
 
 func (acs *AzureCloudSpaceRepository) CreateCloudSpace(cs messages.AzureCloudspace) (messages.AzureCloudspace, error) {
 
+	jsonAcs, err := json.Marshal(cs)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	sqlCmd := `
+	INSERT INTO cloudspaces(name, data)
+	VALUES('%s', '%s');
+	`
+
+	sqlCmd = fmt.Sprintf(sqlCmd, cs.Name, jsonAcs)
+
+	//sqlCmd := fmt.Sprintf("insert into cloudspaces(name, data) values('%s', '%s')", cs.Name, acsJson)
+	_, err = acs.db.Exec(sqlCmd)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return cs, nil
+}
+
+func (acs *AzureCloudSpaceRepository) UpdateCloudSpace(cs messages.AzureCloudspace) (messages.AzureCloudspace, error) {
+
 	acsJson, err := json.Marshal(cs)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	sqlCmd := fmt.Sprintf("insert into cloudspaces(name, data) values('%s', '%s')", cs.Name, acsJson)
+	sqlCmd := `
+	UPDATE cloudspaces
+	SET data = '%s'
+	WHERE name = '%s';
+	`
+	sqlCmd = fmt.Sprintf(sqlCmd, acsJson, cs.Name)
+
 	_, err = acs.db.Exec(sqlCmd)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return cs, nil
+}
+
+func (acs *AzureCloudSpaceRepository) DeleteCloudSpace(cs messages.AzureCloudspace) (messages.AzureCloudspace, error) {
+
+	sqlCmd := `
+	Delete from cloudspaces
+	WHERE name = '%s';
+	`
+	sqlCmd = fmt.Sprintf(sqlCmd, cs.Name)
+
+	_, err := acs.db.Exec(sqlCmd)
 	if err != nil {
 		fmt.Println(err.Error())
 	}

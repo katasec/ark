@@ -28,7 +28,10 @@ func DbStuff() {
 	repo.CreateTable(db)
 	acs := genCloudSpace()
 
-	repo.CreateCloudSpace(acs)
+	acs.Hub.Name = "test2"
+
+	repo.UpdateCloudSpace(acs)
+	repo.DeleteCloudSpace(acs)
 }
 func CreateTable() {
 
