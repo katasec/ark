@@ -7,7 +7,7 @@ import (
 	"log"
 	"strings"
 
-	resources "github.com/katasec/ark/resources"
+	resources "github.com/katasec/ark/resources/v0"
 )
 
 // GetVm returns a vm if it exists

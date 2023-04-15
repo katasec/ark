@@ -2,15 +2,18 @@ package server
 
 import (
 	"fmt"
+	"log"
+	"net/http"
 
+	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5"
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/database"
-	"github.com/katasec/ark/router"
 )
 
 // Server struct models the ark server and its dependencies
 type Server struct {
-	router router.ArkRouter
+	router *chi.Mux
 	config *config.Config
 }
 
@@ -28,14 +31,18 @@ func NewServer() *Server {
 func (s *Server) Start() {
 
 	fmt.Println("Starting server")
-	// Select Router type (For e.g. Chi vs. Gorilla mux)
-	s.router = router.NewChiRouter()
+
+	chiRouter := chi.NewRouter()
+	chiRouter.Use(middleware.Logger)
+
+	s.router = chiRouter
 
 	// Initialize Routes
 	s.initaliseRoutes()
 
 	// Start Listening
-	s.router.LISTEN(ListenPort)
+	log.Fatal(http.ListenAndServe(":"+s.config.ApiServer.Port, s.router))
+
 }
 
 func (s *Server) DbStuff() {

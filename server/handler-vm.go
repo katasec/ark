@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	resources "github.com/katasec/ark/resources"
+	resources "github.com/katasec/ark/resources/v0"
 )
 
 func (s *Server) postVm() http.HandlerFunc {

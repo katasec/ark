@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/katasec/ark/sdk/v0/messages"
+	"github.com/katasec/ark/resources/v0"
 )
 
 type Repositories interface {
@@ -54,7 +54,7 @@ func (acs *AzureCloudSpaceRepository) DropTable(db *sql.DB) {
 	}
 }
 
-func (acs *AzureCloudSpaceRepository) CreateCloudSpace(cs messages.AzureCloudspace) (messages.AzureCloudspace, error) {
+func (acs *AzureCloudSpaceRepository) CreateCloudSpace(cs resources.AzureCloudspace) (resources.AzureCloudspace, error) {
 
 	jsonAcs, err := json.Marshal(cs)
 	if err != nil {
@@ -75,7 +75,7 @@ func (acs *AzureCloudSpaceRepository) CreateCloudSpace(cs messages.AzureCloudspa
 	return cs, nil
 }
 
-func (acs *AzureCloudSpaceRepository) UpdateCloudSpace(cs messages.AzureCloudspace) (messages.AzureCloudspace, error) {
+func (acs *AzureCloudSpaceRepository) UpdateCloudSpace(cs resources.AzureCloudspace) (resources.AzureCloudspace, error) {
 
 	acsJson, err := json.Marshal(cs)
 	if err != nil {
@@ -95,7 +95,7 @@ func (acs *AzureCloudSpaceRepository) UpdateCloudSpace(cs messages.AzureCloudspa
 	return cs, nil
 }
 
-func (acs *AzureCloudSpaceRepository) DeleteCloudSpace(cs messages.AzureCloudspace) (messages.AzureCloudspace, error) {
+func (acs *AzureCloudSpaceRepository) DeleteCloudSpace(cs resources.AzureCloudspace) (resources.AzureCloudspace, error) {
 
 	sqlCmd := `
 	Delete from cloudspaces

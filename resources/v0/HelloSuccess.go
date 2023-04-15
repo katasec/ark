@@ -1,4 +1,4 @@
-package messages
+package resources
 
 type Base struct {
 	UpdateID string

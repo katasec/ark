@@ -8,7 +8,7 @@ import (
 	"path"
 
 	"github.com/katasec/ark/config"
-	resources "github.com/katasec/ark/resources"
+	resources "github.com/katasec/ark/resources/v0"
 )
 
 type JsonFileNames struct {

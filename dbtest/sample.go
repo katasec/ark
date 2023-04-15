@@ -3,11 +3,11 @@ package dbtest
 import (
 	"encoding/json"
 
-	"github.com/katasec/ark/sdk/v0/messages"
+	resources "github.com/katasec/ark/resources/v0"
 )
 
-func genCloudSpace() messages.AzureCloudspace {
-	referenceHubSubnets := []messages.SubnetsInfo{
+func genCloudSpace() resources.AzureCloudspace {
+	referenceHubSubnets := []resources.SubnetsInfo{
 		{
 			Name:          "AzureFirewallSubnet",
 			Description:   "Subnet for Azure Firewall",
@@ -37,18 +37,18 @@ func genCloudSpace() messages.AzureCloudspace {
 
 	hubPrefix := "172.16.0.0/24"
 	spokePrefix := "172.17.0.0/16"
-	azureCloudspace := messages.AzureCloudspace{
+	azureCloudspace := resources.AzureCloudspace{
 		Name: "test",
-		Hub: messages.VNETInfo{
+		Hub: resources.VNETInfo{
 			Name:          "hub",
 			AddressPrefix: &hubPrefix,
 			SubnetsInfo:   referenceHubSubnets,
 		},
-		Spokes: []messages.VNETInfo{
+		Spokes: []resources.VNETInfo{
 			{
 				Name:          "spoke1",
 				AddressPrefix: &spokePrefix,
-				SubnetsInfo: []messages.SubnetsInfo{
+				SubnetsInfo: []resources.SubnetsInfo{
 					{
 						Name:          "snet-test",
 						Description:   "test net",

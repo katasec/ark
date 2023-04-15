@@ -17,6 +17,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/hashicorp/go-retryablehttp v0.7.2
 	github.com/hpcloud/tail v1.0.0
+	github.com/julienschmidt/httprouter v1.3.0
 	github.com/katasec/pulumi-runner v0.1.14
 	github.com/lib/pq v1.10.7
 	github.com/mattn/go-sqlite3 v1.14.16

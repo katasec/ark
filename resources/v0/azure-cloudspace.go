@@ -1,4 +1,4 @@
-package messages
+package resources
 
 type AzureCloudspace struct {
 	Name     string     `json:"Name" yaml:"Name"`
