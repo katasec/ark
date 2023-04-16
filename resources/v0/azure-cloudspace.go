@@ -1,28 +1,36 @@
 package resources
 
 type AzureCloudspace struct {
-	Name     string     `json:"Name" yaml:"Name"`
-	Hub      VNETInfo   `json:"Hub" yaml:"Hub"`
-	Spokes   []VNETInfo `json:"Spokes" yaml:"Spokes"`
+	Name     string
+	Hub      VNETInfo
+	Spokes   []VNETInfo
 	Status   string
 	Id       string
 	UpdateId string
 }
 
 type VNETInfo struct {
-	Name          string        `json:"Name" yaml:"Name"`
-	AddressPrefix *string       `json:"AddressPrefix,omitempty" yaml:"AddressPrefix"`
-	SubnetsInfo   []SubnetsInfo `json:"SubnetsInfo,omitempty" yaml:"SubnetsInfo"`
+	Name          string
+	AddressPrefix *string
+	SubnetsInfo   []SubnetsInfo
 }
 
 type SubnetsInfo struct {
-	AddressPrefix string `json:"AddressPrefix" yaml:"AddressPrefix"`
-	Description   string `json:"Description" yaml:"Description"`
-	Name          string `json:"Name" yaml:"Name"`
-	Tags          Tags   `json:"Tags" yaml:"Tags"`
+	AddressPrefix string
+	Description   string
+	Name          string
+	Tags          Tags
 }
 
 type Tags struct {
-	Key   *string `json:"Key" yaml:"Key"`
-	Value *string `json:"Value" yaml:"Value"`
+	Key   *string
+	Value *string
+}
+
+var (
+// Octet
+)
+
+func NewAzureCloudSpace(octet1 int, octet2 int) *AzureCloudspace {
+	return &AzureCloudspace{}
 }
