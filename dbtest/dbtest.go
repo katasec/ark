@@ -20,18 +20,20 @@ func Start() {
 
 func DbStuff() {
 	db := OpenDb()
+
 	defer db.Close()
 
 	repo := repositories.NewAzureCloudSpaceRepository(db)
 
-	//repo.DropTable(db)
 	repo.CreateTable(db)
 	acs := genCloudSpace()
 
-	acs.Hub.Name = "test2"
+	repo.CreateCloudSpace(acs)
 
+	acs.Hub.Name = "test3"
 	repo.UpdateCloudSpace(acs)
-	repo.DeleteCloudSpace(acs)
+
+	//repo.DeleteCloudSpace(acs)
 }
 
 func OpenDb() *sql.DB {

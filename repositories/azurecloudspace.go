@@ -17,12 +17,14 @@ type Repositories interface {
 }
 
 type AzureCloudSpaceRepository struct {
-	db *sql.DB
+	db        *sql.DB
+	tableName string
 }
 
 func NewAzureCloudSpaceRepository(db *sql.DB) *AzureCloudSpaceRepository {
 	return &AzureCloudSpaceRepository{
-		db: db,
+		db:        db,
+		tableName: GetTableName[AzureCloudSpaceRepository](),
 	}
 }
 
@@ -30,12 +32,14 @@ func (acs *AzureCloudSpaceRepository) CreateTable(db *sql.DB) {
 
 	// Create table
 	sql_table := `
-	CREATE TABLE IF NOT EXISTS cloudspaces(
+	CREATE TABLE IF NOT EXISTS %s(
 		id INTEGER NOT NULL PRIMARY KEY,
 		name TEXT UNIQUE,
 		data text
 	);
 	`
+	sql_table = fmt.Sprintf(sql_table, acs.tableName)
+
 	_, err := db.Exec(sql_table)
 	if err != nil {
 		fmt.Println(err)
@@ -46,8 +50,11 @@ func (acs *AzureCloudSpaceRepository) DropTable(db *sql.DB) {
 
 	// Create table
 	sql_table := `
-	DROP TABLE IF EXISTS cloudspaces;
+	DROP TABLE IF EXISTS %s;
 	`
+
+	sql_table = fmt.Sprintf(sql_table, acs.tableName)
+
 	_, err := db.Exec(sql_table)
 	if err != nil {
 		fmt.Println(err)
@@ -61,13 +68,10 @@ func (acs *AzureCloudSpaceRepository) CreateCloudSpace(cs resources.AzureCloudsp
 		fmt.Println(err.Error())
 	}
 	sqlCmd := `
-	INSERT INTO cloudspaces(name, data)
+	INSERT INTO %s(name, data)
 	VALUES('%s', '%s');
 	`
-
-	sqlCmd = fmt.Sprintf(sqlCmd, cs.Name, jsonAcs)
-
-	//sqlCmd := fmt.Sprintf("insert into cloudspaces(name, data) values('%s', '%s')", cs.Name, acsJson)
+	sqlCmd = fmt.Sprintf(sqlCmd, acs.tableName, cs.Name, jsonAcs)
 	_, err = acs.db.Exec(sqlCmd)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -77,18 +81,19 @@ func (acs *AzureCloudSpaceRepository) CreateCloudSpace(cs resources.AzureCloudsp
 
 func (acs *AzureCloudSpaceRepository) UpdateCloudSpace(cs resources.AzureCloudspace) (resources.AzureCloudspace, error) {
 
-	acsJson, err := json.Marshal(cs)
+	jsonData, err := json.Marshal(cs)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 	sqlCmd := `
-	UPDATE cloudspaces
+	UPDATE %s
 	SET data = '%s'
 	WHERE name = '%s';
 	`
-	sqlCmd = fmt.Sprintf(sqlCmd, acsJson, cs.Name)
+	sqlCmd = fmt.Sprintf(sqlCmd, acs.tableName, string(jsonData), cs.Name)
 
 	_, err = acs.db.Exec(sqlCmd)
+
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -98,10 +103,10 @@ func (acs *AzureCloudSpaceRepository) UpdateCloudSpace(cs resources.AzureCloudsp
 func (acs *AzureCloudSpaceRepository) DeleteCloudSpace(cs resources.AzureCloudspace) (resources.AzureCloudspace, error) {
 
 	sqlCmd := `
-	Delete from cloudspaces
+	Delete from %s
 	WHERE name = '%s';
 	`
-	sqlCmd = fmt.Sprintf(sqlCmd, cs.Name)
+	sqlCmd = fmt.Sprintf(sqlCmd, acs.tableName, cs.Name)
 
 	_, err := acs.db.Exec(sqlCmd)
 	if err != nil {
