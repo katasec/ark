@@ -29,7 +29,6 @@ func NewAzureCloudSpace(octet1 ...int) *AzureCloudspace {
 }
 
 func (acs *AzureCloudspace) AddSpoke(name string) {
-	fmt.Printf("There are %d spokes.\n", len(acs.Spokes))
 
 	acs.Spokes = append(acs.Spokes, VNETInfo{
 		Name:          fmt.Sprintf("vnet-%s", name),
