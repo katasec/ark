@@ -22,13 +22,12 @@ type AzureCloudspace struct {
 // NewAzureCloudSpace Create a new Azure Cloudspace
 func NewAzureCloudSpace(oct1 ...int) *AzureCloudspace {
 
-	// DefaultOctet1 is the default value for the first octet of the address prefix
+	// variables DefaultOctet1 and DefaultOctet2  default value for the first/second octets
 	octet1 := DefaultOctet1
 	if len(oct1) > 0 {
 		octet1 = oct1[0]
 	}
 
-	// DefaultOctet2 is the default value for the second octet of the address prefix
 	return &AzureCloudspace{
 		Hub: VNETInfo{
 			Name:          "vnet-hub",
@@ -57,7 +56,7 @@ func (acs *AzureCloudspace) AddSpoke(name string) error {
 
 	// Create a new spoke
 	newSpoke := VNETInfo{
-		Name:          fmt.Sprintf("%s-%s", VnetPrefix, name),
+		Name:          fmt.Sprintf("%s%s", VnetPrefix, name),
 		AddressPrefix: fmt.Sprintf("%d.%d.0.0/24", acs.hubOctet1, octet2),
 		SubnetsInfo:   GenerateSpokeSubnets(acs.hubOctet1, octet2),
 	}
@@ -112,7 +111,7 @@ func (acs *AzureCloudspace) SpokeCount() int {
 // IsSpoke Check if the spoke exists
 func (acs *AzureCloudspace) IsSpoke(name string) bool {
 
-	vnetName := fmt.Sprintf("%s-%s", VnetPrefix, name)
+	vnetName := fmt.Sprintf("%s%s", VnetPrefix, name)
 	for _, spoke := range acs.Spokes {
 		if strings.EqualFold(spoke.Name, vnetName) {
 			return true

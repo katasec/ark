@@ -6,7 +6,7 @@ var (
 
 	AllOctet2 = []int{}
 
-	VnetPrefix = "vnet"
+	VnetPrefix = "vnet-"
 )
 
 func init() {
