@@ -1,6 +1,10 @@
 package cloudspaces
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
 
 type AzureCloudspace struct {
 	Name     string
@@ -9,33 +13,111 @@ type AzureCloudspace struct {
 	Status   string
 	Id       string
 	UpdateId string
+
+	hubOctet1   int
+	hubOctet2   int
+	firstOctet2 int
 }
 
-func NewAzureCloudSpace(octet1 ...int) *AzureCloudspace {
+// NewAzureCloudSpace Create a new Azure Cloudspace
+func NewAzureCloudSpace(oct1 ...int) *AzureCloudspace {
 
 	// DefaultOctet1 is the default value for the first octet of the address prefix
-	myOctet1 := DefaultOctet1
-	if len(octet1) > 0 {
-		myOctet1 = octet1[0]
+	octet1 := DefaultOctet1
+	if len(oct1) > 0 {
+		octet1 = oct1[0]
 	}
 
 	// DefaultOctet2 is the default value for the second octet of the address prefix
 	return &AzureCloudspace{
 		Hub: VNETInfo{
 			Name:          "vnet-hub",
-			AddressPrefix: fmt.Sprintf("%d.%d.0.0/24", myOctet1, DefaultOctet2),
+			AddressPrefix: fmt.Sprintf("%d.%d.0.0/24", octet1, DefaultOctet2),
+			SubnetsInfo:   GenerateHubSubnets(octet1, DefaultOctet2),
 		},
+		hubOctet2:   DefaultOctet2,
+		firstOctet2: DefaultOctet2 + 1,
+		hubOctet1:   octet1,
 	}
 }
 
-func (acs *AzureCloudspace) AddSpoke(name string) {
+// AddSpoke Add a spoke to the cloudspace
+func (acs *AzureCloudspace) AddSpoke(name string) error {
 
-	acs.Spokes = append(acs.Spokes, VNETInfo{
-		Name:          fmt.Sprintf("vnet-%s", name),
-		AddressPrefix: fmt.Sprintf("%d.%d.0.0/24", DefaultOctet1, Octet2Range[len(acs.Spokes)]),
-	})
+	// Return if the spoke already exists
+	if acs.IsSpoke(name) {
+		return nil
+	} else if len(acs.Spokes) >= len(AllOctet2) {
+		// Return if the number of spokes is greater than allowed
+		return fmt.Errorf("can't have more than %d spokes", len(AllOctet2))
+	}
+
+	// Determine 2nd octet for the new spoke
+	octet2 := acs.NextAvailableOctet2()
+
+	// Create a new spoke
+	newSpoke := VNETInfo{
+		Name:          fmt.Sprintf("%s-%s", VnetPrefix, name),
+		AddressPrefix: fmt.Sprintf("%d.%d.0.0/24", acs.hubOctet1, octet2),
+		SubnetsInfo:   GenerateSpokeSubnets(acs.hubOctet1, octet2),
+	}
+
+	// Add the new spoke to the list of spokes
+	acs.Spokes = append(acs.Spokes, newSpoke)
+
+	fmt.Println("Len Spokes:", len(acs.Spokes))
+	return nil
 }
 
+// UsedOctet2s Get a list of used 2nd Octets
+func (acs *AzureCloudspace) UsedOctet2s() []int {
+	// Get List of used octets
+	usedOctets := []int{}
+	for _, spoke := range acs.Spokes {
+		octets := strings.Split(spoke.AddressPrefix, ".")
+		octet, _ := strconv.Atoi(octets[1]) // 2nd octet
+		usedOctets = append(usedOctets, octet)
+	}
+
+	return usedOctets
+}
+
+// NextAvailableOctet2 Get the next available 2nd Octet
+func (acs *AzureCloudspace) NextAvailableOctet2() int {
+	used := acs.UsedOctet2s()
+	for _, octet := range AllOctet2 {
+		if !contains(used, octet) {
+			return octet
+		}
+	}
+
+	return 0
+}
+
+// contains returns true if the slice contains the element
+func contains(s []int, e int) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
+// SpokeCount Get the number of spokes
+func (acs *AzureCloudspace) SpokeCount() int {
+	return len(acs.Spokes)
+}
+
+// IsSpoke Check if the spoke exists
 func (acs *AzureCloudspace) IsSpoke(name string) bool {
+
+	vnetName := fmt.Sprintf("%s-%s", VnetPrefix, name)
+	for _, spoke := range acs.Spokes {
+		if strings.EqualFold(spoke.Name, vnetName) {
+			return true
+		}
+	}
+
 	return false
 }

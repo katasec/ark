@@ -4,5 +4,5 @@ type SubnetsInfo struct {
 	AddressPrefix string
 	Description   string
 	Name          string
-	Tags          Tags
+	Tags          map[string]string
 }

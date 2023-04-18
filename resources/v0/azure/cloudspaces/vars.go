@@ -4,13 +4,15 @@ var (
 	DefaultOctet1 = 10
 	DefaultOctet2 = 16
 
-	Octet2Range = []int{}
+	AllOctet2 = []int{}
+
+	VnetPrefix = "vnet"
 )
 
 func init() {
 
-	// Initialize Octet2Range
+	// Initialize Octet 2 range to  = 17..200
 	for i := 17; i <= 200; i++ {
-		Octet2Range = append(Octet2Range, i)
+		AllOctet2 = append(AllOctet2, i)
 	}
 }
