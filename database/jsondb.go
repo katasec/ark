@@ -69,7 +69,7 @@ func (j *JsonRepository) OpenFile(filename string) *os.File {
 			panic(err)
 		}
 	} else {
-		fmt.Println("Opening db file...")
+		log.Println("Opening db file...")
 		// Else open file
 		f, err = os.OpenFile(filename, os.O_RDWR, 0644)
 		if err != nil {

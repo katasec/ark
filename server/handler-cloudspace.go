@@ -1,27 +1,33 @@
 package server
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
-	resources "github.com/katasec/ark/resources/v0"
+	"github.com/katasec/ark/requests"
+	"gopkg.in/yaml.v2"
 )
 
 func (s *Server) postCloudspace() http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		cloudspace := resources.CloudSpace{}
+		request := requests.AzureCloudspaceRequest{}
 
-		err := json.NewDecoder(r.Body).Decode(&cloudspace)
+		err := yaml.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		fmt.Fprintf(w, "Cloud Space: %+v", cloudspace)
+		for _, env := range request.Environments {
+			fmt.Println("Env:" + env)
+		}
 
-		db.AddCloudSpace(cloudspace)
-		db.SaveCloudSpaces()
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		fmt.Fprint(w, request.ToAzureCloudpace())
+
+		s.msg.Send("azurecloudspace", request.ToAzureCloudpace())
 	})
 }

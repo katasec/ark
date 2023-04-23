@@ -41,11 +41,12 @@ func NewAsbMessenger(connectionString string, queueName string) *AsbMessenger {
 	return asbMessenger
 }
 
-func (m *AsbMessenger) Send(message string) error {
+func (m *AsbMessenger) Send(subject string, message string) error {
 
 	// Send message
 	err := m.sender.SendMessage(m.ctx, &azservicebus.Message{
-		Body: []byte(message),
+		Subject: &subject,
+		Body:    []byte(message),
 	}, nil)
 
 	if err != nil {

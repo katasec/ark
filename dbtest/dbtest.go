@@ -3,13 +3,14 @@ package dbtest
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	"github.com/katasec/ark/repositories"
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func init() {
-	fmt.Println("This is init")
+	log.Println("This is db init")
 }
 
 func Start() {

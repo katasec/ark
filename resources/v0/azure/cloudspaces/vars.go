@@ -9,6 +9,7 @@ var (
 	VnetPrefix = "vnet-"
 )
 
+// init Initializes variables in the cloudspaces package
 func init() {
 
 	// Initialize Octet 2 range to  = 17..200

@@ -1,26 +1,34 @@
 package requests
 
+import "github.com/katasec/ark/resources/v0/azure/cloudspaces"
+
 type AzureCloudspaceRequest struct {
-	Action string `json:Action`
-	Name   string `json:Name`
-	Env    []Hub  `json:"Env"`
-	Hub    Hub    `json:"Hub"`
+	Kind         string
+	Environments []string
 }
 
-type Hub struct {
-	Name          string        `json:"Name"`
-	AddressPrefix *string       `json:"AddressPrefix,omitempty"`
-	SubnetsInfo   []SubnetsInfo `json:"SubnetsInfo,omitempty"`
+func (r *AzureCloudspaceRequest) ToAzureCloudpace() string {
+	acs := cloudspaces.NewAzureCloudSpace()
+	for _, env := range r.Environments {
+		acs.AddSpoke(env)
+	}
+	return acs.ToJson()
 }
 
-type SubnetsInfo struct {
-	AddressPrefix string `json:"AddressPrefix"`
-	Description   string `json:"Description"`
-	Name          string `json:"Name"`
-	Tags          Tags   `json:"Tags"`
-}
+// type Hub struct {
+// 	Name          string        `json:"Name"`
+// 	AddressPrefix *string       `json:"AddressPrefix,omitempty"`
+// 	SubnetsInfo   []SubnetsInfo `json:"SubnetsInfo,omitempty"`
+// }
 
-type Tags struct {
-	Key   *string `json:"Key"`
-	Value *string `json:"Value"`
-}
+// type SubnetsInfo struct {
+// 	AddressPrefix string `json:"AddressPrefix"`
+// 	Description   string `json:"Description"`
+// 	Name          string `json:"Name"`
+// 	Tags          Tags   `json:"Tags"`
+// }
+
+// type Tags struct {
+// 	Key   *string `json:"Key"`
+// 	Value *string `json:"Value"`
+// }
