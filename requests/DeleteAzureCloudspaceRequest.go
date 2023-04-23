@@ -15,5 +15,5 @@ func (r *DeleteAzureCloudspaceRequest) ToJsonAzureCloudpace() string {
 func (r *DeleteAzureCloudspaceRequest) ToYamlAzureCloudpace() string {
 	acs := cloudspaces.NewAzureCloudSpace()
 	acs.Name = r.Name
-	return acs.ToJson()
+	return acs.ToYaml()
 }

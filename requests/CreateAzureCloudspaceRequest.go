@@ -20,5 +20,5 @@ func (r *CreateAzureCloudspaceRequest) ToYamlAzureCloudpace() string {
 	for _, env := range r.Environments {
 		acs.AddSpoke(env)
 	}
-	return acs.ToJson()
+	return acs.ToYaml()
 }

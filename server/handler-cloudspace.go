@@ -19,12 +19,14 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
+		//w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "application/x-yaml")
+
 		w.WriteHeader(http.StatusOK)
 
-		fmt.Fprint(w, request.ToJsonAzureCloudpace())
+		fmt.Fprint(w, request.ToYamlAzureCloudpace())
 
-		s.msg.Send("azurecloudspace", request.ToJsonAzureCloudpace())
+		s.msg.Send("azurecloudspace", request.ToYamlAzureCloudpace())
 	})
 }
 
@@ -41,11 +43,11 @@ func (s *Server) deleteCloudspace() http.HandlerFunc {
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "application/x-yaml")
 		w.WriteHeader(http.StatusOK)
 
-		fmt.Fprint(w, request.ToJsonAzureCloudpace())
+		fmt.Fprint(w, request.ToYamlAzureCloudpace())
 
-		s.msg.Send("DeleteAzureCloudspaceRequest", request.ToJsonAzureCloudpace())
+		s.msg.Send("DeleteAzureCloudspaceRequest", request.ToYamlAzureCloudpace())
 	})
 }

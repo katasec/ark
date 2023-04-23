@@ -35,7 +35,8 @@ func DoStuff(fileName string) {
 
 	switch kind {
 	case "azure/cloudspace":
-		filecommand.CreateCloudspace(request, jsonContent)
+		filecommand.CreateCloudspace(request, string(data))
+		//filecommand.CreateCloudspace(request, jsonContent)
 		fmt.Println(jsonContent)
 	default:
 		fmt.Println("Didn't recognize request")
