@@ -61,7 +61,7 @@ func Yaml2json(content []byte) (Cloudspace, string, error) {
 	return request, string(requestBytes), nil
 }
 
-func CreateCloudspace(request Cloudspace, jsonContent string, method ...string) {
+func CreateCloudspace(request Cloudspace, fileContent string, method ...string) {
 
 	var httpMethod string
 
@@ -78,7 +78,7 @@ func CreateCloudspace(request Cloudspace, jsonContent string, method ...string) 
 	// Send request to endpoint
 	if httpMethod == "POST" {
 		// Send post request
-		resp, err := http.Post(endpoint, "application/json", bytes.NewBuffer([]byte(jsonContent)))
+		resp, err := http.Post(endpoint, "application/json", bytes.NewBuffer([]byte(fileContent)))
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -95,7 +95,7 @@ func CreateCloudspace(request Cloudspace, jsonContent string, method ...string) 
 
 	} else {
 		// create delete request
-		req, err := http.NewRequest("DELETE", endpoint, bytes.NewBuffer([]byte(jsonContent)))
+		req, err := http.NewRequest("DELETE", endpoint, bytes.NewBuffer([]byte(fileContent)))
 		req.Header.Set("Content-Type", "application/json")
 		if err != nil {
 			fmt.Println(err.Error())

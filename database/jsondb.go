@@ -8,7 +8,7 @@ import (
 	"path"
 
 	"github.com/katasec/ark/config"
-	resources "github.com/katasec/ark/resources"
+	resources "github.com/katasec/ark/resources/v0"
 )
 
 type JsonFileNames struct {
@@ -69,7 +69,7 @@ func (j *JsonRepository) OpenFile(filename string) *os.File {
 			panic(err)
 		}
 	} else {
-		fmt.Println("Opening db file...")
+		log.Println("Opening db file...")
 		// Else open file
 		f, err = os.OpenFile(filename, os.O_RDWR, 0644)
 		if err != nil {

@@ -7,12 +7,13 @@ import (
 	"strings"
 
 	"github.com/katasec/ark/client"
+	resources "github.com/katasec/ark/resources/v0"
+	"github.com/katasec/ark/resources/v0/azure/cloudspaces"
 
 	"encoding/json"
 
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/messaging"
-	"github.com/katasec/ark/sdk/v0/messages"
 	pulumirunner "github.com/katasec/pulumi-runner"
 	"github.com/katasec/pulumi-runner/utils"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto"
@@ -49,6 +50,18 @@ func jsonUnmarshall[T any](message string) (T, error) {
 	//log.Println("The message was:" + message)
 	var msg T
 	err := json.Unmarshal([]byte(message), &msg)
+	if err != nil {
+		log.Println("Invalid message:" + err.Error())
+		log.Println("jsonUnmarshall error:" + message)
+	}
+	return msg, err
+}
+
+// Unmarshals a string to the provided type 'V'
+func yamlUnmarshall[T any](message string) (T, error) {
+	//log.Println("The message was:" + message)
+	var msg T
+	err := yaml.Unmarshal([]byte(message), &msg)
 	if err != nil {
 		log.Println("Invalid message:" + err.Error())
 		log.Println("jsonUnmarshall error:" + message)
@@ -98,7 +111,7 @@ type autoResult struct {
 func (w *Worker) messageHandler(subject string, resourceName string, yamlconfig string, c chan error) {
 
 	// Create a pulumi program to handle this message
-	p, err := w.createPulumiProgram(resourceName, messages.Runtimes.Dotnet)
+	p, err := w.createPulumiProgram(resourceName, resources.Runtimes.Dotnet)
 
 	if err == nil {
 		// Inject yaml config as input for pulumi program
@@ -177,41 +190,37 @@ func (w *Worker) Start() {
 		switch resourceName {
 		case "azurecloudspace":
 			// Convert json -> struct -> yaml and pass yaml as input to pulumi program
-			if yamlConfig, err := jsonToYaml[messages.AzureCloudspace](message); err == nil {
-				c := make(chan error)
-				go w.messageHandler(subject, resourceName, yamlConfig, c)
-				handlerError := <-c
+			c := make(chan error)
+			go w.messageHandler(subject, resourceName, message, c)
+			handlerError := <-c
 
-				//  If Handler ran succesfully, update DB
-				if handlerError == nil {
+			//  If Handler ran succesfully, update DB
+			if handlerError == nil {
 
-					fmt.Println("Handler ran without errors !")
-					// Create ark api client
-					arkClient := client.NewArkClient()
+				fmt.Println("Handler ran without errors !")
+				// Create ark api client
+				arkClient := client.NewArkClient()
 
-					// Convert nmessage to Azurecloudspace
-					cs, err := jsonUnmarshall[messages.AzureCloudspace](message)
-					if err != nil {
-						break
-					}
-
-					// Update DB
-					if strings.HasPrefix(strings.ToLower(subject), "delete") {
-						arkClient.DeleteCloudSpace(cs)
-					} else {
-						arkClient.AddCloudSpace(cs)
-					}
-				} else {
-					fmt.Println("Handler errors:" + handlerError.Error())
+				// Convert nmessage to Azurecloudspace
+				cs, err := yamlUnmarshall[cloudspaces.AzureCloudspace](message)
+				//cs, err := jsonUnmarshall[cloudspaces.AzureCloudspace](message)
+				if err != nil {
+					break
 				}
 
+				// Update DB
+				if strings.HasPrefix(strings.ToLower(subject), "delete") {
+					arkClient.DeleteCloudSpace(cs)
+				} else {
+					arkClient.AddCloudSpace(cs)
+				}
+			} else {
+				fmt.Println("Handler errors:" + handlerError.Error())
 			}
 		case "hellosuccess":
 			// Convert json -> struct -> yaml and pass yaml as input to pulumi program
-			if yamlConfig, err := jsonToYaml[messages.HelloSuccess](message); err == nil {
-				c := make(chan error)
-				go w.messageHandler(subject, resourceName, yamlConfig, c)
-			}
+			c := make(chan error)
+			go w.messageHandler(subject, resourceName, message, c)
 
 		default:
 			log.Printf("subject: %s", subject)

@@ -7,7 +7,7 @@ import (
 	"log"
 	"strings"
 
-	resources "github.com/katasec/ark/resources"
+	resources "github.com/katasec/ark/resources/v0"
 )
 
 // GetCloudSpace returns a cloudspace if it exists

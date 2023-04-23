@@ -1,4 +1,4 @@
-package messages
+package resources
 
 type AzureManagedCluster struct {
 	VnetResourceGroup string

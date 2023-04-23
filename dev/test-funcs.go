@@ -30,7 +30,7 @@ func testMq() {
 
 	smessage := "hello world"
 	log.Println("Sending message:" + smessage)
-	err := mq.Send(smessage)
+	err := mq.Send("Alimzzzzza", smessage)
 	if err != nil {
 		log.Fatalf(err.Error())
 	} else {

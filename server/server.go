@@ -1,17 +1,21 @@
 package server
 
 import (
-	"fmt"
+	"log"
+	"net/http"
 
+	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5"
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/database"
-	"github.com/katasec/ark/router"
+	"github.com/katasec/ark/messaging"
 )
 
 // Server struct models the ark server and its dependencies
 type Server struct {
-	router router.ArkRouter
+	router *chi.Mux
 	config *config.Config
+	msg    messaging.Messenger
 }
 
 func NewServer() *Server {
@@ -19,23 +23,32 @@ func NewServer() *Server {
 	// Read from local config  file
 	cfg := config.ReadConfig()
 
+	// Setup Router
+	chiRouter := chi.NewRouter()
+	chiRouter.Use(middleware.Logger)
+
+	// Setup messaging client
+	connString := cfg.AzureConfig.MqConfig.MqConnectionString
+	queueName := cfg.AzureConfig.MqConfig.MqName
+	msg := messaging.NewAsbMessenger(connString, queueName)
+
 	// Return server with local config
 	return &Server{
 		config: cfg,
+		msg:    msg,
+		router: chiRouter,
 	}
 }
 
 func (s *Server) Start() {
 
-	fmt.Println("Starting server")
-	// Select Router type (For e.g. Chi vs. Gorilla mux)
-	s.router = router.NewChiRouter()
-
 	// Initialize Routes
 	s.initaliseRoutes()
 
 	// Start Listening
-	s.router.LISTEN(ListenPort)
+	log.Println("Server started on port " + s.config.ApiServer.Port + "...")
+	log.Fatal(http.ListenAndServe(":"+s.config.ApiServer.Port, s.router))
+
 }
 
 func (s *Server) DbStuff() {

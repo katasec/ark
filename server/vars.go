@@ -1,6 +1,8 @@
 package server
 
-import "github.com/katasec/ark/database"
+import (
+	"github.com/katasec/ark/database"
+)
 
 var (
 	ListenPort = ":8080"
