@@ -11,7 +11,7 @@ import (
 func (s *Server) postCloudspace() http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		request := requests.AzureCloudspaceRequest{}
+		request := requests.CreateAzureCloudspaceRequest{}
 
 		err := yaml.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
@@ -19,15 +19,33 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 			return
 		}
 
-		for _, env := range request.Environments {
-			fmt.Println("Env:" + env)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		fmt.Fprint(w, request.ToJsonAzureCloudpace())
+
+		s.msg.Send("azurecloudspace", request.ToJsonAzureCloudpace())
+	})
+}
+
+func (s *Server) deleteCloudspace() http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		request := requests.DeleteAzureCloudspaceRequest{
+			Name: "default",
+		}
+
+		err := yaml.NewDecoder(r.Body).Decode(&request)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
 		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 
-		fmt.Fprint(w, request.ToAzureCloudpace())
+		fmt.Fprint(w, request.ToJsonAzureCloudpace())
 
-		s.msg.Send("azurecloudspace", request.ToAzureCloudpace())
+		s.msg.Send("DeleteAzureCloudspaceRequest", request.ToJsonAzureCloudpace())
 	})
 }

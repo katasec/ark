@@ -1,6 +1,6 @@
 package resources
 
-type AzureCloudspace struct {
+type AzureCloudspace1 struct {
 	Name     string
 	Hub      VNETInfo
 	Spokes   []VNETInfo
@@ -31,6 +31,6 @@ var (
 // Octet
 )
 
-func NewAzureCloudSpace(octet1 int, octet2 int) *AzureCloudspace {
-	return &AzureCloudspace{}
-}
+// func NewAzureCloudSpace(octet1 int, octet2 int) *AzureCloudspace {
+// 	return &AzureCloudspace{}
+// }

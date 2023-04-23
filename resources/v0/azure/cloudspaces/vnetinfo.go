@@ -1,7 +1,7 @@
 package cloudspaces
 
 type VNETInfo struct {
-	Name          string
-	AddressPrefix string
-	SubnetsInfo   []SubnetsInfo
+	Name          string        `yaml:"Name"`
+	AddressPrefix string        `yaml:"AddressPrefix"`
+	SubnetsInfo   []SubnetsInfo `yaml:"SubnetsInfo"`
 }

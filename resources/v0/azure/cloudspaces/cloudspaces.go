@@ -5,13 +5,15 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
 
 type AzureCloudspace struct {
-	Name     string
-	Hub      VNETInfo
-	Spokes   []VNETInfo
-	Status   string
+	Name     string     `yaml:"Name"`
+	Hub      VNETInfo   `yaml:"Hub"`
+	Spokes   []VNETInfo `yaml:"Spokes"`
+	Status   string     `yaml:"Status"`
 	Id       string
 	UpdateId string
 
@@ -126,6 +128,14 @@ func (acs *AzureCloudspace) IsSpoke(name string) bool {
 
 func (acs *AzureCloudspace) ToJson() string {
 	b, err := json.Marshal(acs)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return string(b)
+}
+
+func (acs *AzureCloudspace) ToYaml() string {
+	b, err := yaml.Marshal(acs)
 	if err != nil {
 		fmt.Println(err.Error())
 	}

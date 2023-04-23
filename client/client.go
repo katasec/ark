@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/katasec/ark/config"
-	resources "github.com/katasec/ark/resources/v0"
+	cloudspaces "github.com/katasec/ark/resources/v0/azure/cloudspaces"
 )
 
 var (
@@ -45,7 +45,7 @@ func NewArkClient() *ArkClient {
 	}
 }
 
-func (c *ArkClient) AddCloudSpace(cs resources.AzureCloudspace) error {
+func (c *ArkClient) AddCloudSpace(cs cloudspaces.AzureCloudspace) error {
 
 	// Construct Url
 	url := fmt.Sprintf("http://localhost:%s/azure/cloudspaces/%s", arkConfig.ApiServer.Port, cs.Name)
@@ -76,7 +76,7 @@ func (c *ArkClient) AddCloudSpace(cs resources.AzureCloudspace) error {
 	return nil
 }
 
-func (c *ArkClient) DeleteCloudSpace(cs resources.AzureCloudspace) error {
+func (c *ArkClient) DeleteCloudSpace(cs cloudspaces.AzureCloudspace) error {
 
 	// Construct Url
 	url := fmt.Sprintf("http://localhost:%s/azure/cloudspaces/%s", arkConfig.ApiServer.Port, cs.Name)

@@ -8,6 +8,7 @@ import (
 
 	"github.com/katasec/ark/client"
 	resources "github.com/katasec/ark/resources/v0"
+	"github.com/katasec/ark/resources/v0/azure/cloudspaces"
 
 	"encoding/json"
 
@@ -177,7 +178,7 @@ func (w *Worker) Start() {
 		switch resourceName {
 		case "azurecloudspace":
 			// Convert json -> struct -> yaml and pass yaml as input to pulumi program
-			if yamlConfig, err := jsonToYaml[resources.AzureCloudspace](message); err == nil {
+			if yamlConfig, err := jsonToYaml[cloudspaces.AzureCloudspace](message); err == nil {
 				c := make(chan error)
 				go w.messageHandler(subject, resourceName, yamlConfig, c)
 				handlerError := <-c
@@ -190,7 +191,7 @@ func (w *Worker) Start() {
 					arkClient := client.NewArkClient()
 
 					// Convert nmessage to Azurecloudspace
-					cs, err := jsonUnmarshall[resources.AzureCloudspace](message)
+					cs, err := jsonUnmarshall[cloudspaces.AzureCloudspace](message)
 					if err != nil {
 						break
 					}
