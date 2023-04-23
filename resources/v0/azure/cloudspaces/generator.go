@@ -26,11 +26,11 @@ func GenerateHubSubnets(octet1 int, octet2 int) []SubnetsInfo {
 			Description:   "Subnet for VPN Gateway",
 			AddressPrefix: fmt.Sprintf("%s.0.192/26", prefix),
 		},
-		// {
-		// 	Name:          "snet-test",
-		// 	Description:   "Subnet for Testing purposes",
-		// 	AddressPrefix: fmt.Sprintf("%s.0.224/27", prefix),
-		// },
+		{
+			Name:          "snet-test",
+			Description:   "Subnet for Testing purposes",
+			AddressPrefix: fmt.Sprintf("%s.0.224/27", prefix),
+		},
 	}
 }
 
@@ -81,7 +81,7 @@ func GenerateSpokeSubnets(octet1 int, octet2 int) []SubnetsInfo {
 		{
 			Name:          "snet-tier2-rsvd2",
 			Description:   "Tier 2 reserved subnet",
-			AddressPrefix: "172.x.6.0/24",
+			AddressPrefix: fmt.Sprintf("%s.6.0/24", prefix),
 		},
 		{
 			Name:          "snet-tier2-pckr",

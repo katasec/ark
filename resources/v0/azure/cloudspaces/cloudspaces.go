@@ -36,7 +36,7 @@ func NewAzureCloudSpace(oct1 ...int) *AzureCloudspace {
 		Name: "default",
 		Hub: VNETInfo{
 			Name:          "vnet-hub",
-			AddressPrefix: fmt.Sprintf("%d.%d.0.0/24", octet1, DefaultOctet2),
+			AddressPrefix: fmt.Sprintf("%d.%d.0.0/16", octet1, DefaultOctet2),
 			SubnetsInfo:   GenerateHubSubnets(octet1, DefaultOctet2),
 		},
 		hubOctet2:   DefaultOctet2,
@@ -62,7 +62,7 @@ func (acs *AzureCloudspace) AddSpoke(name string) error {
 	// Create a new spoke
 	newSpoke := VNETInfo{
 		Name:          fmt.Sprintf("%s%s", VnetPrefix, name),
-		AddressPrefix: fmt.Sprintf("%d.%d.0.0/24", acs.hubOctet1, octet2),
+		AddressPrefix: fmt.Sprintf("%d.%d.0.0/16", acs.hubOctet1, octet2),
 		SubnetsInfo:   GenerateSpokeSubnets(acs.hubOctet1, octet2),
 	}
 
