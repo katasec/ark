@@ -1,6 +1,7 @@
 package cloudspaces
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -14,8 +15,9 @@ type AzureCloudspace struct {
 	Id       string
 	UpdateId string
 
-	hubOctet1   int
-	hubOctet2   int
+	hubOctet1 int
+	hubOctet2 int
+
 	firstOctet2 int
 }
 
@@ -29,6 +31,7 @@ func NewAzureCloudSpace(oct1 ...int) *AzureCloudspace {
 	}
 
 	return &AzureCloudspace{
+		Name: "default",
 		Hub: VNETInfo{
 			Name:          "vnet-hub",
 			AddressPrefix: fmt.Sprintf("%d.%d.0.0/24", octet1, DefaultOctet2),
@@ -119,4 +122,12 @@ func (acs *AzureCloudspace) IsSpoke(name string) bool {
 	}
 
 	return false
+}
+
+func (acs *AzureCloudspace) ToJson() string {
+	b, err := json.Marshal(acs)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return string(b)
 }

@@ -34,3 +34,12 @@ func TestAcs(t *testing.T) {
 	}
 
 }
+
+func TestAcsJson(t *testing.T) {
+	acs := resources.NewAzureCloudSpace()
+	acs.AddSpoke("bob")
+	acs.AddSpoke("joe")
+
+	t.Log(acs.ToJson())
+
+}
