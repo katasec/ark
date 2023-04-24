@@ -1,7 +1,7 @@
 .ONESHELL:
 SHELL = /bin/bash
 .DEFAULT_GOAL := help
-.PHONY: worker
+.PHONY: worker server checkbuild workerpush
 
 
 help:
@@ -16,5 +16,8 @@ workerpush: ## Build and push worker container
 	@buildAndPush
 checkbuild: ## Check app can build
 	go build -o /dev/null
-
+server: ## Build Server container
+	@IMAGE_NAME=arkserver;
+	@source ./scripts/build.sh;
+	@build
 #	docker build -t ghcr.io/katasec/arkapi:0.01 .

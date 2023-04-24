@@ -26,11 +26,11 @@ func GenerateHubSubnets(octet1 int, octet2 int) []SubnetsInfo {
 			Description:   "Subnet for VPN Gateway",
 			AddressPrefix: fmt.Sprintf("%s.0.192/26", prefix),
 		},
-		{
-			Name:          "snet-test",
-			Description:   "Subnet for Testing purposes",
-			AddressPrefix: fmt.Sprintf("%s.0.224/27", prefix),
-		},
+		// {
+		// 	Name:          "snet-test",
+		// 	Description:   "Subnet for Testing purposes",
+		// 	AddressPrefix: fmt.Sprintf("%s.0.224/27", prefix),
+		// },
 	}
 }
 

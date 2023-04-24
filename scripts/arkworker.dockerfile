@@ -3,14 +3,14 @@
 # - Build Ark binary
 # - Download pulumi into container since ark for pulumi api automation
 # ------------------------------------------------------------------------------------------
-FROM golang:1.18.4-alpine as build
+FROM golang:1.20.3-alpine as build
 WORKDIR /go/src/app
 COPY . .
 
 RUN go mod download && \
     CGO_ENABLED=0 go build -o /go/bin/ark &&\
-    wget https://get.pulumi.com/releases/sdk/pulumi-v3.53.1-linux-x64.tar.gz && \
-    tar -xzvf pulumi-v3.53.1-linux-x64.tar.gz --directory /tmp/ 
+    wget https://get.pulumi.com/releases/sdk/pulumi-v3.64.0-linux-x64.tar.gz && \
+    tar -xzvf pulumi-v3.64.0-linux-x64.tar.gz --directory /tmp/ 
 
 # ------------------------------------------------------------------------------------------
 # Copy compiled binaries on to run container.
