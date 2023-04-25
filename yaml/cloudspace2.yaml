@@ -1,0 +1,3 @@
+kind: azure/cloudspace
+environments:
+- egal

@@ -191,16 +191,16 @@ func (d *DevCmd) Start() {
 
 	// using pipe as a separator for source and destination
 	mounts = []string{
-		fmt.Sprintf("%v|/home/app/.ark", config.GetArkDir()),
-		fmt.Sprintf("%v/.pulumi|/home/app/.pulumi", homeDir),
-		fmt.Sprintf("%v/.azure|/home/app/.azure", homeDir),
+		fmt.Sprintf("%v|/root/.ark", config.GetArkDir()),
+		fmt.Sprintf("%v/.pulumi|/root/.pulumi", homeDir),
+		fmt.Sprintf("%v/.azure|/root/.azure", homeDir),
 	}
 
 	envVars := []string{
 		fmt.Sprintf("ASPNETCORE_URLS=http://%s:%s", cfg.ApiServer.Host, cfg.ApiServer.Port),
 	}
-	cmd := []string{"/ark", "server"}
-	dh.StartContainerUI(cfg.DockerImages.Server, envVars, cfg.ApiServer.Port, containerName, cmd, mounts...)
+	//md := []string{"/ark", "server"}
+	dh.StartContainerUI(cfg.DockerImages.Server, envVars, cfg.ApiServer.Port, containerName, nil, mounts...)
 
 	// ***************************************
 	// Start Ark worker
