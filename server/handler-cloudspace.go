@@ -17,6 +17,7 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 			acsRequest.Name = "default"
 		}
 
+		// Decode request body into acsRequest
 		err := yaml.NewDecoder(r.Body).Decode(&acsRequest)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -25,6 +26,7 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 
 		//w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Content-Type", "application/x-yaml")
+		//s.acsrepo.GetCloudSpace(acsRequest.Name)
 
 		w.WriteHeader(http.StatusOK)
 
