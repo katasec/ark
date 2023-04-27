@@ -28,6 +28,7 @@ func NewAzureCloudSpaceRepository(db *sql.DB) *AzureCloudSpaceRepository {
 	}
 }
 
+// CreateTable creates the table for the repository in the db that's passed in
 func (acs *AzureCloudSpaceRepository) CreateTable(db *sql.DB) {
 
 	// Create table
@@ -61,7 +62,7 @@ func (acs *AzureCloudSpaceRepository) DropTable(db *sql.DB) {
 	}
 }
 
-func (acs *AzureCloudSpaceRepository) CreateCloudSpace(cs cloudspaces.AzureCloudspace) (cloudspaces.AzureCloudspace, error) {
+func (acs *AzureCloudSpaceRepository) CreateCloudSpace(cs *cloudspaces.AzureCloudspace) (cloudspaces.AzureCloudspace, error) {
 
 	jsonAcs, err := json.Marshal(cs)
 	if err != nil {
@@ -76,7 +77,7 @@ func (acs *AzureCloudSpaceRepository) CreateCloudSpace(cs cloudspaces.AzureCloud
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	return cs, nil
+	return *cs, nil
 }
 
 func (acs *AzureCloudSpaceRepository) UpdateCloudSpace(cs cloudspaces.AzureCloudspace) (cloudspaces.AzureCloudspace, error) {

@@ -1,10 +1,15 @@
 package somethingtest_test
 
 import (
+	"database/sql"
+	"fmt"
 	"strconv"
 	"testing"
 
+	"github.com/katasec/ark/repositories"
+	"github.com/katasec/ark/resources/v0/azure/cloudspaces"
 	resources "github.com/katasec/ark/resources/v0/azure/cloudspaces"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func TestAcs(t *testing.T) {
@@ -42,4 +47,47 @@ func TestAcsJson(t *testing.T) {
 
 	t.Log(acs.ToJson())
 
+}
+
+func TestSTuff(t *testing.T) {
+
+	// Create the DB and CLoudpace Table
+	db := OpenDb()
+	repo := repositories.NewAzureCloudSpaceRepository(db)
+	repo.CreateTable(db)
+
+	// Create a cloudspace
+	acs := cloudspaces.NewAzureCloudSpace()
+	fmt.Println(acs.ToJson())
+
+	// Add cloudspace to the database
+	repo.CreateCloudSpace(acs)
+}
+
+// func TestDb() {
+// 	db := OpenDb()
+
+// 	defer db.Close()
+
+// 	repo := repositories.NewAzureCloudSpaceRepository(db)
+
+// 	repo.CreateTable(db)
+// 	acs := genCloudSpace()
+
+// 	repo.CreateCloudSpace(acs)
+
+// 	acs.Hub.Name = "test3"
+// 	repo.UpdateCloudSpace(acs)
+
+// 	//repo.DeleteCloudSpace(acs)
+
+// }
+
+func OpenDb() *sql.DB {
+	db, err := sql.Open("sqlite3", "./hello.db")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return db
 }
