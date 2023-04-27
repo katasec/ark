@@ -14,10 +14,22 @@ sqlite3
 .open ark.db
 ```
 
+# Open in oneline
+
+```
+sqlite3 ~/.ark/db/ark.db
+```
+
 # List Tables
 
 ```
 .tables
+```
+
+# Describe Table
+
+```
+.schema azurecloudspace
 ```
 
 # Quit command line

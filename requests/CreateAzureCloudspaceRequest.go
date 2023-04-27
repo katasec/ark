@@ -3,6 +3,7 @@ package requests
 import "github.com/katasec/ark/resources/v0/azure/cloudspaces"
 
 type CreateAzureCloudspaceRequest struct {
+	Name         string
 	Kind         string
 	Environments []string
 }

@@ -11,9 +11,13 @@ import (
 func (s *Server) postCloudspace() http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		request := requests.CreateAzureCloudspaceRequest{}
+		// Set default acs name
+		acsRequest := requests.CreateAzureCloudspaceRequest{}
+		if acsRequest.Name == "" {
+			acsRequest.Name = "default"
+		}
 
-		err := yaml.NewDecoder(r.Body).Decode(&request)
+		err := yaml.NewDecoder(r.Body).Decode(&acsRequest)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
@@ -24,9 +28,9 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 
 		w.WriteHeader(http.StatusOK)
 
-		fmt.Fprint(w, request.ToYamlAzureCloudpace())
+		fmt.Fprint(w, acsRequest.ToYamlAzureCloudpace())
 
-		s.msg.Send("azurecloudspace", request.ToYamlAzureCloudpace())
+		s.msg.Send("azurecloudspace", acsRequest.ToYamlAzureCloudpace())
 	})
 }
 

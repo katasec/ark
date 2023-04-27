@@ -8,12 +8,12 @@ import (
 
 	"github.com/katasec/ark/repositories"
 	"github.com/katasec/ark/resources/v0/azure/cloudspaces"
-	resources "github.com/katasec/ark/resources/v0/azure/cloudspaces"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func TestAcs(t *testing.T) {
-	acs := resources.NewAzureCloudSpace()
+	acs := cloudspaces.NewAzureCloudSpace()
 	acs.AddSpoke("dev")
 	acs.AddSpoke("uat")
 	acs.AddSpoke("prod")
@@ -41,7 +41,7 @@ func TestAcs(t *testing.T) {
 }
 
 func TestAcsJson(t *testing.T) {
-	acs := resources.NewAzureCloudSpace()
+	acs := cloudspaces.NewAzureCloudSpace()
 	acs.AddSpoke("bob")
 	acs.AddSpoke("joe")
 
@@ -83,8 +83,39 @@ func TestSTuff(t *testing.T) {
 
 // }
 
+func TestWriteThenReadCloudSpace(t *testing.T) {
+
+	// Create DB
+	db := OpenDb()
+	defer db.Close()
+
+	// Create CloudSpace
+	acs := cloudspaces.NewAzureCloudSpace()
+	acs.AddSpoke("dev")
+
+	// Create Repository and write CloudSpace to DB
+	repo := repositories.NewAzureCloudSpaceRepository(db)
+	_, err := repo.CreateCloudSpace(acs)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// Read cloudspace from DB
+	myacs, err := repo.GetCloudSpaces()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// Output cloudspace to console
+	for _, acs := range myacs {
+		for _, spokes := range acs.Spokes {
+			fmt.Println(spokes.Name)
+		}
+	}
+}
+
 func OpenDb() *sql.DB {
-	db, err := sql.Open("sqlite3", "./hello.db")
+	db, err := sql.Open("sqlite3", "./test.db")
 	if err != nil {
 		fmt.Println(err)
 	}

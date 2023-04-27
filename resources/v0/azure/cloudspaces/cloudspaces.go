@@ -69,7 +69,6 @@ func (acs *AzureCloudspace) AddSpoke(name string) error {
 	// Add the new spoke to the list of spokes
 	acs.Spokes = append(acs.Spokes, newSpoke)
 
-	fmt.Println("Len Spokes:", len(acs.Spokes))
 	return nil
 }
 

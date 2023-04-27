@@ -122,3 +122,70 @@ func (acs *AzureCloudSpaceRepository) DeleteCloudSpace(cs cloudspaces.AzureCloud
 	}
 	return cs, nil
 }
+
+func (acs *AzureCloudSpaceRepository) GetCloudSpaces() (acss []cloudspaces.AzureCloudspace, err error) {
+
+	sqlCmd := `select * from %s`
+	sqlCmd = fmt.Sprintf(sqlCmd, acs.tableName)
+
+	fmt.Println(sqlCmd)
+	rows, err := acs.db.Query(sqlCmd)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var id int
+		var name string
+		var data string
+		var cs cloudspaces.AzureCloudspace
+
+		err := rows.Scan(&id, &name, &data)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		err = json.Unmarshal([]byte(data), &cs)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		acss = append(acss, cs)
+	}
+
+	return acss, nil
+}
+
+func (acs *AzureCloudSpaceRepository) GetCloudSpace(name string) (cloudspaces.AzureCloudspace, error) {
+	var cs cloudspaces.AzureCloudspace
+
+	sqlCmd := `select * from %s where name=%s`
+	sqlCmd = fmt.Sprintf(sqlCmd, acs.tableName, name)
+
+	fmt.Println(sqlCmd)
+	rows, err := acs.db.Query(sqlCmd)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var id int
+		var name string
+		var data string
+
+		err := rows.Scan(&id, &name, &data)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		err = json.Unmarshal([]byte(data), &cs)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+	}
+
+	return cs, nil
+}
