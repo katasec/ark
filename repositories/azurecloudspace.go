@@ -22,10 +22,17 @@ type AzureCloudSpaceRepository struct {
 }
 
 func NewAzureCloudSpaceRepository(db *sql.DB) *AzureCloudSpaceRepository {
-	return &AzureCloudSpaceRepository{
+
+	// Create New Cloud Space Repository
+	acsrepo := &AzureCloudSpaceRepository{
 		db:        db,
 		tableName: GetTableName[AzureCloudSpaceRepository](),
 	}
+
+	// Create the table if it doesn't exist
+	acsrepo.CreateTable(db)
+
+	return acsrepo
 }
 
 // CreateTable creates the table for the repository in the db that's passed in

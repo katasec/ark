@@ -157,6 +157,22 @@ func GetArkDir() string {
 	return ArkDir
 }
 
+func (cfg *Config) GetArkDir() string {
+	// Define config dir
+	homeDir, _ := os.UserHomeDir()
+	ArkDir = filepath.Join(homeDir, ".ark")
+
+	return ArkDir
+}
+
+func (cfg *Config) GetDbDir() string {
+	// Define config dir
+	homeDir, _ := os.UserHomeDir()
+	dbDir := filepath.Join(homeDir, ".ark", "db/")
+
+	return dbDir
+}
+
 func GetDbDir() string {
 	// Define config dir
 	homeDir, _ := os.UserHomeDir()

@@ -21,8 +21,8 @@ func (s *Server) postVm() http.HandlerFunc {
 
 		fmt.Fprintf(w, "Vm: %+v", vm)
 
-		db.AddVm(vm) // Add to memory
-		db.SaveVms() // Write to disk
+		// db.AddVm(vm) // Add to memory
+		// db.SaveVms() // Write to disk
 
 	})
 }
