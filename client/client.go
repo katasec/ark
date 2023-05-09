@@ -60,7 +60,7 @@ func (c *ArkClient) AddCloudSpace(cs cloudspaces.AzureCloudspace) error {
 	}
 
 	// Post to ArkServer
-	resp, err := c.client.Post(url, "application/json", postBody)
+	resp, err := c.client.Post(url, "application/x-yaml", postBody)
 	if err != nil {
 		fmt.Println("Error posting data to create cloudspace", err)
 		return err

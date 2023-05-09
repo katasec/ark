@@ -78,7 +78,7 @@ func CreateCloudspace(request Cloudspace, fileContent string, method ...string) 
 	// Send request to endpoint
 	if httpMethod == "POST" {
 		// Send post request
-		resp, err := http.Post(endpoint, "application/json", bytes.NewBuffer([]byte(fileContent)))
+		resp, err := http.Post(endpoint, "application/x-yaml", bytes.NewBuffer([]byte(fileContent)))
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -96,7 +96,7 @@ func CreateCloudspace(request Cloudspace, fileContent string, method ...string) 
 	} else {
 		// create delete request
 		req, err := http.NewRequest("DELETE", endpoint, bytes.NewBuffer([]byte(fileContent)))
-		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Content-Type", "application/x-yaml")
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -105,6 +105,7 @@ func CreateCloudspace(request Cloudspace, fileContent string, method ...string) 
 		client := &http.Client{}
 
 		// Fetch Request
+		fmt.Println("Deleting:", fileContent)
 		resp, err := client.Do(req)
 		if err != nil {
 			fmt.Println(err)
@@ -117,6 +118,8 @@ func CreateCloudspace(request Cloudspace, fileContent string, method ...string) 
 		if err != nil {
 			fmt.Println(err)
 			return
+		} else {
+			fmt.Println("Delete:", resp.Status)
 		}
 
 		// // Display Results

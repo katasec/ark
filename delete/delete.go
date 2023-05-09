@@ -26,11 +26,11 @@ func DoStuff(fileName string) {
 	// fmt.Printf("Starting delete for: %s\n", resource.Kind)
 
 	// Convert request to yaml for the API Server
-	request, jsonContent, _ := filecommand.Yaml2json(data)
+	request, _, _ := filecommand.Yaml2json(data)
 
 	switch kind {
 	case "azure/cloudspace":
-		filecommand.CreateCloudspace(request, jsonContent, "delete")
+		filecommand.CreateCloudspace(request, string(data), "delete")
 	default:
 		fmt.Println("Didn't recognize request")
 	}
