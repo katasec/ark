@@ -64,25 +64,6 @@ func TestSTuff(t *testing.T) {
 	repo.CreateCloudSpace(acs)
 }
 
-// func TestDb() {
-// 	db := OpenDb()
-
-// 	defer db.Close()
-
-// 	repo := repositories.NewAzureCloudSpaceRepository(db)
-
-// 	repo.CreateTable(db)
-// 	acs := genCloudSpace()
-
-// 	repo.CreateCloudSpace(acs)
-
-// 	acs.Hub.Name = "test3"
-// 	repo.UpdateCloudSpace(acs)
-
-// 	//repo.DeleteCloudSpace(acs)
-
-// }
-
 func TestWriteThenReadCloudSpace(t *testing.T) {
 
 	// Create DB

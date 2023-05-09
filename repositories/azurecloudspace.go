@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/katasec/ark/resources/v0/azure/cloudspaces"
 )
@@ -160,20 +161,29 @@ func (acs *AzureCloudSpaceRepository) GetCloudSpaces() (acss []cloudspaces.Azure
 func (acs *AzureCloudSpaceRepository) GetCloudSpace(name string) (cloudspaces.AzureCloudspace, error) {
 	var cs cloudspaces.AzureCloudspace
 
-	sqlCmd := `select * from %s where name=%s`
+	sqlCmd := `select * from %s where name='%s'`
 	sqlCmd = fmt.Sprintf(sqlCmd, acs.tableName, name)
 
 	fmt.Println(sqlCmd)
 	rows, err := acs.db.Query(sqlCmd)
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println("GetCloudSpace:", err.Error())
+		return cloudspaces.AzureCloudspace{}, err
 	}
 	defer rows.Close()
 
+	// Create empty cloudspace if no rows are returned
+	if !rows.Next() {
+		fmt.Println("No rows returned")
+		return *cloudspaces.NewAzureCloudSpace(), nil
+	}
+
+	fmt.Println("Found something")
+	// Else return the cloudspace
+	var data string
 	for rows.Next() {
 		var id int
 		var name string
-		var data string
 
 		err := rows.Scan(&id, &name, &data)
 		if err != nil {
@@ -185,7 +195,9 @@ func (acs *AzureCloudSpaceRepository) GetCloudSpace(name string) (cloudspaces.Az
 			fmt.Println(err)
 		}
 
+		fmt.Println("The data is: ", data)
 	}
+	fmt.Println("The data is: ", data)
 
 	return cs, nil
 }

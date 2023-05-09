@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/katasec/ark/requests"
 	"gopkg.in/yaml.v2"
@@ -24,15 +25,45 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 			return
 		}
 
-		//w.Header().Set("Content-Type", "application/json")
+		// Get cloudspace from DB
+		acs, err := s.acsrepo.GetCloudSpace(acsRequest.Name)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, "Error getting cloudspace: %s,", err)
+			return
+		} else {
+			fmt.Println("Cloudspace found in DB")
+		}
+
+		if acs.Name == "" {
+			acs.Name = acsRequest.Name
+		}
+
+		// Add environments from reuqest
+		for _, env := range acsRequest.Environments {
+			acs.AddSpoke(env)
+		}
+
+		f, err := os.Create("output.yaml")
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+
+		fmt.Println("The hub's name:", acs.Hub.Name)
+		fmt.Fprint(f, acs.ToYaml())
+
+		// Send request to queue
+		// err = s.qClient.Send("azurecloudspace", acs.ToYaml())
+		// if err != nil {
+		// 	w.WriteHeader(http.StatusInternalServerError)
+		// 	fmt.Fprintf(w, "Internal Error: %s,", err)
+		// 	return
+		// }
+
+		// Save cloudspace to DB
+		//s.acsrepo.CreateCloudSpace(&acs)
 		w.Header().Set("Content-Type", "application/x-yaml")
-		//s.acsrepo.GetCloudSpace(acsRequest.Name)
-
 		w.WriteHeader(http.StatusOK)
-
-		fmt.Fprint(w, acsRequest.ToYamlAzureCloudpace())
-
-		s.msg.Send("azurecloudspace", acsRequest.ToYamlAzureCloudpace())
 	})
 }
 
@@ -54,6 +85,6 @@ func (s *Server) deleteCloudspace() http.HandlerFunc {
 
 		fmt.Fprint(w, request.ToYamlAzureCloudpace())
 
-		s.msg.Send("DeleteAzureCloudspaceRequest", request.ToYamlAzureCloudpace())
+		s.qClient.Send("DeleteAzureCloudspaceRequest", request.ToYamlAzureCloudpace())
 	})
 }

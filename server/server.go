@@ -18,10 +18,10 @@ import (
 
 // Server struct models the ark server and its dependencies
 type Server struct {
-	router *chi.Mux
-	config *config.Config
-	msg    messaging.Messenger
-	db     *sql.DB
+	router  *chi.Mux
+	config  *config.Config
+	qClient messaging.Messenger
+	db      *sql.DB
 
 	acsrepo *repositories.AzureCloudSpaceRepository
 }
@@ -57,7 +57,7 @@ func NewServer() *Server {
 	// Return server with local config
 	return &Server{
 		config:  cfg,
-		msg:     msg,
+		qClient: msg,
 		router:  chiRouter,
 		db:      db,
 		acsrepo: acsrepo,
