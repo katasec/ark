@@ -191,7 +191,8 @@ func (d *DevCmd) Start() {
 
 	// using pipe as a separator for source and destination
 	mounts = []string{
-		fmt.Sprintf("%v|/root/.ark", config.GetArkDir()),
+		// fmt.Sprintf("%v|/root/.ark", config.GetArkDir()),
+		fmt.Sprintf("%v/.ark|/home/app/.ark", homeDir),
 		fmt.Sprintf("%v/.pulumi|/root/.pulumi", homeDir),
 		fmt.Sprintf("%v/.azure|/root/.azure", homeDir),
 	}
@@ -208,6 +209,7 @@ func (d *DevCmd) Start() {
 	containerName = "arkworker"
 	mounts = []string{
 		fmt.Sprintf("%v/.ark|/root/.ark", homeDir),
+		//fmt.Sprintf("%v/.ark|/home/app/.ark", homeDir),
 		fmt.Sprintf("%v/.pulumi|/root/.pulumi", homeDir),
 		fmt.Sprintf("%v/.azure|/root/.azure", homeDir),
 	}
