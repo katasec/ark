@@ -22,8 +22,8 @@ var (
 		Host: "0.0.0.0",
 		Port: "5067",
 	}
-	DEV_ARK_SERVER_IMAGE_NAME = "ghcr.io/katasec/arkserver:v0.0.4"
-	DEV_ARK_WORKER_IMAGE_NAME = "ghcr.io/katasec/arkworker:v0.0.7"
+	DEV_ARK_SERVER_IMAGE_NAME = "ghcr.io/katasec/arkserver:v0.0.6"
+	DEV_ARK_WORKER_IMAGE_NAME = "ghcr.io/katasec/arkworker:v0.0.6"
 )
 
 type Config struct {
