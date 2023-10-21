@@ -14,10 +14,10 @@ var (
 	d = NewDevCmd()
 
 	// Docker Images
-	DEV_PGSQL_IMAGE_NAME      = "postgres:14.2-alpine"
-	DEV_ARK_SERVER_IMAGE_NAME = "ghcr.io/katasec/arkserver:v0.0.7"
-	DEV_ARK_WORKER_IMAGE_NAME = "ghcr.io/katasec/arkworker:v0.0.7"
-
+	DEV_PGSQL_IMAGE_NAME        = "postgres:14.2-alpine"
+	DEV_ARK_SERVER_IMAGE_NAME   = "ghcr.io/katasec/arkserver:v0.0.7"
+	DEV_ARK_WORKER_IMAGE_NAME   = "ghcr.io/katasec/arkworker:v0.0.7"
+	DEV_ARK_DB_MYSQL_IMAGE_NAME = "mysql:8.1.0"
 	// Dev Instance defaults
 	DevDbDefaultUser = "postgres"
 	DevDbDefaultPass = "postgres"

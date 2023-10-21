@@ -180,9 +180,17 @@ func (d *DevCmd) Start() {
 		shell.ExecShellCmd("chmod -R 644 " + path.Join(homeDir, ".pulumi", "credentials.json"))
 	}
 
-	// if runtime.GOOS == "windows" {
-	// 	homeDir = winHomeDir(homeDir)
-	// }
+	if runtime.GOOS == "windows" {
+		homeDir = winHomeDir(homeDir)
+	}
+
+	// ***************************************
+	// Start Mysql Server
+	// ***************************************
+	envVars := []string{
+		"MYSQL_ROOT_PASSWORD=Password123",
+	}
+	dh.StartContainerUI(DEV_ARK_DB_MYSQL_IMAGE_NAME, envVars, "3306", "db", nil, []string{}...)
 
 	// ***************************************
 	// Start Ark Server
@@ -192,12 +200,13 @@ func (d *DevCmd) Start() {
 	// using pipe as a separator for source and destination
 	mounts = []string{
 		// fmt.Sprintf("%v|/root/.ark", config.GetArkDir()),
-		fmt.Sprintf("%v/.ark|/home/app/.ark", homeDir),
-		fmt.Sprintf("%v/.pulumi|/root/.pulumi", homeDir),
-		fmt.Sprintf("%v/.azure|/root/.azure", homeDir),
+		"/Users/writeameer/.ark|/root/.ark",
+		// "/var/run/docker.sock|/root/.ark/",
+		// fmt.Sprintf("%v/.pulumi|/root/.pulumi", homeDir),
+		// fmt.Sprintf("%v/.azure|/root/.azure", homeDir),
 	}
 
-	envVars := []string{
+	envVars = []string{
 		fmt.Sprintf("ASPNETCORE_URLS=http://%s:%s", cfg.ApiServer.Host, cfg.ApiServer.Port),
 	}
 	//md := []string{"/ark", "server"}
@@ -210,8 +219,8 @@ func (d *DevCmd) Start() {
 	mounts = []string{
 		fmt.Sprintf("%v/.ark|/root/.ark", homeDir),
 		//fmt.Sprintf("%v/.ark|/home/app/.ark", homeDir),
-		fmt.Sprintf("%v/.pulumi|/root/.pulumi", homeDir),
-		fmt.Sprintf("%v/.azure|/root/.azure", homeDir),
+		// fmt.Sprintf("%v/.pulumi|/root/.pulumi", homeDir),
+		// fmt.Sprintf("%v/.azure|/root/.azure", homeDir),
 	}
 	dh.StartContainerUI(cfg.DockerImages.Worker, nil, "0", containerName, []string{"/ark", "worker", "start"}, mounts...)
 

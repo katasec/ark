@@ -88,7 +88,8 @@ func (d *DockerHelper) ListContainers() (containers []types.Container, err error
 	})
 
 	if err != nil {
-		arkSpinner.ErrorStatusEvent("Plesae start docker for running Ark dev, exitting !")
+		arkSpinner.ErrorStatusEvent(err.Error())
+		arkSpinner.ErrorStatusEvent("Please start docker for running Ark dev, exitting !")
 		os.Exit(1)
 	}
 
@@ -210,7 +211,9 @@ func (d *DockerHelper) RunContainer(imageName string, envvars []string, port str
 	// Start the container
 	containerID := resp.ID
 	if err := d.cli.ContainerStart(d.ctx, containerID, types.ContainerStartOptions{}); err != nil {
-		panic(err)
+		//panic(err)
+		fmt.Printf("Error: %s\n", err.Error())
+		os.Exit(1)
 	}
 
 	// Loop until container starts
