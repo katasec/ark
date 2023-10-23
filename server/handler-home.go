@@ -9,11 +9,26 @@ var (
 	homeHtml = `
 		<!DOCTYPE html>
 		<html>
-			<head>
-				<title>Home</title>
+				<head>
+					<title>Home</title>
+					<style>
+					.style1
+					{
+						font-family:    Arial, Helvetica, sans-serif;
+						font-size:      15px;
+						text-align : center;
+					}
+				</style>					
 				</head>
 				<body>
-					<img src="/images/ark.svg" alt="Ark Logo" />
+					<div id="logo" class="style1">
+						<img src="/images/ark.svg" alt="Ark Logo" width="100"/>
+					</div>
+
+					<div id="desription"  class="style1">
+						<br/>
+						Ark is a cli to simplify management of your cloud resources using security best practices. Please check the <a href="https://github.com/katasec/ark">repo</a> for more details.
+					</div>					
 				</body>
 		</html>
 					`
