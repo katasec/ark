@@ -1,4 +1,4 @@
-package somethingtest_test
+package scratchpad
 
 import (
 	"database/sql"

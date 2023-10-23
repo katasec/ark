@@ -40,9 +40,9 @@ func (m *RedisMessenger) Send(subject string, message string) error {
 	return err
 }
 
-func (m *RedisMessenger) Receive(subject string, message string) (string, string, error) {
+func (m *RedisMessenger) Receive() (string, string, error) {
 	messageBody, err := m.client.LPop(m.ctx, m.queueName).Result()
-	subject = m.queueName
+	subject := m.queueName
 
 	return messageBody, subject, err
 }
