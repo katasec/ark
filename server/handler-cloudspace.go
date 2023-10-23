@@ -2,8 +2,8 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
-	"os"
 
 	"github.com/katasec/ark/requests"
 	"gopkg.in/yaml.v2"
@@ -44,21 +44,17 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 			acs.AddSpoke(env)
 		}
 
-		f, err := os.Create("output.yaml")
-		if err != nil {
-			fmt.Println(err.Error())
-		}
-
 		fmt.Println("The hub's name:", acs.Hub.Name)
-		fmt.Fprint(f, acs.ToYaml())
 
 		// Send request to queue
-		// err = s.qClient.Send("azurecloudspace", acs.ToYaml())
-		// if err != nil {
-		// 	w.WriteHeader(http.StatusInternalServerError)
-		// 	fmt.Fprintf(w, "Internal Error: %s,", err)
-		// 	return
-		// }
+		err = s.qClient.Send("azurecloudspace", acs.ToYaml())
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, "Internal Error: %s,", err)
+			return
+		} else {
+			log.Println("Message sent successfully !")
+		}
 
 		// Save cloudspace to DB
 		//s.acsrepo.CreateCloudSpace(&acs)
@@ -86,5 +82,6 @@ func (s *Server) deleteCloudspace() http.HandlerFunc {
 		fmt.Fprint(w, request.ToYamlAzureCloudpace())
 
 		s.qClient.Send("DeleteAzureCloudspaceRequest", request.ToYamlAzureCloudpace())
+
 	})
 }

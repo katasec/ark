@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/katasec/ark/client"
 	resources "github.com/katasec/ark/resources/v0"
@@ -31,11 +32,12 @@ func NewWorker() *Worker {
 	cfg := config.ReadConfig()
 
 	// Get queue name and access creds from config
-	connectionString := cfg.AzureConfig.MqConfig.MqConnectionString
+	connectionString := cfg.RedisUrl
 	queueName := cfg.AzureConfig.MqConfig.MqName
 
 	// Create an mq client
 	var mq messaging.Messenger = messaging.NewAsbMessenger(connectionString, queueName)
+	//var mq messaging.Messenger = messaging.NewRedisMessenger(connectionString, queueName)
 
 	fmt.Println("queueName is:" + queueName)
 	// Return worker with local config
@@ -171,13 +173,22 @@ func (w *Worker) Start() {
 	// Inifinite loop polling messages
 	for {
 		// This is a blocking receive
-		log.Println("Waiting for message...")
+		log.Println("polling for message...")
 		message, subject, err := w.mq.Receive()
 
 		if err != nil {
-			log.Println("Infinite loop polling for message, error:" + err.Error())
+			if err.Error() == "redis: nil" {
+				log.Println("Waiting for new message...")
+				time.Sleep(10 * time.Second)
+			} else {
+				panic(err)
+			}
+			//log.Println("Infinite loop polling for message, error:" + err.Error())
+
 			continue
 		}
+
+		time.Sleep(5 * time.Second)
 
 		subject = strings.ToLower(subject)
 		fmt.Println("Received Subject:" + subject)

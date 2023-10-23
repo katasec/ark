@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"context"
+	"errors"
 	"log"
 
 	"github.com/go-redis/redis/v8"
@@ -41,12 +42,15 @@ func (m *RedisMessenger) Send(subject string, message string) error {
 func (m *RedisMessenger) Receive() (string, string, error) {
 	messageBody, err := m.client.LPop(m.ctx, m.queueName).Result()
 	subject := m.queueName
-
-	return messageBody, subject, err
+	if err != nil {
+		return messageBody, subject, err
+	}
+	return messageBody, subject, nil
 }
 
 func getRedisClient(connectionString string) *redis.Client {
 
+	log.Println("Connection string:" + connectionString)
 	// Parse connection string
 	opt, err := redis.ParseURL(connectionString)
 	if err != nil {
@@ -56,6 +60,10 @@ func getRedisClient(connectionString string) *redis.Client {
 
 	// Create redis client
 	client := redis.NewClient(opt)
-
+	if client == nil {
+		panic(errors.New("redis client was nil"))
+	} else {
+		log.Println("Connected to redis successfully. " + client.Options().Addr)
+	}
 	return client
 }

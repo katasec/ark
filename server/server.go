@@ -39,6 +39,7 @@ func NewServer() *Server {
 	connString := cfg.AzureConfig.MqConfig.MqConnectionString
 	queueName := cfg.AzureConfig.MqConfig.MqName
 	msg := messaging.NewAsbMessenger(connString, queueName)
+	//msg := messaging.NewRedisMessenger(cfg.RedisUrl, queueName)
 
 	// Setup Database
 	dbDir := cfg.GetDbDir()

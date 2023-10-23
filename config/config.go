@@ -34,6 +34,7 @@ type Config struct {
 	ApiServer       ApiServer
 	DockerImages    DockerImages
 	PulumiDefultOrg string
+	RedisUrl        string
 }
 
 func check(e error) {
