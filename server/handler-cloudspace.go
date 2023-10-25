@@ -24,6 +24,7 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		log.Println(acsRequest.ToJsonAzureCloudpace())
 
 		// Get cloudspace from DB
 		acs, err := s.acsrepo.GetCloudSpace(acsRequest.Name)
@@ -47,7 +48,7 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 		fmt.Println("The hub's name:", acs.Hub.Name)
 
 		// Send request to queue
-		err = s.qClient.Send("azurecloudspace", acs.ToYaml())
+		err = s.qClient.Send("azurecloudspace", acs.ToJson())
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintf(w, "Internal Error: %s,", err)
@@ -81,7 +82,7 @@ func (s *Server) deleteCloudspace() http.HandlerFunc {
 
 		fmt.Fprint(w, request.ToYamlAzureCloudpace())
 
-		s.qClient.Send("DeleteAzureCloudspaceRequest", request.ToYamlAzureCloudpace())
+		s.qClient.Send("DeleteAzureCloudspaceRequest", request.ToJsonAzureCloudpace())
 
 	})
 }

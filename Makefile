@@ -21,3 +21,9 @@ server: ## Build Server container
 	@source ./scripts/build.sh;
 	@build
 #	docker build -t ghcr.io/katasec/arkapi:0.01 .
+rserver: ## Run Server
+	@go install
+	@ark server
+rworker: ## Run Server
+	@go install
+	@ark worker start

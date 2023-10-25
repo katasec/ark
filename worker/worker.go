@@ -32,7 +32,7 @@ func NewWorker() *Worker {
 	cfg := config.ReadConfig()
 
 	// Get queue name and access creds from config
-	connectionString := cfg.RedisUrl
+	connectionString := cfg.AzureConfig.MqConfig.MqConnectionString
 	queueName := cfg.AzureConfig.MqConfig.MqName
 
 	// Create an mq client
@@ -112,11 +112,14 @@ type autoResult struct {
 // messageHandler Creates a pulumi program and injects the message as pulumi config
 func (w *Worker) messageHandler(subject string, resourceName string, yamlconfig string, c chan error) {
 
+	log.Println("Before creating pulumi program")
+
 	// Create a pulumi program to handle this message
 	p, err := w.createPulumiProgram(resourceName, resources.Runtimes.Dotnet)
 
 	if err == nil {
 		// Inject yaml config as input for pulumi program
+
 		p.Stack.SetConfig(context.Background(), "arkdata", auto.ConfigValue{Value: yamlconfig})
 		p.FixConfig()
 
@@ -177,14 +180,7 @@ func (w *Worker) Start() {
 		message, subject, err := w.mq.Receive()
 
 		if err != nil {
-			if err.Error() == "redis: nil" {
-				log.Println("Waiting for new message...")
-				time.Sleep(10 * time.Second)
-			} else {
-				panic(err)
-			}
-			//log.Println("Infinite loop polling for message, error:" + err.Error())
-
+			log.Println("Infinite loop polling for message, error:" + err.Error())
 			continue
 		}
 
