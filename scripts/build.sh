@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # ---------------------------------------------------------------------
 # Globals
 # ---------------------------------------------------------------------
@@ -10,6 +12,10 @@ DOCKER_FILE_NAME=""
 # Functions
 # ---------------------------------------------------------------------
 function build() {
+
+    # Set image version from git tag
+    IMAGE_VERSION=`git describe --tags --abbrev=0`
+
     # Check IMAGE_VERSION exists
     if [ -z "${IMAGE_VERSION}" ]; then
         echo "Please specify docker image version via env var IMAGE_VERSION, exitting."

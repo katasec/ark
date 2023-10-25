@@ -6,8 +6,11 @@ FROM golang:1.20.3-alpine as build
 WORKDIR /go/src/app
 COPY . .
 
-RUN go mod download && \
-    CGO_ENABLED=0 go build -o /go/bin/ark
+RUN apk add gcc && \
+    apk add musl-dev && \
+    apk add libc-dev && \
+    go mod download && \
+    CGO_ENABLED=1 go build -o /go/bin/ark
 
 
 # ------------------------------------------------------------------------------------------
