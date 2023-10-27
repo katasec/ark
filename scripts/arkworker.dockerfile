@@ -21,12 +21,13 @@ RUN go mod download && \
 # Copy compiled binaries on to run container.
 # ------------------------------------------------------------------------------------------
 
-# FROM bash:5.2.15-alpine3.16
+FROM bash:5.2.15-alpine3.18
 # FROM mcr.microsoft.com/dotnet/sdk:7.0
 
 # Pulumi needs az cli
-FROM mcr.microsoft.com/azure-cli:latest  
+#FROM mcr.microsoft.com/azure-cli:latest  
 RUN apk add dotnet7-sdk
+#RUN apk add dotnet7-runtime
 COPY --from=build /go/bin/ark /
 #COPY --from=build /go/bin/ark /usr/local/bin
 COPY --from=build /root/.pulumi/bin/pulumi /usr/local/bin/pulumi

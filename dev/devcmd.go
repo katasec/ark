@@ -219,9 +219,16 @@ func (d *DevCmd) Start() {
 		fmt.Sprintf("%v/|/root/.ark", config.GetArkDir()),
 		//fmt.Sprintf("%v/.ark|/home/app/.ark", homeDir),
 		fmt.Sprintf("%v/.pulumi|/root/.pulumi", homeDir),
-		fmt.Sprintf("%v/.azure|/root/.azure", homeDir),
+		//fmt.Sprintf("%v/.azure|/root/.azure", homeDir),
 	}
-	dh.StartContainerUI(cfg.DockerImages.Worker, nil, "0", containerName, []string{"/ark", "worker", "start"}, mounts...)
+	envVars = []string{
+		"ARM_CLIENT_ID=" + os.Getenv("ARM_CLIENT_ID"),
+		"ARM_CLIENT_SECRET=" + os.Getenv("ARM_CLIENT_SECRET"),
+		"ARM_SUBSCRIPTION_ID=" + os.Getenv("ARM_SUBSCRIPTION_ID"),
+		"ARM_LOCATION_NAME=" + os.Getenv("ARM_LOCATION_NAME"),
+		"ARM_TENANT_ID=" + os.Getenv("ARM_TENANT_ID"),
+	}
+	dh.StartContainerUI(cfg.DockerImages.Worker, envVars, "0", containerName, []string{"/ark", "worker", "start"}, mounts...)
 
 }
 

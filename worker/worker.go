@@ -4,12 +4,14 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"time"
 
 	"github.com/katasec/ark/cmd/client"
 	resources "github.com/katasec/ark/resources/v0"
 	"github.com/katasec/ark/resources/v0/azure/cloudspaces"
+	"github.com/katasec/ark/shell"
 
 	"encoding/json"
 
@@ -170,7 +172,22 @@ func (w *Worker) createPulumiProgram(resourceName string, runtime string) (*pulu
 	return pulumirunner.NewRemoteProgram(args)
 }
 
+func (w *Worker) SetupAzureCreds() {
+	log.Println("Setting up Azure creds")
+	out, _ := shell.ExecShellCmd("pulumi config set azure-native:clientId " + os.Getenv("ARM_CLIENT_ID"))
+	log.Println(out)
+
+	out, _ = shell.ExecShellCmd("pulumi config set azure-native:clientSecret " + os.Getenv("ARM_CLIENT_SECRET") + " --secret")
+	log.Println(out)
+
+	out, _ = shell.ExecShellCmd("pulumi config set azure-native:tenantId " + os.Getenv("ARM_TENANT_ID"))
+	log.Println(out)
+
+	out, _ = shell.ExecShellCmd("pulumi config set azure-native:subscriptionId " + os.Getenv("ARM_SUBSCRIPTION_ID"))
+	log.Println(out)
+}
 func (w *Worker) Start() {
+	//w.SetupAzureCreds()
 	log.Println("Starting worker")
 
 	// Inifinite loop polling messages
