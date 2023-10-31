@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func ExecShellCmd(shellCmdStr string) (output string, err error) {
+func ExecShellCmd1(shellCmdStr string) (output string, err error) {
 
 	shellCmd := strings.Split(shellCmdStr, " ")
 

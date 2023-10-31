@@ -10,7 +10,7 @@ import (
 
 	"github.com/hpcloud/tail"
 	"github.com/katasec/ark/config"
-	"github.com/katasec/ark/shell"
+	shell "github.com/katasec/utils/shell"
 	"github.com/katasec/ark/utils"
 )
 

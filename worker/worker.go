@@ -11,7 +11,7 @@ import (
 	"github.com/katasec/ark/cmd/client"
 	resources "github.com/katasec/ark/resources/v0"
 	"github.com/katasec/ark/resources/v0/azure/cloudspaces"
-	"github.com/katasec/ark/shell"
+	shell "github.com/katasec/utils/shell"
 
 	"encoding/json"
 

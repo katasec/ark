@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/katasec/ark/shell"
+	shell "github.com/katasec/utils/shell"
 	arkutils "github.com/katasec/ark/utils"
 	pulumirunner "github.com/katasec/pulumi-runner"
 	utils "github.com/katasec/pulumi-runner/utils"
