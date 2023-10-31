@@ -9,7 +9,7 @@ require (
 	github.com/andanhm/go-prettytime v1.1.0
 	github.com/briandowns/spinner v1.23.0
 	github.com/dapr/cli v1.12.0
-	github.com/docker/docker v24.0.6+incompatible
+	github.com/docker/docker v24.0.7+incompatible
 	github.com/docker/go-connections v0.4.0
 	github.com/go-chi/chi v1.5.5
 	github.com/go-chi/chi/v5 v5.0.10
