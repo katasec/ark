@@ -56,6 +56,11 @@ func NewEmptyConfig() {
 	utils.ExitOnError(err)
 
 	// Create config yaml
+	funcport := os.Getenv("FUNCTIONS_CUSTOMHANDLER_PORT")
+	if funcport != "" {
+		apiServer.Port = funcport
+	}
+
 	myConfig := &Config{
 		LogFile:   filepath.Join(ArkDir, "ark.log"),
 		ApiServer: apiServer,
