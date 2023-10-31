@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+    <title>Home</title>
+    <style>
+        .style1 {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        .heading {
+            font-family: 'Open Sans';
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .logo,
+        .description {
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="logo" class="heading">
+        <img src="{{ .prefix}}/katasec.png" alt="Katasec Logo" />
+        <br />
+        <img src="{{ .prefix}}/ark.svg" alt="Ark Logo" width="20%" />
+    </div>
+
+    <div id="desription" class="heading">
+        Reduce Complexity<br />
+        Reduce Cost <br />
+        Reduce Breaches <br />
+        <br />
+        <!-- <br/>
+                Ark is a cli to simplify management of your cloud resources using security best practices. Please check the <a href="https://github.com/katasec/ark">repo</a> for more details. 
+                <br/> -->
+        Click <a
+            href="https://katasecid.b2clogin.com/katasecid.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1_SignUpIn&client_id=6fa18972-6f2d-4bca-a4a6-0ebd58f77bf6&nonce=defaultNonce&redirect_uri=https%3A%2F%2Fjwt.ms&scope=openid&response_type=id_token&prompt=login">here</a>
+        to sign up!
+    </div>
+
+</body>
+
+</html>
