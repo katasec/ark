@@ -6,14 +6,11 @@ package main
 import (
 	"os"
 
+	"github.com/katasec/ark/cmd"
 	"github.com/katasec/ark/dev"
 	"github.com/katasec/ark/utils"
-	"github.com/katasec/ark/web"
 )
 
-// "github.com/katasec/ark/cmd"
-// "github.com/katasec/ark/dev"
-// "github.com/katasec/ark/utils"
 func main() {
 
 	// Run if this program is being called from Pulumi
@@ -23,8 +20,5 @@ func main() {
 	}
 
 	// Behave as normal cli
-	//fmt.Println("hi")
-	server := web.NewServer()
-	server.Start()
-	//cmd.Execute()
+	cmd.Execute()
 }
