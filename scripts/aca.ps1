@@ -30,7 +30,6 @@ $envVars = @{
 }
 
 $version = git describe --tags --abbrev=0
-$version="v0.0.17"
 $image = "ghcr.io/katasec/arkserver:$version"
 Write-Output "Image Version: $image"
 $containerAppTemplateObjectParams = @{
