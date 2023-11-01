@@ -29,6 +29,7 @@ func NewServer() *Server {
 
 func (s *Server) Start() {
 	// Start the server
-	log.Println("Listening on: http://127.0.0.1:" + s.port)
-	log.Fatal(http.ListenAndServe(":"+s.port, s.mux))
+	listAddr := "0.0.0.0"
+	log.Println("Listening on: http://" + listAddr + ":" + s.port)
+	log.Fatal(http.ListenAndServe(listAddr+":"+s.port, s.mux))
 }

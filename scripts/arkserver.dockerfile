@@ -16,8 +16,8 @@ RUN apk add gcc && \
 # ------------------------------------------------------------------------------------------
 # Copy compiled binary on to golang distro
 # ------------------------------------------------------------------------------------------
-FROM --platform=linux/amd64 bash:5.2.15-alpine3.17
-#FROM bash:5.2.15-alpine3.17
+#FROM --platform=linux/amd64 bash:5.2.15-alpine3.17
+FROM bash:5.2.15-alpine3.17
 COPY --from=build /go/bin/ark /
 #COPY --from=build /go/src/app/scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 CMD ["/ark","server"]

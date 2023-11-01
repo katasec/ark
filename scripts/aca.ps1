@@ -34,7 +34,7 @@ $containerAppTemplateObjectParams = @{
     Image = "ghcr.io/katasec/arkserver:$version"
     ResourceCpu = 0.25
     ResourceMemory = "0.5Gi"
-    Command = "ark web"
+    Command = "/ark web"
     Env = $envVars
 }
 $image = New-AzContainerAppTemplateObject @containerAppTemplateObjectParams
