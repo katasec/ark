@@ -22,8 +22,8 @@ var (
 )
 
 func init() {
-	fmt.Println("In file command")
-	//arkConfig = config.ReadConfig()
+	//fmt.Println("In file command")
+	arkConfig = config.ReadConfig()
 	dtLayout = "2006-01-02 15:04:05"
 }
 

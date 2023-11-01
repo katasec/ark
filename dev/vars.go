@@ -11,7 +11,7 @@ var (
 	checksPassed = true
 
 	// Used for managing ark `dev` command
-	//d = NewDevCmd()
+	d = NewDevCmd()
 
 	// Docker Images
 	DEV_PGSQL_IMAGE_NAME = "postgres:14.2-alpine"

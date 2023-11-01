@@ -19,7 +19,7 @@ type DevCmd struct {
 }
 
 func NewDevCmd() *DevCmd {
-	fmt.Println("In NewDevCmd")
+	//fmt.Println("In NewDevCmd")
 	cfg := config.ReadConfig()
 
 	return &DevCmd{
