@@ -18,7 +18,7 @@ func NewServer() *Server {
 	// Create Server struct with new mux
 	s := &Server{
 		mux:  http.NewServeMux(),
-		port: misc.IfEmpty(os.Getenv("ARK_WEB_PORT"), "8080"),
+		port: misc.IfEmpty(os.Getenv("ARK_WEB_PORT"), "80"),
 	}
 
 	// Register handlers for routes
