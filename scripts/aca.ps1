@@ -28,9 +28,10 @@ $envVars = @{
     ARK_WEB_PORT = $port
 }
 
+$version = git describe --tags --abbrev=0
 $containerAppTemplateObjectParams = @{
     Name = "azps-containerapp"
-    Image = "ghcr.io/katasec/arkserver:v0.0.13"
+    Image = "ghcr.io/katasec/arkserver:$version"
     ResourceCpu = 0.25
     ResourceMemory = "0.5Gi"
     Command = "ark web"
