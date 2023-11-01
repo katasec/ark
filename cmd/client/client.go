@@ -11,12 +11,13 @@ import (
 )
 
 var (
-	arkConfig = config.ReadConfig()
-	dtLayout  = "2006-01-02 15:04:05"
+	arkConfig *config.Config
+	dtLayout  string
 )
 
 func init() {
-	//fmt.Println("This is init()")
+	//arkConfig = config.ReadConfig()
+	dtLayout = "2006-01-02 15:04:05"
 }
 
 func Start() {

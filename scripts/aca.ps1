@@ -30,7 +30,7 @@ $envVars = @{
 
 $containerAppTemplateObjectParams = @{
     Name = "azps-containerapp"
-    Image = "ghcr.io/katasec/arkserver:v0.0.12"
+    Image = "ghcr.io/katasec/arkserver:v0.0.13"
     ResourceCpu = 0.25
     ResourceMemory = "0.5Gi"
     Command = "ark web"

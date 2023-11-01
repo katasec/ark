@@ -10,8 +10,8 @@ import (
 	"runtime"
 	"strings"
 
-	shell "github.com/katasec/utils/shell"
 	"github.com/katasec/ark/utils"
+	shell "github.com/katasec/utils/shell"
 	"gopkg.in/yaml.v2"
 )
 

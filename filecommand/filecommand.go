@@ -17,8 +17,15 @@ import (
 )
 
 var (
-	arkConfig = config.ReadConfig()
+	arkConfig *config.Config
+	dtLayout  string
 )
+
+func init() {
+	fmt.Println("In file command")
+	//arkConfig = config.ReadConfig()
+	dtLayout = "2006-01-02 15:04:05"
+}
 
 func GetResource(data []byte) (Resource, error) {
 	// convert to struct

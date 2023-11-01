@@ -10,8 +10,8 @@ import (
 
 	"github.com/hpcloud/tail"
 	"github.com/katasec/ark/config"
-	shell "github.com/katasec/utils/shell"
 	"github.com/katasec/ark/utils"
+	shell "github.com/katasec/utils/shell"
 )
 
 type DevCmd struct {
@@ -19,6 +19,7 @@ type DevCmd struct {
 }
 
 func NewDevCmd() *DevCmd {
+	fmt.Println("In NewDevCmd")
 	cfg := config.ReadConfig()
 
 	return &DevCmd{

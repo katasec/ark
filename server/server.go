@@ -29,6 +29,7 @@ type Server struct {
 func NewServer() *Server {
 
 	// Read from local config  file
+	fmt.Println("In New Server")
 	cfg := config.ReadConfig()
 
 	// Setup Router
