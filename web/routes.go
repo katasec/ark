@@ -23,9 +23,12 @@ func (s *Server) initialiseRoutes() {
 	// }
 
 	s.mux.Handle("/assets/", run(handlers.FileHandler("/assets")))
-	s.mux.Handle("/api/arkweb", run(handlers.HomeHandler()))
-	s.mux.Handle("/api/arkweb/", run(handlers.FileHandler("/api/arkweb/")))
 
+	s.mux.Handle("/api/arkweb", run(handlers.HomeHandler()))
+	s.mux.Handle("/api/web", run(handlers.HomeHandler()))
+
+	s.mux.Handle("/api/arkweb/", run(handlers.FileHandler("/api/arkweb/")))
+	s.mux.Handle("/api/web/", run(handlers.FileHandler("/api/arkweb/")))
 	// Serve "assets" folder from root
 	s.mux.Handle("/", run(handlers.HomeHandler()))
 

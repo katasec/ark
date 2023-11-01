@@ -18,7 +18,7 @@ func NewServer() *Server {
 	// Create Server struct with new mux
 	s := &Server{
 		mux:  http.NewServeMux(),
-		port: misc.IfEmpty(os.Getenv("FUNCTIONS_CUSTOMHANDLER_PORT"), "8080"),
+		port: misc.IfEmpty(os.Getenv("ARK_WEB_PORT"), "8080"),
 	}
 
 	// Register handlers for routes
@@ -29,6 +29,6 @@ func NewServer() *Server {
 
 func (s *Server) Start() {
 	// Start the server
-	log.Println("Listening on:" + s.port)
+	log.Println("Listening on: http://127.0.0.1:" + s.port)
 	log.Fatal(http.ListenAndServe(":"+s.port, s.mux))
 }

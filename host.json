@@ -7,8 +7,8 @@
   "customHandler": {
     "enableForwardingHttpRequest": true,
     "description": {
-      "defaultExecutablePath": "/Users/writeameer/go/bin/ark",
-      "workingDirectory": "",
+      "defaultExecutablePath": "bin/ark",
+      "workingDirectory": "bin",
       "arguments": [
           "web"
       ]

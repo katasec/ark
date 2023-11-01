@@ -48,7 +48,6 @@ func FileHandler(prefix ...string) http.HandlerFunc {
 	fs := http.FileServer(http.FS(assets))
 
 	if stripPrefix != "" {
-		fmt.Println("Returning stripped !")
 		return func(w http.ResponseWriter, r *http.Request) {
 			strippedRequest := r.Clone(r.Context())
 			strippedRequest.URL.Path = strings.TrimPrefix(strippedRequest.URL.Path, stripPrefix)
@@ -57,7 +56,6 @@ func FileHandler(prefix ...string) http.HandlerFunc {
 		}
 
 	} else {
-		fmt.Println("Returning normal !")
 		return func(w http.ResponseWriter, r *http.Request) {
 			fs.ServeHTTP(w, r)
 		}

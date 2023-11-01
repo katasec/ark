@@ -44,6 +44,25 @@ function build() {
     fi
 }
 
+function publishAzure() 
+{
+    # Rebuild binary into bin folder
+    mkdir -p bin
+    GOOS=linux GOARCH=amd64 go build -o bin/
+
+    # Publish to Azure function
+    func azure functionapp publish katasecweb
+}
+
+function runlocal() 
+{
+    # Rebuild binary into bin folder
+    mkdir -p bin
+    go build -o bin/
+
+    # Publish to Azure function
+    func start
+}
 
 function buildAndPush() {
     build

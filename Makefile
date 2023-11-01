@@ -21,3 +21,9 @@ runserver: ## Run Server
 runworker: ## Run Worker
 	@go install
 	@ark worker start
+
+publishazure: ## Publish to Azure functions
+	@source ./scripts/build.sh && publishAzure	
+
+runlocal: ## Run Azure func locally
+	@source ./scripts/build.sh && runlocal	
