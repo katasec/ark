@@ -20,18 +20,21 @@ $port = 80
 # $envVar1.Name = "ARK_WEB_PORT"
 # $envVar1.Value = $port
 
-# $envVar2 = New-Object -TypeName Microsoft.Azure.PowerShell.Cmdlets.ContainerApp.Models.IEnvironmentVar
+#$envVar2 = New-Object -TypeName Microsoft.Azure.PowerShell.Cmdlets.App.Models.Api.IEnvironmentVar
 # $envVar2.Name = "MY_ENV_VAR2"
 # $envVar2.Value = "Goodbye, world!"
 
 $envVars = @{
-    ARK_WEB_PORT = $port
+    Name="ARK_WEB_PORT"
+    Value="$port"
 }
 
 $version = git describe --tags --abbrev=0
+$image = "ghcr.io/katasec/arkserver:$version"
+Write-Output "Image Version: $image"
 $containerAppTemplateObjectParams = @{
     Name = "azps-containerapp"
-    Image = "ghcr.io/katasec/arkserver:$version"
+    Image = $image
     ResourceCpu = 0.25
     ResourceMemory = "0.5Gi"
     Command = "/ark web"
