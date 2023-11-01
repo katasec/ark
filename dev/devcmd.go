@@ -210,7 +210,7 @@ func (d *DevCmd) Start() {
 		fmt.Sprintf("ASPNETCORE_URLS=http://%s:%s", cfg.ApiServer.Host, cfg.ApiServer.Port),
 	}
 	//md := []string{"/ark", "server"}
-	dh.StartContainerUI(cfg.DockerImages.Server, envVars, cfg.ApiServer.Port, containerName, []string{"/ark", "server"}, mounts...)
+	dh.StartContainerUI(cfg.DockerImages.Server, envVars, cfg.ApiServer.Port, containerName, []string{"ark", "server"}, mounts...)
 
 	// ***************************************
 	// Start Ark worker

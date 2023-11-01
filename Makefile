@@ -14,7 +14,6 @@ checkbuild: ## Check app can build
 	@go build -o /dev/null
 server: ## Build Server container
 	@source ./scripts/build.sh && IMAGE_NAME=arkserver && build
-#	docker build -t ghcr.io/katasec/arkapi:0.01 .
 runserver: ## Run Server
 	@go install
 	@ark server
