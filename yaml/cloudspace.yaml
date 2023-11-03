@@ -1,4 +1,7 @@
 kind: azure/cloudspace
 environments:
-- prod
-- ameer
+- legcydev
+- legacyprod
+- dlpcustomer1
+
+

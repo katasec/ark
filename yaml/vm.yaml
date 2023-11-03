@@ -1,0 +1,8 @@
+---
+kind: azure/vm
+cloudpsace:
+  name: default
+  os:  sss
+  size: sss
+
+

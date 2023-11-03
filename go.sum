@@ -142,8 +142,8 @@ github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLf
 github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 h1:BQSFePA1RWJOlocH6Fxy8MmwDt+yVQYULKfN0RoTN8A=
 github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99/go.mod h1:1lJo3i6rXxKeerYnT8Nvf0QmHCRC1n8sfWVwXF2Frvo=
 github.com/joho/godotenv v1.3.0 h1:Zjp+RcGpHhGlrMbJzXTrZZPrWj+1vfm90La1wgB6Bhc=
-github.com/katasec/pulumi-runner v0.1.14 h1:AUZrrEHDk8lSOtI26BiEgxraCg41mo//27twnmndXig=
-github.com/katasec/pulumi-runner v0.1.14/go.mod h1:9UilVyD+OxpJ+llRf2yvp5mNbqW7qm38qEHU5pJ9Xes=
+github.com/katasec/pulumi-runner v0.1.18 h1:xTs+xp8gNuztmelx19H32pSAZ9nXi1ujLsI+XsvNuqs=
+github.com/katasec/pulumi-runner v0.1.18/go.mod h1:9UilVyD+OxpJ+llRf2yvp5mNbqW7qm38qEHU5pJ9Xes=
 github.com/katasec/utils v0.0.0-20231029071733-fb2c7459c404 h1:Cj8Y8vfpo30NqGa32Bf4vaFVq62UN97YD1RUWmu+VJ4=
 github.com/katasec/utils v0.0.0-20231029071733-fb2c7459c404/go.mod h1:KVvlkqcbjNsUFsMbkFKhZKGxU/wRKjg+XwlIWyoLWOs=
 github.com/kevinburke/ssh_config v1.2.0 h1:x584FjTGwHzMwvHx18PXxbBVzfnxogHaAReU4gf13a4=

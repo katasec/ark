@@ -8,9 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/katasec/ark/cmd/client"
 	resources "github.com/katasec/ark/resources/v0"
-	"github.com/katasec/ark/resources/v0/azure/cloudspaces"
 	shell "github.com/katasec/utils/shell"
 
 	"encoding/json"
@@ -195,7 +193,7 @@ func (w *Worker) Start() {
 		// This is a blocking receive
 		log.Println("polling for message...")
 		message, subject, err := w.mq.Receive()
-
+		log.Println("After blocking poll")
 		if err != nil {
 			log.Println("Infinite loop polling for message, error:" + err.Error())
 			continue
@@ -223,10 +221,10 @@ func (w *Worker) Start() {
 
 				fmt.Println("Handler ran without errors !")
 				// Create ark api client
-				arkClient := client.NewArkClient()
+				//arkClient := client.NewArkClient()
 
 				// Convert nmessage to Azurecloudspace
-				cs, err := yamlUnmarshall[cloudspaces.AzureCloudspace](message)
+				//cs, err := yamlUnmarshall[cloudspaces.AzureCloudspace](message)
 				//cs, err := jsonUnmarshall[cloudspaces.AzureCloudspace](message)
 				if err != nil {
 					break
@@ -234,9 +232,11 @@ func (w *Worker) Start() {
 
 				// Update DB
 				if strings.HasPrefix(strings.ToLower(subject), "delete") {
-					arkClient.DeleteCloudSpace(cs)
+					//arkClient.DeleteCloudSpace(cs)
+					fmt.Println("TODO: Delete Cloudpace from DB")
 				} else {
-					arkClient.AddCloudSpace(cs)
+					//arkClient.AddCloudSpace(cs)
+					fmt.Println("TODO: Add Cloudpace to DB")
 				}
 			} else {
 				fmt.Println("Handler errors:" + handlerError.Error())

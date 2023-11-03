@@ -3,3 +3,4 @@ kind: azure/managedcluster
 cloudpsace:
   name: default
   environment: ameer
+

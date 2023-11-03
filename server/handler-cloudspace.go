@@ -54,6 +54,7 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 			fmt.Fprintf(w, "Internal Error: %s,", err)
 			return
 		} else {
+			log.Println("Erro was nill")
 			log.Println("Message sent successfully !")
 		}
 

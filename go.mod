@@ -16,7 +16,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/hashicorp/go-retryablehttp v0.7.4
 	github.com/hpcloud/tail v1.0.0
-	github.com/katasec/pulumi-runner v0.1.14
+	github.com/katasec/pulumi-runner v0.1.18
 	github.com/katasec/utils v0.0.0-20231029071733-fb2c7459c404
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/mitchellh/go-ps v1.0.0
