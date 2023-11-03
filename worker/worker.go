@@ -16,7 +16,6 @@ import (
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/messaging"
 	pulumirunner "github.com/katasec/pulumi-runner"
-	"github.com/katasec/pulumi-runner/utils"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto"
 	"gopkg.in/yaml.v2"
 )
@@ -140,7 +139,7 @@ func (w *Worker) messageHandler(subject string, resourceName string, yamlconfig 
 // createPulumiProgram creates a pulumi program from a git remote resource for the given resource name
 func (w *Worker) createPulumiProgram(resourceName string, runtime string) (*pulumirunner.RemoteProgram, error) {
 
-	logger := utils.ConfigureLogger(w.config.LogFile)
+	//logger := utils.ConfigureLogger(w.config.LogFile)
 	projectPath := fmt.Sprintf("%s-handler", resourceName)
 
 	log.Println("Project path:" + projectPath)
@@ -153,7 +152,7 @@ func (w *Worker) createPulumiProgram(resourceName string, runtime string) (*pulu
 		Plugins: []map[string]string{
 			{
 				"name":    "azure-native",
-				"version": "v1.89.1",
+				"version": "v2.7.0",
 			},
 		},
 		Config: []map[string]string{
@@ -163,7 +162,7 @@ func (w *Worker) createPulumiProgram(resourceName string, runtime string) (*pulu
 			},
 		},
 		Runtime: runtime,
-		Writer:  logger,
+		Writer:  os.Stdout,
 	}
 
 	// Create a new pulumi program
