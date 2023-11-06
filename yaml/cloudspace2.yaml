@@ -1,3 +1,4 @@
 kind: azure/cloudspace
 environments:
-- egal
+- dev
+- prod
