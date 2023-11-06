@@ -7,23 +7,23 @@ import (
 	"github.com/briandowns/spinner"
 )
 
-type ArkSpinner struct {
+type Spinner struct {
 	spinner *spinner.Spinner
 }
 
-func NewArkSpinner() *ArkSpinner {
+func NewArkSpinner() *Spinner {
 	s := spinner.New(spinner.CharSets[18], 100*time.Millisecond)
-	return &ArkSpinner{
+	return &Spinner{
 		spinner: s,
 	}
 }
 
-func (a *ArkSpinner) Start(message string) {
+func (a *Spinner) Start(message string) {
 	a.spinner.Color("blue")
 	a.spinner.Start()
 	a.spinner.Suffix = " " + message
 }
-func (a *ArkSpinner) Stop(err error, message string) {
+func (a *Spinner) Stop(err error, message string) {
 
 	if err == nil {
 		a.spinner.FinalMSG = "✅  " + message + "\n"
@@ -34,14 +34,14 @@ func (a *ArkSpinner) Stop(err error, message string) {
 	a.spinner.Stop()
 }
 
-func (a *ArkSpinner) InfoStatusEvent(message string) {
+func (a *Spinner) InfoStatusEvent(message string) {
 	fmt.Println("ℹ️  " + message)
 }
 
-func (a *ArkSpinner) SuccessStatusEvent(message string) {
+func (a *Spinner) SuccessStatusEvent(message string) {
 	fmt.Println("✅  " + message)
 }
 
-func (a *ArkSpinner) ErrorStatusEvent(message string) {
+func (a *Spinner) ErrorStatusEvent(message string) {
 	fmt.Println("❌  " + message)
 }
