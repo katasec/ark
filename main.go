@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/katasec/ark/cmd"
-	"github.com/katasec/ark/dev"
+	"github.com/katasec/ark/cmd/dev"
 	"github.com/katasec/ark/utils"
 )
 

@@ -6,7 +6,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/katasec/ark/dev"
+	//"github.com/katasec/ark/dev"
+	"github.com/katasec/ark/cmd/dev"
 	"github.com/spf13/cobra"
 )
 

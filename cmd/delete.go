@@ -4,7 +4,7 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/katasec/ark/delete"
+	"github.com/katasec/ark/cmd/delete"
 	"github.com/spf13/cobra"
 )
 

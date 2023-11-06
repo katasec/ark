@@ -4,7 +4,8 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/katasec/ark/dev"
+	//"github.com/katasec/ark/dev"
+	"github.com/katasec/ark/cmd/dev"
 	"github.com/spf13/cobra"
 )
 
