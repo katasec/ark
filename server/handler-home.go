@@ -23,7 +23,7 @@ var (
 				</head>
 				<body>
 					<div id="logo" class="style1">
-						<img src="/images/ark.svg" alt="Ark Logo" width="10%"/ >
+						<img src="/assets/ark.svg" alt="Ark Logo" width="10%"/ >
 					</div>
 
 					<div id="desription"  class="style1">

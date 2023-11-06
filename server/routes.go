@@ -1,12 +1,14 @@
 package server
 
-import "net/http"
+import (
+	"net/http"
+)
 
 func (s *Server) initaliseRoutes() {
 
 	// Setup file server
-	fs := http.FileServer(http.Dir("images"))
-	s.router.Handle("/images/*", http.StripPrefix("/images/", fs))
+	fs := http.FileServer(http.Dir("server/assets"))
+	s.router.Handle("/assets/*", http.StripPrefix("/assets", fs))
 
 	// Register route handlers for routes
 	s.router.Get("/", s.homeHander())
