@@ -37,7 +37,7 @@ var (
 					`
 )
 
-func (s *Server) homeHander() http.HandlerFunc {
+func (s *Server) HomeHander() http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, homeHtml)
 	})

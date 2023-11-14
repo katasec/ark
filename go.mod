@@ -3,9 +3,7 @@ module github.com/katasec/ark
 go 1.20
 
 require (
-	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.8.0
 	github.com/Azure/azure-sdk-for-go/sdk/messaging/azservicebus v1.5.0
-	github.com/Azure/azure-sdk-for-go/sdk/storage/azblob v1.2.0
 	github.com/andanhm/go-prettytime v1.1.0
 	github.com/briandowns/spinner v1.23.0
 	github.com/dapr/cli v1.12.0
@@ -18,6 +16,7 @@ require (
 	github.com/hpcloud/tail v1.0.0
 	github.com/katasec/pulumi-runner v0.1.18
 	github.com/katasec/utils v0.0.0-20231029071733-fb2c7459c404
+	github.com/lib/pq v1.10.7
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/mitchellh/go-ps v1.0.0
 	github.com/pulumi/pulumi-azure-native-sdk/resources v1.104.0
@@ -30,6 +29,8 @@ require (
 
 require (
 	dario.cat/mergo v1.0.0 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.8.0 // indirect
+	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.3.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.4.0 // indirect
 	github.com/Azure/go-amqp v1.0.2 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect

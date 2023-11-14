@@ -27,7 +27,7 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 		log.Println(acsRequest.ToJsonAzureCloudpace())
 
 		// Get cloudspace from DB
-		acs, err := s.acsrepo.GetCloudSpace(acsRequest.Name)
+		acs, err := s.Acsrepo.GetCloudSpace(acsRequest.Name)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintf(w, "Error getting cloudspace: %s,", err)

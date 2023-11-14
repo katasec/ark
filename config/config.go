@@ -35,6 +35,7 @@ type Config struct {
 	DockerImages    DockerImages
 	PulumiDefultOrg string
 	RedisUrl        string
+	DbConfig        DbConfig
 }
 
 func check(e error) {

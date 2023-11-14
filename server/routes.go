@@ -11,7 +11,7 @@ func (s *Server) initaliseRoutes() {
 	s.router.Handle("/assets/*", http.StripPrefix("/assets", fs))
 
 	// Register route handlers for routes
-	s.router.Get("/", s.homeHander())
+	s.router.Get("/", s.HomeHander())
 	s.router.Post("/azure/cloudspace", s.postCloudspace())
 	s.router.Delete("/azure/cloudspace", s.deleteCloudspace())
 	s.router.Post("/azure/vm", s.postVm())

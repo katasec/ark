@@ -22,14 +22,12 @@ type Server struct {
 	config  *config.Config
 	qClient messaging.Messenger
 	db      *sql.DB
-
-	acsrepo *repositories.AzureCloudSpaceRepository
+	Acsrepo *repositories.AzureCloudSpaceRepository
 }
 
 func NewServer() *Server {
 
 	// Read from local config  file
-	fmt.Println("In New Server")
 	cfg := config.ReadConfig()
 
 	// Setup Router
@@ -42,27 +40,17 @@ func NewServer() *Server {
 	msg := messaging.NewAsbMessenger(connString, queueName)
 	//msg := messaging.NewRedisMessenger(cfg.RedisUrl, queueName)
 
-	// Setup Database
-	dbDir := cfg.GetDbDir()
-	dbFile := fmt.Sprintf("%s/ark.db", dbDir)
-
-	db, err := sql.Open("sqlite3", dbFile)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println("Database opened successfully")
-	}
+	//Setup DB Config
 
 	// Initialize Repositories
-	acsrepo := repositories.NewAzureCloudSpaceRepository(db)
+	//acsrepo := repositories.NewAzureCloudSpaceRepository(db)
 
 	// Return server with local config
 	return &Server{
 		config:  cfg,
 		qClient: msg,
 		router:  chiRouter,
-		db:      db,
-		acsrepo: acsrepo,
+		//Acsrepo: acsrepo,
 	}
 }
 
@@ -77,6 +65,20 @@ func (s *Server) Start() {
 
 }
 
-func (s *Server) DbStuff() {
-	// database.SomeStuff()
+func (s *Server) GetDbConnection() (*sql.DB, error) {
+
+	db, err := sql.Open(s.config.DbConfig.DriverName, s.config.DbConfig.DataSourceName)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		log.Println("Database ping successful!")
+	}
+
+	return db, err
 }
