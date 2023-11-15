@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"testing"
 
 	"github.com/katasec/ark/repositories"
@@ -21,8 +22,21 @@ func TestNewAzureCloudSpaceRepository(t *testing.T) {
 
 	acsRepo := repositories.NewAzureCloudSpaceRepository(db)
 
-	cs := &cloudspaces.AzureCloudspace{
-		Name: "default2",
+	//acsRepo.DeleteCloudSpace()
+	name := "default3"
+	acsRepo.CreateCloudSpace(GetSampleAcs(name))
+
+	acs, err := acsRepo.GetCloudSpace(name)
+	if err != nil {
+		fmt.Println(err)
+	}
+	log.Printf("ACS Name:%s\n", acs.Name)
+}
+
+func GetSampleAcs(name string) *cloudspaces.AzureCloudspace {
+
+	return &cloudspaces.AzureCloudspace{
+		Name: name,
 		Hub: cloudspaces.VNETInfo{
 			Name:          "hub",
 			AddressPrefix: "10.1.0.0/16",
@@ -46,7 +60,4 @@ func TestNewAzureCloudSpaceRepository(t *testing.T) {
 			},
 		},
 	}
-
-	//acsRepo.DeleteCloudSpace(*cs)
-	acsRepo.CreateCloudSpace(cs)
 }
