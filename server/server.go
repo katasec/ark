@@ -71,7 +71,6 @@ func (s *Server) GetDbConnection() (*sql.DB, error) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	defer db.Close()
 
 	err = db.Ping()
 	if err != nil {

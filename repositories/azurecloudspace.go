@@ -42,7 +42,7 @@ func (acs *AzureCloudSpaceRepository) CreateTable(db *sql.DB) {
 	// Create table
 	sql_table := `
 	CREATE TABLE IF NOT EXISTS %s(
-		id INTEGER NOT NULL PRIMARY KEY,
+		id SERIAL PRIMARY KEY,
 		name TEXT UNIQUE,
 		data text
 	);
@@ -70,22 +70,31 @@ func (acs *AzureCloudSpaceRepository) DropTable(db *sql.DB) {
 	}
 }
 
-func (acs *AzureCloudSpaceRepository) CreateCloudSpace(cs *cloudspaces.AzureCloudspace) (cloudspaces.AzureCloudspace, error) {
+func (acs *AzureCloudSpaceRepository) CreateCloudSpace(cs *cloudspaces.AzureCloudspace) error {
 
 	jsonAcs, err := json.Marshal(cs)
 	if err != nil {
 		fmt.Println(err.Error())
+		return err
+	}
+
+	if cs.Name == "" {
+		fmt.Println("Cloudspace name is empty")
+		return fmt.Errorf("cloudspace name is empty")
 	}
 	sqlCmd := `
 	INSERT INTO %s(name, data)
 	VALUES('%s', '%s');
 	`
 	sqlCmd = fmt.Sprintf(sqlCmd, acs.tableName, cs.Name, jsonAcs)
+	//fmt.Println(sqlCmd)
 	_, err = acs.db.Exec(sqlCmd)
 	if err != nil {
 		fmt.Println(err.Error())
+		return err
 	}
-	return *cs, nil
+
+	return nil
 }
 
 func (acs *AzureCloudSpaceRepository) UpdateCloudSpace(cs cloudspaces.AzureCloudspace) (cloudspaces.AzureCloudspace, error) {
@@ -100,7 +109,7 @@ func (acs *AzureCloudSpaceRepository) UpdateCloudSpace(cs cloudspaces.AzureCloud
 	WHERE name = '%s';
 	`
 	sqlCmd = fmt.Sprintf(sqlCmd, acs.tableName, string(jsonData), cs.Name)
-
+	//fmt.Println(sqlCmd)
 	_, err = acs.db.Exec(sqlCmd)
 
 	if err != nil {
