@@ -174,7 +174,7 @@ func (acs *AzureCloudSpaceRepository) GetCloudSpace(name string) (cloudspaces.Az
 	sqlCmd := `select * from %s where name='%s'`
 	sqlCmd = fmt.Sprintf(sqlCmd, acs.tableName, name)
 
-	// fmt.Println(sqlCmd)
+	// Query the db for the cloudspace by name
 	rows, err := acs.db.Query(sqlCmd)
 	if err != nil {
 		log.Println("GetCloudSpace:", err.Error())
@@ -182,13 +182,7 @@ func (acs *AzureCloudSpaceRepository) GetCloudSpace(name string) (cloudspaces.Az
 	}
 	defer rows.Close()
 
-	// Create empty cloudspace if no rows are returned
-	// if !rows.Next() {
-	// 	fmt.Println("No rows returned")
-	// 	return *cloudspaces.NewAzureCloudSpace(), nil
-	// }
-
-	// Else return the cloudspace
+	// Read the cloudspace from the db
 	var data string
 	for rows.Next() {
 		var id int
@@ -203,8 +197,6 @@ func (acs *AzureCloudSpaceRepository) GetCloudSpace(name string) (cloudspaces.Az
 		if err != nil {
 			fmt.Println(err)
 		}
-
-		//fmt.Println("In loop, The data is: ", cs.Name)
 	}
 
 	return cs, nil
