@@ -23,17 +23,22 @@ func TestNewAzureCloudSpaceRepository(t *testing.T) {
 	acsRepo := repositories.NewAzureCloudSpaceRepository(db)
 
 	//acsRepo.DeleteCloudSpace()
-	name := "default3"
-	acsRepo.CreateCloudSpace(GetSampleAcs(name))
+	name := "default4"
+	acs := CreateSampleAcs(name)
+	acsRepo.CreateCloudSpace(acs)
 
-	acs, err := acsRepo.GetCloudSpace(name)
+	acsFromDb, err := acsRepo.GetCloudSpace(name)
 	if err != nil {
 		fmt.Println(err)
 	}
-	log.Printf("ACS Name:%s\n", acs.Name)
+	log.Printf("ACS Name:%s\n", acsFromDb.Name)
+
+	//acsRepo.DeleteCloudSpace(name)
+
 }
 
-func GetSampleAcs(name string) *cloudspaces.AzureCloudspace {
+// CreateSampleAcs Creates a sample Azure Cloud Space Struct for testing
+func CreateSampleAcs(name string) *cloudspaces.AzureCloudspace {
 
 	return &cloudspaces.AzureCloudspace{
 		Name: name,

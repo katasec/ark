@@ -118,19 +118,20 @@ func (acs *AzureCloudSpaceRepository) UpdateCloudSpace(cs cloudspaces.AzureCloud
 	return cs, nil
 }
 
-func (acs *AzureCloudSpaceRepository) DeleteCloudSpace(cs cloudspaces.AzureCloudspace) (cloudspaces.AzureCloudspace, error) {
+func (acs *AzureCloudSpaceRepository) DeleteCloudSpace(name string) error {
 
 	sqlCmd := `
 	Delete from %s
 	WHERE name = '%s';
 	`
-	sqlCmd = fmt.Sprintf(sqlCmd, acs.tableName, cs.Name)
+	sqlCmd = fmt.Sprintf(sqlCmd, acs.tableName, name)
 
 	_, err := acs.db.Exec(sqlCmd)
 	if err != nil {
 		fmt.Println(err.Error())
+		return err
 	}
-	return cs, nil
+	return nil
 }
 
 func (acs *AzureCloudSpaceRepository) GetCloudSpaces() (acss []cloudspaces.AzureCloudspace, err error) {
