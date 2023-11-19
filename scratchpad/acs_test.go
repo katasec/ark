@@ -76,7 +76,7 @@ func TestWriteThenReadCloudSpace(t *testing.T) {
 
 	// Create Repository and write CloudSpace to DB
 	repo := repositories.NewAzureCloudSpaceRepository(db)
-	_, err := repo.CreateCloudSpace(acs)
+	err := repo.CreateCloudSpace(acs)
 	if err != nil {
 		fmt.Println(err)
 	}
