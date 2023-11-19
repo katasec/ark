@@ -23,7 +23,9 @@ require (
 	github.com/pulumi/pulumi-azure-native-sdk/servicebus v1.104.0
 	github.com/pulumi/pulumi-azure-native-sdk/storage v1.104.0
 	github.com/pulumi/pulumi/sdk/v3 v3.91.1
+	github.com/rabbitmq/amqp091-go v1.9.0
 	github.com/spf13/cobra v1.7.0
+	github.com/stretchr/testify v1.8.4
 	gopkg.in/yaml.v2 v2.4.0
 )
 
@@ -50,6 +52,7 @@ require (
 	github.com/cloudflare/circl v1.3.6 // indirect
 	github.com/containerd/console v1.0.4-0.20230313162750-1ae8d489ac81 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
+	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/distribution/reference v0.5.0 // indirect
 	github.com/djherbis/times v1.6.0 // indirect
@@ -93,6 +96,7 @@ require (
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pkg/term v1.1.0 // indirect
+	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/pulumi/esc v0.5.7 // indirect
 	github.com/pulumi/pulumi-azure-native-sdk v1.104.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
