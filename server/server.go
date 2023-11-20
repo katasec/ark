@@ -23,7 +23,7 @@ import (
 type Server struct {
 	router  *chi.Mux
 	config  *config.Config
-	qClient messaging.Messenger
+	QClient messaging.Messenger
 	db      *sql.DB
 	Acsrepo *repositories.AzureCloudSpaceRepository
 }
@@ -56,7 +56,7 @@ func NewServer() *Server {
 	// Return server with local config
 	return &Server{
 		config:  cfg,
-		qClient: msg,
+		QClient: msg,
 		router:  chiRouter,
 		Acsrepo: acsrepo,
 	}
@@ -107,4 +107,26 @@ func getDbConnection() (*sql.DB, error) {
 	}
 
 	return db, err
+}
+
+// Funcstions to impolement Server interface
+
+func (s *Server) GetQClient() messaging.Messenger {
+	return s.QClient
+}
+
+func (s *Server) GetRouter() *chi.Mux {
+	return s.router
+}
+
+func (s *Server) GetConfig() *config.Config {
+	return s.config
+}
+
+func (s *Server) GetDb() *sql.DB {
+	return s.db
+}
+
+func (s Server) GetAcsrepo() *repositories.AzureCloudSpaceRepository {
+	return s.Acsrepo
 }
