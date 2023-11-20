@@ -14,9 +14,8 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		// Set default acs name
-		acsRequest := requests.CreateAzureCloudspaceRequest{}
-		if acsRequest.Name == "" {
-			acsRequest.Name = "default"
+		acsRequest := requests.CreateAzureCloudspaceRequest{
+			Name: "default",
 		}
 
 		// Decode request body into acsRequest
@@ -34,18 +33,17 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 			return
 		}
 
-		// Create new cloudspace if it doesn't exist
+		// Generate new cloudspace struct if none found in DB
 		if acs.Name == "" {
 			fmt.Println("Cloudspace not found in DB, creating new cloudspace")
 			acs = *(cloudspaces.NewAzureCloudSpace())
 			fmt.Println(acs.ToJson())
 		}
 
-		// Add environments from reuqest
+		// Add environments from reuqest into struct
 		for _, env := range acsRequest.Environments {
 			acs.AddSpoke(env)
 		}
-
 		fmt.Println("The hub's name:", acs.Hub.Name)
 
 		// Send request to queue
