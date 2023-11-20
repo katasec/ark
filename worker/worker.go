@@ -11,13 +11,10 @@ import (
 	resources "github.com/katasec/ark/resources/v0"
 	shell "github.com/katasec/utils/shell"
 
-	"encoding/json"
-
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/messaging"
 	pulumirunner "github.com/katasec/pulumi-runner"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto"
-	"gopkg.in/yaml.v2"
 )
 
 type Worker struct {
@@ -46,53 +43,6 @@ func NewWorker() *Worker {
 	}
 }
 
-// Unmarshals a string to the provided type 'V'
-func jsonUnmarshall[T any](message string) (T, error) {
-	//log.Println("The message was:" + message)
-	var msg T
-	err := json.Unmarshal([]byte(message), &msg)
-	if err != nil {
-		log.Println("Invalid message:" + err.Error())
-		log.Println("jsonUnmarshall error:" + message)
-	}
-	return msg, err
-}
-
-// Unmarshals a string to the provided type 'V'
-func yamlUnmarshall[T any](message string) (T, error) {
-	//log.Println("The message was:" + message)
-	var msg T
-	err := yaml.Unmarshal([]byte(message), &msg)
-	if err != nil {
-		log.Println("Invalid message:" + err.Error())
-		log.Println("jsonUnmarshall error:" + message)
-	}
-	return msg, err
-}
-
-// Marshals a struct of type 'V' to a yaml string
-func yamlMarshall[T any](message T) (string, error) {
-	// Convert message into yaml
-	b, err := yaml.Marshal(message)
-	if err != nil {
-		fmt.Println("Could not covert request to yaml config data")
-		log.Printf("yamlMarshall error: %v\n", message)
-	}
-
-	return string(b), err
-}
-
-func jsonToYaml[T any](message string) (string, error) {
-
-	myStruct, _ := jsonUnmarshall[T](message)
-	yamlString, err := yamlMarshall(myStruct)
-	if err != nil {
-		fmt.Printf("There were errors, this message will not be processed. Message: %s\n", message)
-	}
-
-	return yamlString, err
-}
-
 // For e.g from subject  'createazurecloudspacerequest' or 'deleteazurecloudspacerequest', returns 'azurecloudspace'
 func (w *Worker) getResourceName(subject string) string {
 	fmt.Println("getResourceName():" + subject)
@@ -101,11 +51,6 @@ func (w *Worker) getResourceName(subject string) string {
 	resourceName = strings.Replace(resourceName, "create", "", 1)
 	resourceName = strings.Replace(resourceName, "request", "", 1)
 	return resourceName
-}
-
-type autoResult struct {
-	result any
-	err    error
 }
 
 // messageHandler Creates a pulumi program and injects the message as pulumi config
@@ -169,7 +114,7 @@ func (w *Worker) createPulumiProgram(resourceName string, runtime string) (*pulu
 	return pulumirunner.NewRemoteProgram(args)
 }
 
-func (w *Worker) SetupAzureCreds() {
+func (w *Worker) setupAzureCreds() {
 	log.Println("Setting up Azure creds")
 	out, _ := shell.ExecShellCmd("pulumi config set azure-native:clientId " + os.Getenv("ARM_CLIENT_ID"))
 	log.Println(out)
@@ -183,8 +128,9 @@ func (w *Worker) SetupAzureCreds() {
 	out, _ = shell.ExecShellCmd("pulumi config set azure-native:subscriptionId " + os.Getenv("ARM_SUBSCRIPTION_ID"))
 	log.Println(out)
 }
+
 func (w *Worker) Start() {
-	//w.SetupAzureCreds()
+	w.setupAzureCreds()
 	log.Println("Starting worker")
 
 	// Inifinite loop polling messages

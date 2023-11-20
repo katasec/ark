@@ -91,6 +91,10 @@ func CreateCloudspace(request Cloudspace, fileContent string, method ...string) 
 		}
 
 		// Output response and status
+		if resp == nil {
+			fmt.Println("Error, response is nil, exitting...")
+			os.Exit(0)
+		}
 		fmt.Println(resp.Status)
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {

@@ -2,6 +2,7 @@ package server
 
 import (
 	"database/sql"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 
@@ -14,6 +15,8 @@ import (
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/messaging"
 	"github.com/katasec/ark/repositories"
+
+	_ "github.com/lib/pq" // Import the pq driver
 )
 
 // Server struct models the ark server and its dependencies
@@ -41,16 +44,21 @@ func NewServer() *Server {
 	//msg := messaging.NewRedisMessenger(cfg.RedisUrl, queueName)
 
 	//Setup DB Config
+	db, err := getDbConnection()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	// Initialize Repositories
-	//acsrepo := repositories.NewAzureCloudSpaceRepository(db)
+	acsrepo := repositories.NewAzureCloudSpaceRepository(db)
 
 	// Return server with local config
 	return &Server{
 		config:  cfg,
 		qClient: msg,
 		router:  chiRouter,
-		//Acsrepo: acsrepo,
+		Acsrepo: acsrepo,
 	}
 }
 
@@ -65,9 +73,28 @@ func (s *Server) Start() {
 
 }
 
-func (s *Server) GetDbConnection() (*sql.DB, error) {
+func (s *Server) getDbConnection() (*sql.DB, error) {
 
 	db, err := sql.Open(s.config.DbConfig.DriverName, s.config.DbConfig.DataSourceName)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = db.Ping()
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		log.Println("Database ping successful!")
+	}
+
+	return db, err
+}
+
+func getDbConnection() (*sql.DB, error) {
+
+	config := config.ReadConfig()
+
+	db, err := sql.Open(config.DbConfig.DriverName, config.DbConfig.DataSourceName)
 	if err != nil {
 		fmt.Println(err)
 	}

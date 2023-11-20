@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/katasec/ark/requests"
+	"github.com/katasec/ark/resources/v0/azure/cloudspaces"
 	"gopkg.in/yaml.v2"
 )
 
@@ -24,7 +25,6 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		log.Println(acsRequest.ToJsonAzureCloudpace())
 
 		// Get cloudspace from DB
 		acs, err := s.Acsrepo.GetCloudSpace(acsRequest.Name)
@@ -32,12 +32,13 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintf(w, "Error getting cloudspace: %s,", err)
 			return
-		} else {
-			fmt.Println("Cloudspace found in DB")
 		}
 
+		// Create new cloudspace if it doesn't exist
 		if acs.Name == "" {
-			acs.Name = acsRequest.Name
+			fmt.Println("Cloudspace not found in DB, creating new cloudspace")
+			acs = *(cloudspaces.NewAzureCloudSpace())
+			fmt.Println(acs.ToJson())
 		}
 
 		// Add environments from reuqest
@@ -54,12 +55,11 @@ func (s *Server) postCloudspace() http.HandlerFunc {
 			fmt.Fprintf(w, "Internal Error: %s,", err)
 			return
 		} else {
-			log.Println("Erro was nill")
 			log.Println("Message sent successfully !")
 		}
 
 		// Save cloudspace to DB
-		//s.acsrepo.CreateCloudSpace(&acs)
+		s.Acsrepo.AddCloudSpace(&acs)
 		w.Header().Set("Content-Type", "application/x-yaml")
 		w.WriteHeader(http.StatusOK)
 	})

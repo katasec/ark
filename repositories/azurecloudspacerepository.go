@@ -70,7 +70,8 @@ func (acs *AzureCloudSpaceRepository) DropTable(db *sql.DB) {
 	}
 }
 
-func (acs *AzureCloudSpaceRepository) CreateCloudSpace(cs *cloudspaces.AzureCloudspace) error {
+// AddCloudSpace Inserts a new cloudspace into the database
+func (acs *AzureCloudSpaceRepository) AddCloudSpace(cs *cloudspaces.AzureCloudspace) error {
 
 	jsonAcs, err := json.Marshal(cs)
 	if err != nil {
@@ -172,6 +173,7 @@ func (acs *AzureCloudSpaceRepository) GetCloudSpace(name string) (cloudspaces.Az
 	var cs cloudspaces.AzureCloudspace
 
 	sqlCmd := `select * from %s where name='%s'`
+	fmt.Println("Acs TableName:" + acs.tableName)
 	sqlCmd = fmt.Sprintf(sqlCmd, acs.tableName, name)
 
 	// Query the db for the cloudspace by name

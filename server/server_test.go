@@ -14,7 +14,7 @@ import (
 func TestNewAzureCloudSpaceRepository(t *testing.T) {
 
 	server := NewServer()
-	db, err := server.GetDbConnection()
+	db, err := server.getDbConnection()
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -25,7 +25,7 @@ func TestNewAzureCloudSpaceRepository(t *testing.T) {
 	//acsRepo.DeleteCloudSpace()
 	name := "default4"
 	acs := CreateSampleAcs(name)
-	acsRepo.CreateCloudSpace(acs)
+	acsRepo.AddCloudSpace(acs)
 	acsFromDb, err := acsRepo.GetCloudSpace(name)
 	if err != nil {
 		fmt.Println(err)

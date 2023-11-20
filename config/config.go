@@ -190,7 +190,7 @@ func GetDbDir() string {
 }
 
 func getConfigFileName() string {
-	return fmt.Sprintf("%s/config", GetArkDir())
+	return fmt.Sprintf("%s/config.yaml", GetArkDir())
 }
 
 func (cfg *Config) Dump() {
