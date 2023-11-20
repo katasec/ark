@@ -3,7 +3,7 @@ package dockerhelper
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"strings"
 	"time"
@@ -108,7 +108,7 @@ func (d *DockerHelper) Pull(imageName string) (err error) {
 	}
 
 	// Waiting for pull to complete
-	if _, err := ioutil.ReadAll(out); err != nil {
+	if _, err := io.ReadAll(out); err != nil {
 		panic(err)
 	}
 	return err
