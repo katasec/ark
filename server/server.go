@@ -38,9 +38,14 @@ func NewServer() *Server {
 	chiRouter.Use(middleware.Logger)
 
 	// Setup messaging client
-	connString := cfg.AzureConfig.MqConfig.MqConnectionString
-	queueName := cfg.AzureConfig.MqConfig.MqName
-	msg := messaging.NewAsbMessenger(connString, queueName)
+	//connString := cfg.AzureConfig.MqConfig.MqConnectionString
+	connString := cfg.MqConnectionString
+
+	//queueName := cfg.AzureConfig.MqConfig.MqName
+	queueName := cfg.MqName
+
+	msg := messaging.NewRabbitMqMessenger(connString, queueName)
+	//msg := messaging.NewAsbMessenger(connString, queueName)
 	//msg := messaging.NewRedisMessenger(cfg.RedisUrl, queueName)
 
 	//Setup DB Config
