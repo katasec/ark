@@ -8,17 +8,10 @@ import (
 	"strings"
 
 	"github.com/katasec/ark/cmd"
-	"github.com/katasec/ark/cmd/dev"
 	"github.com/mitchellh/go-ps"
 )
 
 func main() {
-
-	// Run if this program is being called from Pulumi
-	if IsPulumiChild(os.Args) {
-		d := dev.NewDevCmd()
-		d.Setup()
-	}
 
 	// Behave as normal cli
 	cmd.Execute()

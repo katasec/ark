@@ -4,7 +4,6 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 
 	//"github.com/katasec/ark/dev"
 	"github.com/katasec/ark/cmd/dev"
@@ -19,7 +18,6 @@ var logsCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		d := dev.NewDevCmd()
 		d.Logs()
-		fmt.Println("logs called!")
 	},
 }
 

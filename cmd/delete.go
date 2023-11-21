@@ -13,13 +13,8 @@ var deleteFile string
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Use to delete resource defined in the yaml file",
+	Long:  "Use to delete resource defined in the yaml file",
 	Run: func(cmd *cobra.Command, args []string) {
 		delete.DoStuff(deleteFile)
 	},
