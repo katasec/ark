@@ -15,7 +15,7 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.7.4
 	github.com/hpcloud/tail v1.0.0
 	github.com/katasec/pulumi-runner v0.1.18
-	github.com/katasec/utils v0.0.0-20231029071733-fb2c7459c404
+	github.com/katasec/utils v0.0.3
 	github.com/lib/pq v1.10.7
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/mitchellh/go-ps v1.0.0
