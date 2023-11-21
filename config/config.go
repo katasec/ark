@@ -37,6 +37,7 @@ type Config struct {
 	RedisUrl           string
 	DbConfig           DbConfig
 	MqConnectionString string
+	MqName             string
 }
 
 func check(e error) {

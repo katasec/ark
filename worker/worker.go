@@ -6,9 +6,8 @@ import (
 	"log"
 	"os"
 	"strings"
-	"time"
 
-	resources "github.com/katasec/ark/resources/v0"
+	resources "github.com/katasec/ark/resources"
 	shell "github.com/katasec/utils/shell"
 
 	"github.com/katasec/ark/config"
@@ -28,11 +27,15 @@ func NewWorker() *Worker {
 	cfg := config.ReadConfig()
 
 	// Get queue name and access creds from config
-	connectionString := cfg.AzureConfig.MqConfig.MqConnectionString
-	queueName := cfg.AzureConfig.MqConfig.MqName
+	//connectionString := cfg.AzureConfig.MqConfig.MqConnectionString
+	connectionString := cfg.MqConnectionString
+	fmt.Println("connectionString is:" + connectionString)
+	//queueName := cfg.AzureConfig.MqConfig.MqName
+	queueName := cfg.MqName
 
 	// Create an mq client
-	var mq messaging.Messenger = messaging.NewAsbMessenger(connectionString, queueName)
+	//var mq messaging.Messenger = messaging.NewAsbMessenger(connectionString, queueName)
+	var mq messaging.Messenger = messaging.NewRabbitMqMessenger(connectionString, queueName)
 	//var mq messaging.Messenger = messaging.NewRedisMessenger(connectionString, queueName)
 
 	fmt.Println("queueName is:" + queueName)
@@ -144,8 +147,6 @@ func (w *Worker) Start() {
 			continue
 		}
 
-		time.Sleep(5 * time.Second)
-
 		subject = strings.ToLower(subject)
 		fmt.Println("Received Subject:" + subject)
 
@@ -154,48 +155,45 @@ func (w *Worker) Start() {
 
 		// Route the message by resource name
 		resourceName := w.getResourceName(subject)
-		switch resourceName {
-		case "azurecloudspace":
-			// Convert json -> struct -> yaml and pass yaml as input to pulumi program
-			c := make(chan error)
-			go w.messageHandler(subject, resourceName, message, c)
-			handlerError := <-c
-
-			//  If Handler ran succesfully, update DB
-			if handlerError == nil {
-
-				fmt.Println("Handler ran without errors !")
-				// Create ark api client
-				//arkClient := client.NewArkClient()
-
-				// Convert nmessage to Azurecloudspace
-				//cs, err := yamlUnmarshall[cloudspaces.AzureCloudspace](message)
-				//cs, err := jsonUnmarshall[cloudspaces.AzureCloudspace](message)
-				if err != nil {
-					break
-				}
-
-				// Update DB
-				if strings.HasPrefix(strings.ToLower(subject), "delete") {
-					//arkClient.DeleteCloudSpace(cs)
-					fmt.Println("TODO: Delete Cloudpace from DB")
-				} else {
-					//arkClient.AddCloudSpace(cs)
-					fmt.Println("TODO: Add Cloudpace to DB")
-				}
-			} else {
-				fmt.Println("Handler errors:" + handlerError.Error())
-			}
-		case "hellosuccess":
-			// Convert json -> struct -> yaml and pass yaml as input to pulumi program
-			c := make(chan error)
-			go w.messageHandler(subject, resourceName, message, c)
-
-		default:
-			log.Printf("subject: %s", subject)
-			log.Println("Unrecognized message, skipping")
-		}
+		executeCommand(resourceName, w, subject, message, err)
 
 	}
 
+}
+
+func executeCommand(resourceName string, w *Worker, subject string, message string, err error) {
+	switch resourceName {
+	case "azurecloudspace":
+
+		c := make(chan error)
+		go w.messageHandler(subject, resourceName, message, c)
+		handlerError := <-c
+
+		if handlerError == nil {
+
+			fmt.Println("Handler ran without errors !")
+
+			if err != nil {
+				break
+			}
+
+			if strings.HasPrefix(strings.ToLower(subject), "delete") {
+
+				fmt.Println("TODO: Delete Cloudpace from DB")
+			} else {
+
+				fmt.Println("TODO: Add Cloudpace to DB")
+			}
+		} else {
+			fmt.Println("Handler errors:" + handlerError.Error())
+		}
+	case "hellosuccess":
+
+		c := make(chan error)
+		go w.messageHandler(subject, resourceName, message, c)
+
+	default:
+		log.Printf("subject: %s", subject)
+		log.Println("Unrecognized message, skipping")
+	}
 }

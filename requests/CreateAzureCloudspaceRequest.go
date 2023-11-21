@@ -1,6 +1,6 @@
 package requests
 
-import "github.com/katasec/ark/resources/v0/azure/cloudspaces"
+import "github.com/katasec/ark/resources/azure/cloudspaces"
 
 type CreateAzureCloudspaceRequest struct {
 	Name         string

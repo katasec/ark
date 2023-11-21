@@ -2,6 +2,8 @@ package server
 
 import (
 	"net/http"
+
+	"github.com/katasec/ark/server/handlers"
 )
 
 func (s *Server) initaliseRoutes() {
@@ -11,8 +13,9 @@ func (s *Server) initaliseRoutes() {
 	s.router.Handle("/assets/*", http.StripPrefix("/assets", fs))
 
 	// Register route handlers for routes
-	s.router.Get("/", s.HomeHander())
-	s.router.Post("/azure/cloudspace", s.postCloudspace())
-	s.router.Delete("/azure/cloudspace", s.deleteCloudspace())
-	s.router.Post("/azure/vm", s.postVm())
+	s.router.Get("/", handlers.HomeHander(s))
+	s.router.Post("/azure/cloudspace", handlers.PostCloudspace(s))
+	s.router.Delete("/azure/cloudspace", handlers.DeleteCloudspace(s))
+	s.router.Post("/azure/vm", handlers.PostVm(s))
+
 }

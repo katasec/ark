@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/katasec/ark/repositories"
-	"github.com/katasec/ark/resources/v0/azure/cloudspaces"
+	"github.com/katasec/ark/resources/azure/cloudspaces"
 
 	_ "github.com/lib/pq" // Import the pq driver
 )

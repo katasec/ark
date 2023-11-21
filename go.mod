@@ -15,13 +15,10 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.7.4
 	github.com/hpcloud/tail v1.0.0
 	github.com/katasec/pulumi-runner v0.1.18
-	github.com/katasec/utils v0.0.0-20231029071733-fb2c7459c404
+	github.com/katasec/utils v0.0.3
 	github.com/lib/pq v1.10.7
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/mitchellh/go-ps v1.0.0
-	github.com/pulumi/pulumi-azure-native-sdk/resources v1.104.0
-	github.com/pulumi/pulumi-azure-native-sdk/servicebus v1.104.0
-	github.com/pulumi/pulumi-azure-native-sdk/storage v1.104.0
 	github.com/pulumi/pulumi/sdk/v3 v3.91.1
 	github.com/rabbitmq/amqp091-go v1.9.0
 	github.com/spf13/cobra v1.7.0
@@ -98,7 +95,6 @@ require (
 	github.com/pkg/term v1.1.0 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/pulumi/esc v0.5.7 // indirect
-	github.com/pulumi/pulumi-azure-native-sdk v1.104.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06 // indirect

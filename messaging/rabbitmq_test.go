@@ -57,13 +57,17 @@ func TestSendMessage(t *testing.T) {
 	log.Printf(" [x] Sent %s\n", body)
 }
 
-// func TestSendMessage2(t *testing.T) {
-// 	config := config.ReadConfig()
-// 	assert.NotEmpty(t, config.MqConnectionString, "The MqConnectionString was nil")
+func TestSendMessage2(t *testing.T) {
+	config := config.ReadConfig()
+	assert.NotEmpty(t, config.MqConnectionString, "The MqConnectionString was nil")
 
-// 	var mq = NewRabbitMqMessenger("commandqueue", config.MqConnectionString)
-// 	mq.Send("test", "Hello World111!")
+	queueName := "test"
+	subject := "testsubject"
 
-// 	message := mq.Receive("test")
-// 	log.Printf("The received message was:" + message)
-// }
+	var mq = NewRabbitMqMessenger(queueName, config.MqConnectionString)
+	mq.Send(subject, "Hello World111!")
+	message, subject, err := mq.Receive()
+	assert.NoError(t, err, "The error was not nil")
+
+	log.Printf("The received message was:%s from subject:%s", message, subject)
+}

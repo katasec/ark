@@ -3,7 +3,6 @@ package messaging
 import (
 	"context"
 	"log"
-	"time"
 
 	"github.com/rabbitmq/amqp091-go"
 	amqp "github.com/rabbitmq/amqp091-go"
@@ -15,7 +14,7 @@ type RabbitMqMessenger struct {
 	conn    *amqp.Connection
 }
 
-func NewRabbitMqMessenger(queueName string, connectionString string) *RabbitMqMessenger {
+func NewRabbitMqMessenger(connectionString string, queueName string) *RabbitMqMessenger {
 
 	// Connect to RabbitMQ
 	conn, err := amqp.Dial(connectionString)
@@ -25,6 +24,10 @@ func NewRabbitMqMessenger(queueName string, connectionString string) *RabbitMqMe
 	// Open a channel
 	ch, err := conn.Channel()
 	failOnError(err, "Failed to open a channel")
+
+	// Configure QoS to limit unacknowledged messages to one
+	err = ch.Qos(1, 0, false)
+	failOnError(err, "Failed to set QoS")
 	//defer ch.Close()
 
 	// Declare a queue
@@ -47,10 +50,10 @@ func NewRabbitMqMessenger(queueName string, connectionString string) *RabbitMqMe
 
 func (msg *RabbitMqMessenger) Send(subject string, body string) error {
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+	ctx := context.Background()
 
-	err := msg.channel.PublishWithContext(ctx,
+	err := msg.channel.PublishWithContext(
+		ctx,
 		"",             // exchange
 		msg.queue.Name, // routing key
 		false,          // mandatory
@@ -67,7 +70,7 @@ func (msg *RabbitMqMessenger) Send(subject string, body string) error {
 	return err
 }
 
-func (msg *RabbitMqMessenger) Receive(subject string) <-chan amqp091.Delivery {
+func (msg *RabbitMqMessenger) ReceiveChannel(subject string) <-chan amqp091.Delivery {
 
 	msgs, err := msg.channel.Consume(
 		msg.queue.Name, // queue
@@ -84,6 +87,18 @@ func (msg *RabbitMqMessenger) Receive(subject string) <-chan amqp091.Delivery {
 	}
 
 	return msgs
+}
+
+func (msg *RabbitMqMessenger) Receive() (message string, subject string, err error) {
+
+	msgs, err := msg.channel.Consume(msg.queue.Name, "", true, false, false, false, nil)
+	if err != nil {
+		failOnError(err, "Failed to register a consumer")
+	}
+
+	data := <-msgs
+
+	return string(data.Body), string(data.Type), err
 }
 
 func (msg *RabbitMqMessenger) Close() {

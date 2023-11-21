@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/katasec/ark/config"
-	cloudspaces "github.com/katasec/ark/resources/v0/azure/cloudspaces"
+	cloudspaces "github.com/katasec/ark/resources/azure/cloudspaces"
 )
 
 var (
