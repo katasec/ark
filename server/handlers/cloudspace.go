@@ -7,7 +7,7 @@ import (
 
 	"github.com/katasec/ark/arkserver"
 	"github.com/katasec/ark/requests"
-	"github.com/katasec/ark/resources/v0/azure/cloudspaces"
+	"github.com/katasec/ark/resources/azure/cloudspaces"
 	"gopkg.in/yaml.v2"
 )
 

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/katasec/ark/resources/v0/azure/cloudspaces"
+	"github.com/katasec/ark/resources/azure/cloudspaces"
 )
 
 type Repositories interface {

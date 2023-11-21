@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	resources "github.com/katasec/ark/resources/v0"
+	resources "github.com/katasec/ark/resources"
 	shell "github.com/katasec/utils/shell"
 
 	"github.com/katasec/ark/config"

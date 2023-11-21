@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/katasec/ark/arkserver"
-	resources "github.com/katasec/ark/resources/v0"
+	resources "github.com/katasec/ark/resources"
 )
 
 func PostVm(s arkserver.Server) http.HandlerFunc {
