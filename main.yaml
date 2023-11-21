@@ -1,0 +1,38 @@
+name: Bard Code Review
+
+on:
+  push:
+    branches:
+      - main
+      - ad/remove-cloud-setup
+
+jobs:
+  bard-code-review:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Bard GitHub Action
+        uses: Bard-GitHub-Action/Bard-GitHub-Action@master
+
+      - name: Run Bard Code Review
+        id: bard-code-review
+        uses: Bard-GitHub-Action/Bard-GitHub-Action@master
+        with:
+          token: ${{ secrets.BARD_GITHUB_TOKEN }}
+
+      - name: Post code review comments
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const bardComments = context.payload.jobs.bard-code-review.outputs.bardComments;
+            const issueNumber = context.payload.issue.number;
+
+            github.issues.createComment({
+              repo: context.repo.repo,
+              owner: context.repo.owner,
+              issue_number: issueNumber,
+              body: bardComments.join('\n'),
+            });
