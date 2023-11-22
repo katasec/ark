@@ -2,16 +2,16 @@ package config
 
 type AzureConfig struct {
 	ResourceGroupName string
-	StorageConfig     AzureLogConfig
+	StorageConfig     AzureStorageConfig
 	MqConfig          AzureMqConfig
 }
 
-type AzureLogConfig struct {
-	LogStorageAccountName string
-	LogStorageEndpoint    string
-	LogStorageKey         string
-	LogsContainer         string
-	PulumiStateContainer  string
+type AzureStorageConfig struct {
+	StorageAccountName   string
+	StorageEndpoint      string
+	StorageKey           string
+	LogsContainer        string
+	PulumiStateContainer string
 }
 
 type AzureMqConfig struct {

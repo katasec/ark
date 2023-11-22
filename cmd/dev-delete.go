@@ -4,24 +4,28 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/katasec/ark/cmd/delete"
+	"github.com/katasec/ark/cmd/dev"
 	"github.com/spf13/cobra"
 )
-
-var deleteFile string
 
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "Use to delete resource defined in the yaml file",
-	Long:  "Use to delete resource defined in the yaml file",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		delete.DoStuff(deleteFile)
+		d := dev.NewDevCmd()
+		d.Delete()
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(deleteCmd)
+	devCmd.AddCommand(deleteCmd)
 
 	// Here you will define your flags and configuration settings.
 
@@ -32,7 +36,4 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// deleteCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
-	deleteCmd.Flags().StringVarP(&deleteFile, "filename", "f", deleteFile, "Name of yaml file with configuration to apply")
-	deleteCmd.MarkFlagRequired("filename")
 }

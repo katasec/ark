@@ -22,7 +22,7 @@ var configCmd = &cobra.Command{
 	},
 }
 
-var set1 string
+//var set1 string
 
 func init() {
 	rootCmd.AddCommand(configCmd)

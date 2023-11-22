@@ -49,10 +49,9 @@ var (
 	PrimaryStorageKey        = "PrimaryStorageKey"
 	MqConnectionString       = "MqConnectionString"
 	CommandQueueName         = "CommandQueueName"
-	LogStorageAccountName    = "LogStorageAccountName"
-	LogStorageEndpoint       = "LogStorageEndpoint"
-	LogStorageKey            = "LogStorageKey"
-	LogContainerName         = "LogContainerName"
+	StorageAccountName       = "StorageAccountName"
+	StorageEndpoint          = "StorageEndpoint"
+	StorageKey               = "StorageKey"
 	PulumiStateContainerName = "PulumiStateContainerName"
 	PulumiDbContainerName    = "PulumiDbContainerName"
 )
