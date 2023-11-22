@@ -57,26 +57,39 @@ func (d *DevCmd) Setup() {
 }
 
 func (d *DevCmd) Delete() {
+	if checkAreYouSure() {
+		// Setup spinner
+		spinner := utils.NewArkSpinner()
 
-	// Setup spinner
-	spinner := utils.NewArkSpinner()
+		// Print link to log file
+		message := fmt.Sprintf("Running Delete, please tail log file for more details %s", d.Config.LogFile)
+		spinner.InfoStatusEvent(message)
 
-	// Print link to log file
-	message := fmt.Sprintf("Running Delete, please tail log file for more details %s", d.Config.LogFile)
-	spinner.InfoStatusEvent(message)
+		// Run pulumi destroy to delete cloud resources
+		note := "Deleting Azure components from dev environment"
+		spinner.Start(note)
+		pulumi := d.createPulumiProgram(setupAzureComponents, "dev")
+		err := pulumi.Destroy()
+		spinner.Stop(err, note)
 
-	// Run pulumi destroy to delete cloud resources
-	note := "Deleting Azure components from dev environment"
-	spinner.Start(note)
-	pulumi := d.createPulumiProgram(setupAzureComponents, "dev")
-	err := pulumi.Destroy()
-	spinner.Stop(err, note)
-
-	// Update config
-	if err != nil {
-		d.RefreshConfig()
+		// Update config
+		if err != nil {
+			d.RefreshConfig()
+		}
 	}
+}
 
+func checkAreYouSure() bool {
+	fmt.Println("Are you sure? Type 'yes' to confirm")
+	var input string
+	fmt.Scanln(&input)
+
+	if strings.ToLower(input) == "yes" {
+		return true
+	} else {
+		fmt.Println("Okay, I will cancel the operation.")
+		return false
+	}
 }
 func (d *DevCmd) RefreshConfig() {
 	var err error
