@@ -78,18 +78,6 @@ func (d *DevCmd) Delete() {
 	}
 }
 
-func checkAreYouSure() bool {
-	fmt.Println("Are you sure? Type 'yes' to confirm")
-	var input string
-	fmt.Scanln(&input)
-
-	if strings.ToLower(input) == "yes" {
-		return true
-	} else {
-		fmt.Println("Okay, I will cancel the operation.")
-		return false
-	}
-}
 func (d *DevCmd) RefreshConfig() {
 	var err error
 
@@ -252,4 +240,17 @@ func winHomeDir(homeDir string) string {
 	fmt.Println(winDir)
 
 	return winDir
+}
+
+func checkAreYouSure() bool {
+	fmt.Println("Are you sure? Type 'yes' to confirm")
+	var input string
+	fmt.Scanln(&input)
+
+	if strings.ToLower(input) == "yes" {
+		return true
+	} else {
+		fmt.Println("Okay, I will cancel the operation.")
+		return false
+	}
 }
