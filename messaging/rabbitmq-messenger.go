@@ -2,6 +2,7 @@ package messaging
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/rabbitmq/amqp091-go"
@@ -16,6 +17,7 @@ type RabbitMqMessenger struct {
 
 func NewRabbitMqMessenger(connectionString string, queueName string) *RabbitMqMessenger {
 
+	fmt.Println("NewRabbitMqMessenger():" + connectionString + " " + queueName)
 	// Connect to RabbitMQ
 	conn, err := amqp.Dial(connectionString)
 	failOnError(err, "Failed to connect to RabbitMQ")
@@ -30,7 +32,7 @@ func NewRabbitMqMessenger(connectionString string, queueName string) *RabbitMqMe
 	failOnError(err, "Failed to set QoS")
 	//defer ch.Close()
 
-	// Declare a queue
+	// Declare/Create a queue
 	q, err := ch.QueueDeclare(
 		queueName, // name
 		true,      // durable

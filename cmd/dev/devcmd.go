@@ -29,7 +29,6 @@ func NewDevCmd() *DevCmd {
 
 func (d *DevCmd) Setup() {
 
-	//checkBeforeCreate()
 	fmt.Println("Checking pre-requisites before running setup:")
 	if !CheckSetupPreReqs() {
 		os.Exit(1)
@@ -108,8 +107,7 @@ func (d *DevCmd) RefreshConfig() {
 	}
 
 	// Contruct Pulumi Stack FQDN
-	orgName := cfg.PulumiDefultOrg
-	stackFQDN := fmt.Sprintf("%s/%s/%s", orgName, ProjectNamePrefix, StackName)
+	stackFQDN := fmt.Sprintf("%s/%s/%s", cfg.PulumiDefultOrg, ProjectNamePrefix, StackName)
 
 	/*
 	 Extract Azure resource details from Pulumi Exports
@@ -121,10 +119,6 @@ func (d *DevCmd) RefreshConfig() {
 
 	// Log Storage Account Name
 	cfg.AzureConfig.StorageConfig.StorageAccountName, err = d.getReference(stackFQDN, StorageAccountName)
-	utils.ExitOnError(err)
-
-	// Log Storage Account Endpoint
-	cfg.AzureConfig.StorageConfig.StorageEndpoint, err = d.getReference(stackFQDN, StorageEndpoint)
 	utils.ExitOnError(err)
 
 	// Log Storage LogStorageKey

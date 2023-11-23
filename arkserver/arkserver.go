@@ -7,7 +7,7 @@ import (
 )
 
 type Server interface {
-	GetQClient() messaging.Messenger
+	GetCommandQ() messaging.Messenger
 	GetAcsrepo() *repositories.AzureCloudSpaceRepository
 	GetRouter() *chi.Mux
 }

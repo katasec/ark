@@ -5,10 +5,10 @@ import (
 	"log"
 	"strings"
 
-	shell "github.com/katasec/utils/shell"
 	arkutils "github.com/katasec/ark/utils"
 	pulumirunner "github.com/katasec/pulumi-runner"
 	utils "github.com/katasec/pulumi-runner/utils"
+	shell "github.com/katasec/utils/shell"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -40,7 +40,7 @@ func (d *DevCmd) createPulumiProgram(pulumiFn pulumi.RunFunc, stackName string) 
 
 func (d *DevCmd) getReference(stackFQDN string, key string) (output string, err error) {
 	myCmd := fmt.Sprintf("pulumi stack -s %s output %s", stackFQDN, key)
-
+	fmt.Println(myCmd)
 	value, err := shell.ExecShellCmd(myCmd)
 	value = strings.Trim(value, "\n")
 

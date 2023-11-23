@@ -26,19 +26,9 @@ func NewWorker() *Worker {
 	// Read from local config  file
 	cfg := config.ReadConfig()
 
-	// Get queue name and access creds from config
-	//connectionString := cfg.AzureConfig.MqConfig.MqConnectionString
-	connectionString := cfg.MqConnectionString
-	fmt.Println("connectionString is:" + connectionString)
-	//queueName := cfg.AzureConfig.MqConfig.MqName
-	queueName := cfg.MqName
-
 	// Create an mq client
-	//var mq messaging.Messenger = messaging.NewAsbMessenger(connectionString, queueName)
-	var mq messaging.Messenger = messaging.NewRabbitMqMessenger(connectionString, queueName)
-	//var mq messaging.Messenger = messaging.NewRedisMessenger(connectionString, queueName)
+	var mq messaging.Messenger = messaging.NewRabbitMqMessenger(cfg.MqConnStr, cfg.CmdQ)
 
-	fmt.Println("queueName is:" + queueName)
 	// Return worker with local config
 	return &Worker{
 		config: cfg,

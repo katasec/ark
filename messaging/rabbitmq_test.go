@@ -15,14 +15,14 @@ import (
 func TestMqConfig(t *testing.T) {
 	config := config.ReadConfig()
 
-	assert.NotEmpty(t, config.MqConnectionString, "The MqConnectionString was nil")
+	assert.NotEmpty(t, config.MqConnStr, "The MqConnectionString was nil")
 }
 
 func TestSendMessage(t *testing.T) {
 	config := config.ReadConfig()
-	assert.NotEmpty(t, config.MqConnectionString, "The MqConnectionString was nil")
+	assert.NotEmpty(t, config.MqConnStr, "The MqConnectionString was nil")
 
-	conn, err := amqp.Dial(config.MqConnectionString)
+	conn, err := amqp.Dial(config.MqConnStr)
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 
@@ -59,12 +59,12 @@ func TestSendMessage(t *testing.T) {
 
 func TestSendMessage2(t *testing.T) {
 	config := config.ReadConfig()
-	assert.NotEmpty(t, config.MqConnectionString, "The MqConnectionString was nil")
+	assert.NotEmpty(t, config.MqConnStr, "The MqConnectionString was nil")
 
 	queueName := "test"
 	subject := "testsubject"
 
-	var mq = NewRabbitMqMessenger(queueName, config.MqConnectionString)
+	var mq = NewRabbitMqMessenger(queueName, config.MqConnStr)
 	mq.Send(subject, "Hello World111!")
 	message, subject, err := mq.Receive()
 	assert.NoError(t, err, "The error was not nil")

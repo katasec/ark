@@ -23,7 +23,8 @@ import (
 type Server struct {
 	router  *chi.Mux
 	config  *config.Config
-	QClient messaging.Messenger
+	cmdQ    messaging.Messenger
+	respQ   messaging.Messenger
 	db      *sql.DB
 	Acsrepo *repositories.AzureCloudSpaceRepository
 }
@@ -36,17 +37,6 @@ func NewServer() *Server {
 	// Setup Router
 	chiRouter := chi.NewRouter()
 	chiRouter.Use(middleware.Logger)
-
-	// Setup messaging client
-	//connString := cfg.AzureConfig.MqConfig.MqConnectionString
-	connString := cfg.MqConnectionString
-
-	//queueName := cfg.AzureConfig.MqConfig.MqName
-	queueName := cfg.MqName
-
-	msg := messaging.NewRabbitMqMessenger(connString, queueName)
-	//msg := messaging.NewAsbMessenger(connString, queueName)
-	//msg := messaging.NewRedisMessenger(cfg.RedisUrl, queueName)
 
 	//Setup DB Config
 	db, err := getDbConnection()
@@ -61,7 +51,8 @@ func NewServer() *Server {
 	// Return server with local config
 	return &Server{
 		config:  cfg,
-		QClient: msg,
+		cmdQ:    messaging.NewRabbitMqMessenger(cfg.MqConnStr, cfg.CmdQ),
+		respQ:   messaging.NewRabbitMqMessenger(cfg.MqConnStr, cfg.RespQ),
 		router:  chiRouter,
 		Acsrepo: acsrepo,
 	}
@@ -116,8 +107,8 @@ func getDbConnection() (*sql.DB, error) {
 
 // Funcstions to impolement Server interface
 
-func (s *Server) GetQClient() messaging.Messenger {
-	return s.QClient
+func (s *Server) GetCommandQ() messaging.Messenger {
+	return s.cmdQ
 }
 
 func (s *Server) GetRouter() *chi.Mux {
