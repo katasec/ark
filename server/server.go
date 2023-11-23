@@ -3,6 +3,7 @@ package server
 import (
 	"database/sql"
 	"os"
+	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 
@@ -60,6 +61,9 @@ func NewServer() *Server {
 
 func (s *Server) Start() {
 
+	// Start Response Queue Processing
+	go s.processRespQ()
+
 	// Initialize Routes
 	s.initaliseRoutes()
 
@@ -67,6 +71,28 @@ func (s *Server) Start() {
 	log.Println("Server started on port " + s.config.ApiServer.Port + "...")
 	log.Fatal(http.ListenAndServe(":"+s.config.ApiServer.Port, s.router))
 
+}
+
+// processRespQ Starts the loop that processes messages from the response queue
+func (s *Server) processRespQ() {
+	log.Println("Starting loop for response processing")
+	// Inifinite loop polling messages
+	for {
+		// This is a blocking receive
+		log.Println("polling for message...")
+		message, subject, err := s.respQ.Receive()
+		if err != nil {
+			log.Println("Infinite loop polling for message, error:" + err.Error())
+			continue
+		}
+
+		subject = strings.ToLower(subject)
+
+		// Log Message
+		log.Println("The subject was:" + subject)
+		log.Println("The message was:" + message)
+
+	}
 }
 
 func (s *Server) getDbConnection() (*sql.DB, error) {
@@ -105,10 +131,14 @@ func getDbConnection() (*sql.DB, error) {
 	return db, err
 }
 
-// Funcstions to impolement Server interface
-
-func (s *Server) GetCommandQ() messaging.Messenger {
+// Returns Command Queue. The command queue is used to send commands to the worker
+func (s *Server) GetCmdQ() messaging.Messenger {
 	return s.cmdQ
+}
+
+// Returns Command Queue. The command queue is used to send commands to the worker
+func (s *Server) GetResqQ() messaging.Messenger {
+	return s.respQ
 }
 
 func (s *Server) GetRouter() *chi.Mux {
@@ -123,6 +153,6 @@ func (s *Server) GetDb() *sql.DB {
 	return s.db
 }
 
-func (s Server) GetAcsrepo() *repositories.AzureCloudSpaceRepository {
+func (s Server) GetAcsDb() *repositories.AzureCloudSpaceRepository {
 	return s.Acsrepo
 }

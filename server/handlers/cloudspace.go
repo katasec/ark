@@ -15,8 +15,8 @@ func PostCloudspace(s arkserver.Server) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		// Deference pointer to get acsrepo and qclient
-		acsRepo := s.GetAcsrepo()
-		qClient := s.GetCommandQ()
+		db := s.GetAcsDb()
+		qClient := s.GetCmdQ()
 
 		// Set default acs name
 		acsRequest := requests.CreateAzureCloudspaceRequest{
@@ -31,7 +31,7 @@ func PostCloudspace(s arkserver.Server) http.HandlerFunc {
 		}
 
 		// Get cloudspace from DB
-		acs, err := acsRepo.GetCloudSpace(acsRequest.Name)
+		acs, err := db.GetCloudSpace(acsRequest.Name)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintf(w, "Error getting cloudspace: %s,", err)
@@ -62,7 +62,7 @@ func PostCloudspace(s arkserver.Server) http.HandlerFunc {
 		}
 
 		// Save cloudspace to DB
-		acsRepo.AddCloudSpace(&acs)
+		db.AddCloudSpace(&acs)
 		w.Header().Set("Content-Type", "application/x-yaml")
 		w.WriteHeader(http.StatusOK)
 	})
@@ -87,7 +87,7 @@ func DeleteCloudspace(s arkserver.Server) http.HandlerFunc {
 
 		fmt.Fprint(w, request.ToYamlAzureCloudpace())
 
-		qClient := s.GetCommandQ()
+		qClient := s.GetCmdQ()
 		qClient.Send("DeleteAzureCloudspaceRequest", request.ToJsonAzureCloudpace())
 
 	})

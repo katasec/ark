@@ -7,8 +7,16 @@ import (
 )
 
 type Server interface {
-	GetCommandQ() messaging.Messenger
-	GetAcsrepo() *repositories.AzureCloudSpaceRepository
+
+	// Returns Command Queue. The command queue is used to send commands to the worker
+	GetCmdQ() messaging.Messenger
+
+	// Returns Command Queue. The command queue is used to send commands to the worker
+	GetResqQ() messaging.Messenger
+
+	// Returns db repository for Azure Cloud Spaces
+	GetAcsDb() *repositories.AzureCloudSpaceRepository
+
 	GetRouter() *chi.Mux
 }
 

@@ -18,7 +18,8 @@ import (
 
 type Worker struct {
 	config *config.Config
-	mq     messaging.Messenger
+	respQ  messaging.Messenger
+	cmdQ   messaging.Messenger
 }
 
 func NewWorker() *Worker {
@@ -26,24 +27,38 @@ func NewWorker() *Worker {
 	// Read from local config  file
 	cfg := config.ReadConfig()
 
-	// Create an mq client
-	var mq messaging.Messenger = messaging.NewRabbitMqMessenger(cfg.MqConnStr, cfg.CmdQ)
-
 	// Return worker with local config
 	return &Worker{
 		config: cfg,
-		mq:     mq,
+		cmdQ:   messaging.NewRabbitMqMessenger(cfg.MqConnStr, cfg.CmdQ),
+		respQ:  messaging.NewRabbitMqMessenger(cfg.MqConnStr, cfg.RespQ),
 	}
 }
 
-// For e.g from subject  'createazurecloudspacerequest' or 'deleteazurecloudspacerequest', returns 'azurecloudspace'
-func (w *Worker) getResourceName(subject string) string {
-	fmt.Println("getResourceName():" + subject)
-	resourceName := strings.ToLower(subject)
-	resourceName = strings.Replace(resourceName, "delete", "", 1)
-	resourceName = strings.Replace(resourceName, "create", "", 1)
-	resourceName = strings.Replace(resourceName, "request", "", 1)
-	return resourceName
+func (w *Worker) Start() {
+	w.setupAzureCreds()
+	log.Println("Starting worker")
+
+	// Inifinite loop polling messages
+	for {
+		// This is a blocking receive
+		log.Println("polling for message...")
+		message, subject, err := w.cmdQ.Receive()
+		if err != nil {
+			log.Println("Infinite loop polling for message, error:" + err.Error())
+			continue
+		}
+
+		subject = strings.ToLower(subject)
+		fmt.Println("Received Subject:" + subject)
+
+		// Log Message
+		log.Println("The subject was:" + subject)
+
+		// Route the message by resource name
+		resourceName := w.getResourceName(subject)
+		executeCommand(resourceName, w, subject, message, err)
+	}
 }
 
 // messageHandler Creates a pulumi program and injects the message as pulumi config
@@ -108,47 +123,30 @@ func (w *Worker) createPulumiProgram(resourceName string, runtime string) (*pulu
 }
 
 func (w *Worker) setupAzureCreds() {
-	log.Println("Setting up Azure creds")
-	out, _ := shell.ExecShellCmd("pulumi config set azure-native:clientId " + os.Getenv("ARM_CLIENT_ID"))
-	log.Println(out)
 
-	out, _ = shell.ExecShellCmd("pulumi config set azure-native:clientSecret " + os.Getenv("ARM_CLIENT_SECRET") + " --secret")
-	log.Println(out)
+	log.Println("Reading Azure creds from env vars")
+	envvars := []string{"ARM_CLIENT_ID", "ARM_CLIENT_SECRET", "ARM_TENANT_ID", "ARM_SUBSCRIPTION_ID"}
 
-	out, _ = shell.ExecShellCmd("pulumi config set azure-native:tenantId " + os.Getenv("ARM_TENANT_ID"))
-	log.Println(out)
-
-	out, _ = shell.ExecShellCmd("pulumi config set azure-native:subscriptionId " + os.Getenv("ARM_SUBSCRIPTION_ID"))
-	log.Println(out)
-}
-
-func (w *Worker) Start() {
-	w.setupAzureCreds()
-	log.Println("Starting worker")
-
-	// Inifinite loop polling messages
-	for {
-		// This is a blocking receive
-		log.Println("polling for message...")
-		message, subject, err := w.mq.Receive()
-		log.Println("After blocking poll")
-		if err != nil {
-			log.Println("Infinite loop polling for message, error:" + err.Error())
-			continue
+	ok := false
+	for _, envvar := range envvars {
+		if os.Getenv(envvar) != "" {
+			ok = true
+			shell.ExecShellCmd("pulumi config set azure-native:clientId " + os.Getenv(envvar))
+		} else {
+			ok = false
+			log.Println("Env var " + envvar + " not set")
 		}
-
-		subject = strings.ToLower(subject)
-		fmt.Println("Received Subject:" + subject)
-
-		// Log Message
-		log.Println("The subject was:" + subject)
-
-		// Route the message by resource name
-		resourceName := w.getResourceName(subject)
-		executeCommand(resourceName, w, subject, message, err)
-
 	}
 
+	if !ok {
+		log.Println("Some env vars not set, exitting...")
+		os.Exit(1)
+	}
+
+	// shell.ExecShellCmd("pulumi config set azure-native:clientId " + os.Getenv("ARM_CLIENT_ID"))
+	// shell.ExecShellCmd("pulumi config set azure-native:clientSecret " + os.Getenv("ARM_CLIENT_SECRET") + " --secret")
+	// shell.ExecShellCmd("pulumi config set azure-native:tenantId " + os.Getenv("ARM_TENANT_ID"))
+	// shell.ExecShellCmd("pulumi config set azure-native:subscriptionId " + os.Getenv("ARM_SUBSCRIPTION_ID"))
 }
 
 func executeCommand(resourceName string, w *Worker, subject string, message string, err error) {
@@ -160,23 +158,19 @@ func executeCommand(resourceName string, w *Worker, subject string, message stri
 		handlerError := <-c
 
 		if handlerError == nil {
-
 			fmt.Println("Handler ran without errors !")
 
-			if err != nil {
-				break
-			}
+			w.respQ.Send(subject, message)
 
 			if strings.HasPrefix(strings.ToLower(subject), "delete") {
-
 				fmt.Println("TODO: Delete Cloudpace from DB")
 			} else {
-
 				fmt.Println("TODO: Add Cloudpace to DB")
 			}
 		} else {
 			fmt.Println("Handler errors:" + handlerError.Error())
 		}
+
 	case "hellosuccess":
 
 		c := make(chan error)
@@ -186,4 +180,14 @@ func executeCommand(resourceName string, w *Worker, subject string, message stri
 		log.Printf("subject: %s", subject)
 		log.Println("Unrecognized message, skipping")
 	}
+}
+
+// For e.g from subject  'createazurecloudspacerequest' or 'deleteazurecloudspacerequest', returns 'azurecloudspace'
+func (w *Worker) getResourceName(subject string) string {
+	fmt.Println("getResourceName():" + subject)
+	resourceName := strings.ToLower(subject)
+	resourceName = strings.Replace(resourceName, "delete", "", 1)
+	resourceName = strings.Replace(resourceName, "create", "", 1)
+	resourceName = strings.Replace(resourceName, "request", "", 1)
+	return resourceName
 }
