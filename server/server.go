@@ -16,6 +16,8 @@ import (
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/messaging"
 	"github.com/katasec/ark/repositories"
+	"github.com/katasec/ark/resources/azure/cloudspaces"
+	jsonx "github.com/katasec/utils/json"
 
 	_ "github.com/lib/pq" // Import the pq driver
 )
@@ -90,8 +92,19 @@ func (s *Server) processRespQ() {
 
 		// Log Message
 		log.Println("The subject was:" + subject)
-		log.Println("The message was:" + message)
-
+		log.Println("Before switch statement")
+		switch subject {
+		case "deleteazurecloudspacerequest":
+			log.Println("Received delete azure cloudspace request")
+			acs, err := jsonx.JsonUnmarshall[cloudspaces.AzureCloudspace](message)
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				s.Acsrepo.DeleteCloudSpace(acs.Name)
+			}
+		default:
+			log.Println("Unknown subject:" + subject)
+		}
 	}
 }
 

@@ -121,6 +121,7 @@ func (acs *AzureCloudSpaceRepository) UpdateCloudSpace(cs cloudspaces.AzureCloud
 
 func (acs *AzureCloudSpaceRepository) DeleteCloudSpace(name string) error {
 
+	log.Println("Deleting cloudspace:" + name)
 	sqlCmd := `
 	Delete from %s
 	WHERE name = '%s';
@@ -131,6 +132,8 @@ func (acs *AzureCloudSpaceRepository) DeleteCloudSpace(name string) error {
 	if err != nil {
 		fmt.Println(err.Error())
 		return err
+	} else {
+		fmt.Println("Deleted cloudspace:" + name)
 	}
 	return nil
 }
