@@ -130,5 +130,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gotest.tools/v3 v3.4.0 // indirect
 	lukechampine.com/frand v1.4.2 // indirect
+	oras.land/oras-go/v2 v2.3.1 // indirect
 	sourcegraph.com/sourcegraph/appdash v0.0.0-20211028080628-e2786a622600 // indirect
 )
