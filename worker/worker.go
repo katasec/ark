@@ -142,11 +142,6 @@ func (w *Worker) setupAzureCreds() {
 		log.Println("Some env vars not set, exitting...")
 		os.Exit(1)
 	}
-
-	// shell.ExecShellCmd("pulumi config set azure-native:clientId " + os.Getenv("ARM_CLIENT_ID"))
-	// shell.ExecShellCmd("pulumi config set azure-native:clientSecret " + os.Getenv("ARM_CLIENT_SECRET") + " --secret")
-	// shell.ExecShellCmd("pulumi config set azure-native:tenantId " + os.Getenv("ARM_TENANT_ID"))
-	// shell.ExecShellCmd("pulumi config set azure-native:subscriptionId " + os.Getenv("ARM_SUBSCRIPTION_ID"))
 }
 
 func executeCommand(resourceName string, w *Worker, subject string, message string, err error) {

@@ -133,7 +133,7 @@ func (acs *AzureCloudSpaceRepository) DeleteCloudSpace(name string) error {
 		fmt.Println(err.Error())
 		return err
 	} else {
-		fmt.Println("Deleted cloudspace:" + name)
+		log.Println("Deleted cloudspace:" + name)
 	}
 	return nil
 }
