@@ -5,6 +5,8 @@ import (
 	"log"
 	"net/http"
 
+	logx "github.com/katasec/ark/log"
+
 	"github.com/katasec/ark/arkserver"
 	"github.com/katasec/ark/requests"
 	"github.com/katasec/ark/resources/azure/cloudspaces"
@@ -69,7 +71,9 @@ func PostCloudspace(s arkserver.Server) http.HandlerFunc {
 }
 
 func DeleteCloudspace(s arkserver.Server) http.HandlerFunc {
+
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		logx.Logger().Info("In DeleteCloudspace handler")
 
 		request := requests.DeleteAzureCloudspaceRequest{
 			Name: "default",
@@ -88,6 +92,7 @@ func DeleteCloudspace(s arkserver.Server) http.HandlerFunc {
 		fmt.Fprint(w, request.ToYamlAzureCloudpace())
 
 		qClient := s.GetCmdQ()
+
 		qClient.Send("DeleteAzureCloudspaceRequest", request.ToJsonAzureCloudpace())
 
 	})

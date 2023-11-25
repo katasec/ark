@@ -14,6 +14,8 @@ import (
 	"github.com/katasec/ark/messaging"
 	pulumirunner "github.com/katasec/pulumi-runner"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto"
+
+	logx "github.com/katasec/ark/log"
 )
 
 type Worker struct {
@@ -53,7 +55,7 @@ func (w *Worker) Start() {
 		fmt.Println("Received Subject:" + subject)
 
 		// Log Message
-		log.Println("The subject was:" + subject)
+		logx.Logger().Info("The subject was:" + subject)
 
 		// Route the message by resource name
 		resourceName := w.getResourceName(subject)
