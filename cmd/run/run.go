@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	"oras.land/oras-go/v2"
 	"oras.land/oras-go/v2/content/file"
@@ -12,8 +13,13 @@ import (
 	"oras.land/oras-go/v2/registry/remote/retry"
 )
 
-func DoStuff(recipe string) {
-	fmt.Println("Doing stuff:" + recipe)
+func DoStuff(ics string) {
+	//ics = "ghcr.io/katasec/cloudspace:v1"
+	refx := strings.Split(ics, ":")[0]
+	tagx := strings.Split(ics, ":")[1]
+	regx := strings.Split(ics, "/")[0]
+
+	fmt.Println("Doing stuff:" + ics)
 	localpath := "/Users/ameerdeen/.ark/manifests/"
 	fs, err := file.New(localpath)
 	if err != nil {
@@ -23,8 +29,9 @@ func DoStuff(recipe string) {
 
 	// 1. Connect to a remote repository
 	ctx := context.Background()
-	reg := "ghcr.io"
-	repo, err := remote.NewRepository(reg + "/katasec/artifact")
+	//reg := "ghcr.io"
+	//repo, err := remote.NewRepository(reg + "/katasec/artifact")
+	repo, err := remote.NewRepository(refx)
 	if err != nil {
 		panic(err)
 	}
@@ -36,18 +43,19 @@ func DoStuff(recipe string) {
 	repo.Client = &auth.Client{
 		Client: retry.DefaultClient,
 		Cache:  auth.DefaultCache,
-		Credential: auth.StaticCredential(reg, auth.Credential{
+		Credential: auth.StaticCredential(regx, auth.Credential{
 			Username: username,
 			Password: password,
 		}),
 	}
 
-	tag := "v1"
-	manifestDescriptor, err := oras.Copy(ctx, repo, tag, fs, tag, oras.DefaultCopyOptions)
+	//tag := "v1"
+	_, err = oras.Copy(ctx, repo, tagx, fs, tagx, oras.DefaultCopyOptions)
+	//oras.FetchBytes(ctx, repo, tagx)
 	if err != nil {
 		panic(err)
 	} else {
-		fmt.Println(repo.Reference.Repository + ":" + tag + " copied to " + localpath)
+		fmt.Println(repo.Reference.Repository + ":" + tagx + " copied to " + localpath)
 	}
-	fmt.Println("manifest descriptor:", manifestDescriptor)
+
 }

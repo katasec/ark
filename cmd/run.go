@@ -4,12 +4,11 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/katasec/ark/cmd/run"
 	"github.com/spf13/cobra"
 )
+
+var ics string
 
 // runCmd represents the run command
 var runCmd = &cobra.Command{
@@ -22,13 +21,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("run called")
-		if len(args) == 0 {
-			fmt.Println("Please specify recipe name")
-			os.Exit(1)
-		}
-
-		run.DoStuff(args[0])
+		run.DoStuff(ics)
 	},
 }
 
@@ -44,4 +37,7 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// runCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	runCmd.Flags().StringVarP(&ics, "ics", "i", ics, "Name of ics (Infrastructure Configuration specification) to run")
+	runCmd.MarkFlagRequired("ics")
 }
