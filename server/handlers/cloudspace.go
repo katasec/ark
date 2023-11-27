@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"reflect"
 
 	logx "github.com/katasec/ark/log"
 
@@ -54,7 +55,9 @@ func PostCloudspace(s arkserver.Server) http.HandlerFunc {
 		fmt.Println("The hub's name:", acs.Hub.Name)
 
 		// Send request to queue
-		err = qClient.Send("azurecloudspace", acs.ToJson())
+		subject := reflect.TypeOf(acsRequest).Name()
+		log.Println("The subject is:" + subject)
+		err = qClient.Send(subject, acs.ToJson()) // "azurecloudspace"
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintf(w, "Internal Error: %s,", err)
@@ -73,7 +76,7 @@ func PostCloudspace(s arkserver.Server) http.HandlerFunc {
 func DeleteCloudspace(s arkserver.Server) http.HandlerFunc {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logx.Logger().Info("In DeleteCloudspace handler")
+		logx.LoggerFn().Info("In DeleteCloudspace handler")
 
 		request := requests.DeleteAzureCloudspaceRequest{
 			Name: "default",

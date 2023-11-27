@@ -2,11 +2,13 @@ package worker
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
 	"strings"
 
+	"github.com/katasec/ark/requests"
 	resources "github.com/katasec/ark/resources"
 	shell "github.com/katasec/utils/shell"
 
@@ -43,24 +45,99 @@ func (w *Worker) Start() {
 
 	// Inifinite loop polling messages
 	for {
-		// This is a blocking receive
+		// This is a blocking receive waiting for messages from the server
 		log.Println("polling for message...")
 		message, subject, err := w.cmdQ.Receive()
+		//_, subject, err := w.cmdQ.Receive()
 		if err != nil {
 			log.Println("Infinite loop polling for message, error:" + err.Error())
 			continue
 		}
 
+		// Log Message
 		subject = strings.ToLower(subject)
 		fmt.Println("Received Subject:" + subject)
+		logx.Logger.Info("The subject was:" + subject)
 
-		// Log Message
-		logx.Logger().Info("The subject was:" + subject)
+		switch subject {
+		case "createazurecloudspacerequest":
+			executeCommand2[requests.CreateAzureCloudspaceRequest](w, message, err)
+		case "deletezurecloudspacerequest":
+			executeCommand2[*requests.DeleteAzureCloudspaceRequest](w, message, err)
+		}
 
 		// Route the message by resource name
 		resourceName := w.getResourceName(subject)
-		executeCommand(resourceName, w, subject, message, err)
+		log.Println("Resource name:" + resourceName)
+		log.Println("Skipping command execution for now")
+		//executeCommand(resourceName, w, subject, message, err)
 	}
+}
+
+func executeCommand2[T requests.RequestInterface](w *Worker, message string, err error) error {
+	var request T
+	json.Unmarshal([]byte(message), &request)
+	if err != nil {
+		log.Println("Error unmarshalling message:" + err.Error())
+		return err
+	}
+
+	subject := request.GetRequestType()
+	resourceName := request.GetResourceType()
+
+	c := make(chan error)
+	go w.messageHandler(subject, resourceName, message, c)
+	handlerError := <-c
+
+	// Send response to queue on success
+	if handlerError == nil {
+		fmt.Println("Handler ran without errors !")
+		w.respQ.Send(subject, message)
+	} else {
+		fmt.Println("Handler errors:" + handlerError.Error())
+		return handlerError
+	}
+
+	return nil
+}
+
+func executeCommand(resourceName string, w *Worker, subject string, message string, err error) {
+	c := make(chan error)
+	go w.messageHandler(subject, resourceName, message, c)
+	handlerError := <-c
+
+	if handlerError == nil {
+		fmt.Println("Handler ran without errors !")
+		w.respQ.Send(subject, message)
+
+	} else {
+		fmt.Println("Handler errors:" + handlerError.Error())
+	}
+
+	// switch resourceName {
+	// case "azurecloudspace":
+
+	// 	c := make(chan error)
+	// 	go w.messageHandler(subject, resourceName, message, c)
+	// 	handlerError := <-c
+
+	// 	if handlerError == nil {
+	// 		fmt.Println("Handler ran without errors !")
+	// 		w.respQ.Send(subject, message)
+
+	// 	} else {
+	// 		fmt.Println("Handler errors:" + handlerError.Error())
+	// 	}
+
+	// case "hellosuccess":
+
+	// 	c := make(chan error)
+	// 	go w.messageHandler(subject, resourceName, message, c)
+
+	// default:
+	// 	log.Printf("subject: %s", subject)
+	// 	log.Println("Unrecognized message, skipping")
+	// }
 }
 
 // messageHandler Creates a pulumi program and injects the message as pulumi config
@@ -143,39 +220,6 @@ func (w *Worker) setupAzureCreds() {
 	if !ok {
 		log.Println("Some env vars not set, exitting...")
 		os.Exit(1)
-	}
-}
-
-func executeCommand(resourceName string, w *Worker, subject string, message string, err error) {
-	switch resourceName {
-	case "azurecloudspace":
-
-		c := make(chan error)
-		go w.messageHandler(subject, resourceName, message, c)
-		handlerError := <-c
-
-		if handlerError == nil {
-			fmt.Println("Handler ran without errors !")
-
-			w.respQ.Send(subject, message)
-
-			if strings.HasPrefix(strings.ToLower(subject), "delete") {
-				fmt.Println("TODO: Delete Cloudpace from DB")
-			} else {
-				fmt.Println("TODO: Add Cloudpace to DB")
-			}
-		} else {
-			fmt.Println("Handler errors:" + handlerError.Error())
-		}
-
-	case "hellosuccess":
-
-		c := make(chan error)
-		go w.messageHandler(subject, resourceName, message, c)
-
-	default:
-		log.Printf("subject: %s", subject)
-		log.Println("Unrecognized message, skipping")
 	}
 }
 

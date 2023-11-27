@@ -95,6 +95,7 @@ func (s *Server) processRespQ() {
 		log.Println("Before switch statement")
 		switch subject {
 		case "createazurecloudspacerequest":
+			acs := cloudspaces.AzureCloudspace{}
 			log.Println("Received create azure cloudspace request")
 			acs, err := jsonx.JsonUnmarshall[cloudspaces.AzureCloudspace](message)
 			if err != nil {

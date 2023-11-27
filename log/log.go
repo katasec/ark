@@ -9,12 +9,17 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+var (
+	Logger *log.Entry
+)
+
 func init() {
 	//log.SetFormatter(&log.)
 	log.SetOutput(os.Stdout)
+	Logger = LoggerFn()
 }
 
-func Logger() *log.Entry {
+func LoggerFn() *log.Entry {
 	pc, file, line, ok := runtime.Caller(1)
 	if !ok {
 		panic("Could not get context info for logger!")

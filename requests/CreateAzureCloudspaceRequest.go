@@ -1,6 +1,8 @@
 package requests
 
-import "github.com/katasec/ark/resources/azure/cloudspaces"
+import (
+	"github.com/katasec/ark/resources/azure/cloudspaces"
+)
 
 type CreateAzureCloudspaceRequest struct {
 	Name         string
@@ -22,4 +24,14 @@ func (r *CreateAzureCloudspaceRequest) ToYamlAzureCloudpace() string {
 		acs.AddSpoke(env)
 	}
 	return acs.ToYaml()
+}
+
+// GetResourceType For e.g. "azurecloudspace"
+func (r CreateAzureCloudspaceRequest) GetResourceType() string {
+	return "azurecloudspace"
+}
+
+// GetRequestType For e.g. "create"
+func (r CreateAzureCloudspaceRequest) GetRequestType() string {
+	return "create"
 }
