@@ -61,20 +61,19 @@ func (w *Worker) Start() {
 
 		switch subject {
 		case "createazurecloudspacerequest":
-			executeCommand2[requests.CreateAzureCloudspaceRequest](w, message, err)
-		case "deletezurecloudspacerequest":
-			executeCommand2[*requests.DeleteAzureCloudspaceRequest](w, message, err)
+			executeCommand[requests.CreateAzureCloudspaceRequest](w, message, err)
+		case "deleteazurecloudspacerequest":
+			executeCommand[*requests.DeleteAzureCloudspaceRequest](w, message, err)
 		}
 
 		// Route the message by resource name
 		resourceName := w.getResourceName(subject)
 		log.Println("Resource name:" + resourceName)
 		log.Println("Skipping command execution for now")
-		//executeCommand(resourceName, w, subject, message, err)
 	}
 }
 
-func executeCommand2[T requests.RequestInterface](w *Worker, message string, err error) error {
+func executeCommand[T requests.RequestInterface](w *Worker, message string, err error) error {
 	var request T
 	json.Unmarshal([]byte(message), &request)
 	if err != nil {
@@ -101,45 +100,6 @@ func executeCommand2[T requests.RequestInterface](w *Worker, message string, err
 	return nil
 }
 
-func executeCommand(resourceName string, w *Worker, subject string, message string, err error) {
-	c := make(chan error)
-	go w.messageHandler(subject, resourceName, message, c)
-	handlerError := <-c
-
-	if handlerError == nil {
-		fmt.Println("Handler ran without errors !")
-		w.respQ.Send(subject, message)
-
-	} else {
-		fmt.Println("Handler errors:" + handlerError.Error())
-	}
-
-	// switch resourceName {
-	// case "azurecloudspace":
-
-	// 	c := make(chan error)
-	// 	go w.messageHandler(subject, resourceName, message, c)
-	// 	handlerError := <-c
-
-	// 	if handlerError == nil {
-	// 		fmt.Println("Handler ran without errors !")
-	// 		w.respQ.Send(subject, message)
-
-	// 	} else {
-	// 		fmt.Println("Handler errors:" + handlerError.Error())
-	// 	}
-
-	// case "hellosuccess":
-
-	// 	c := make(chan error)
-	// 	go w.messageHandler(subject, resourceName, message, c)
-
-	// default:
-	// 	log.Printf("subject: %s", subject)
-	// 	log.Println("Unrecognized message, skipping")
-	// }
-}
-
 // messageHandler Creates a pulumi program and injects the message as pulumi config
 func (w *Worker) messageHandler(subject string, resourceName string, yamlconfig string, c chan error) {
 
@@ -150,7 +110,6 @@ func (w *Worker) messageHandler(subject string, resourceName string, yamlconfig 
 
 	if err == nil {
 		// Inject yaml config as input for pulumi program
-
 		p.Stack.SetConfig(context.Background(), "arkdata", auto.ConfigValue{Value: yamlconfig})
 		p.FixConfig()
 
