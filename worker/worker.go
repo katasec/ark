@@ -22,8 +22,12 @@ import (
 
 type Worker struct {
 	config *config.Config
-	respQ  messaging.Messenger
-	cmdQ   messaging.Messenger
+
+	// respQ is the queue to send responses to the server
+	respQ messaging.Messenger
+
+	// cmdQ is the queue to receive commands from the server
+	cmdQ messaging.Messenger
 }
 
 func NewWorker() *Worker {
@@ -40,7 +44,9 @@ func NewWorker() *Worker {
 }
 
 func (w *Worker) Start() {
-	w.setupAzureCreds()
+
+	// Read Azure creds on startup
+	w.getAzureCredsFromEnv()
 	log.Println("Starting worker")
 
 	// Inifinite loop polling messages
@@ -48,7 +54,6 @@ func (w *Worker) Start() {
 		// This is a blocking receive waiting for messages from the server
 		log.Println("polling for message...")
 		message, subject, err := w.cmdQ.Receive()
-		//_, subject, err := w.cmdQ.Receive()
 		if err != nil {
 			log.Println("Infinite loop polling for message, error:" + err.Error())
 			continue
@@ -56,42 +61,42 @@ func (w *Worker) Start() {
 
 		// Log Message
 		subject = strings.ToLower(subject)
-		fmt.Println("Received Subject:" + subject)
 		logx.Logger.Info("The subject was:" + subject)
 
+		// Execute command based on subject
 		switch subject {
 		case "createazurecloudspacerequest":
 			executeCommand[requests.CreateAzureCloudspaceRequest](w, message, err)
 		case "deleteazurecloudspacerequest":
-			executeCommand[*requests.DeleteAzureCloudspaceRequest](w, message, err)
+			executeCommand[requests.DeleteAzureCloudspaceRequest](w, message, err)
 		}
 
-		// Route the message by resource name
-		resourceName := w.getResourceName(subject)
-		log.Println("Resource name:" + resourceName)
-		log.Println("Skipping command execution for now")
 	}
 }
 
-func executeCommand[T requests.RequestInterface](w *Worker, message string, err error) error {
-	var request T
-	json.Unmarshal([]byte(message), &request)
+func executeCommand[T requests.RequestInterface](w *Worker, payload string, err error) error {
+
+	// Convert payload to message type
+	var message T
+	json.Unmarshal([]byte(payload), &message)
 	if err != nil {
 		log.Println("Error unmarshalling message:" + err.Error())
 		return err
 	}
 
-	subject := request.GetRequestType()
-	resourceName := request.GetResourceType()
+	// Extract action and resource name from request
+	action := message.GetActionType()
+	resourceName := message.GetResourceType()
 
+	// Run handler in a go routine to create/destroy infra
 	c := make(chan error)
-	go w.messageHandler(subject, resourceName, message, c)
+	go w.messageHandler(action, resourceName, payload, c)
 	handlerError := <-c
 
-	// Send response to queue on success
+	// Send result to server via response queue on success
 	if handlerError == nil {
 		fmt.Println("Handler ran without errors !")
-		w.respQ.Send(subject, message)
+		w.respQ.Send(action, payload)
 	} else {
 		fmt.Println("Handler errors:" + handlerError.Error())
 		return handlerError
@@ -101,7 +106,7 @@ func executeCommand[T requests.RequestInterface](w *Worker, message string, err 
 }
 
 // messageHandler Creates a pulumi program and injects the message as pulumi config
-func (w *Worker) messageHandler(subject string, resourceName string, yamlconfig string, c chan error) {
+func (w *Worker) messageHandler(action string, resourceName string, yamlconfig string, c chan error) {
 
 	log.Println("Before creating pulumi program")
 
@@ -114,7 +119,7 @@ func (w *Worker) messageHandler(subject string, resourceName string, yamlconfig 
 		p.FixConfig()
 
 		// Run pulumi up or destroy
-		if strings.HasPrefix(strings.ToLower(subject), "delete") {
+		if strings.HasPrefix(strings.ToLower(action), "delete") {
 			_, err := p.Destroy()
 			c <- err
 		} else {
@@ -131,14 +136,14 @@ func (w *Worker) messageHandler(subject string, resourceName string, yamlconfig 
 func (w *Worker) createPulumiProgram(resourceName string, runtime string) (*pulumirunner.RemoteProgram, error) {
 
 	//logger := utils.ConfigureLogger(w.config.LogFile)
-	projectPath := fmt.Sprintf("%s-handler", resourceName)
+	//projectPath := fmt.Sprintf("%s-handler", resourceName)
 
-	log.Println("Project path:" + projectPath)
+	//log.Println("Project path:" + projectPath)
 	args := &pulumirunner.RemoteProgramArgs{
 		ProjectName: resourceName,
+		ProjectPath: resourceName + "-handler", //projectPath,
 		GitURL:      "https://github.com/katasec/library.git",
 		Branch:      "refs/remotes/origin/main",
-		ProjectPath: projectPath,
 		StackName:   "dev",
 		Plugins: []map[string]string{
 			{
@@ -160,11 +165,19 @@ func (w *Worker) createPulumiProgram(resourceName string, runtime string) (*pulu
 	return pulumirunner.NewRemoteProgram(args)
 }
 
-func (w *Worker) setupAzureCreds() {
+// getAzureCredsFromEnv reads Azure creds from env vars and sets them in pulumi config
+func (w *Worker) getAzureCredsFromEnv() {
 
+	// Define env vars to read
 	log.Println("Reading Azure creds from env vars")
-	envvars := []string{"ARM_CLIENT_ID", "ARM_CLIENT_SECRET", "ARM_TENANT_ID", "ARM_SUBSCRIPTION_ID"}
+	envvars := []string{
+		"ARM_CLIENT_ID",
+		"ARM_CLIENT_SECRET",
+		"ARM_TENANT_ID",
+		"ARM_SUBSCRIPTION_ID",
+	}
 
+	// Check if all env vars are set
 	ok := false
 	for _, envvar := range envvars {
 		if os.Getenv(envvar) != "" {
@@ -176,18 +189,9 @@ func (w *Worker) setupAzureCreds() {
 		}
 	}
 
+	// Exit if any env var is not set
 	if !ok {
 		log.Println("Some env vars not set, exitting...")
 		os.Exit(1)
 	}
-}
-
-// For e.g from subject  'createazurecloudspacerequest' or 'deleteazurecloudspacerequest', returns 'azurecloudspace'
-func (w *Worker) getResourceName(subject string) string {
-	fmt.Println("getResourceName():" + subject)
-	resourceName := strings.ToLower(subject)
-	resourceName = strings.Replace(resourceName, "delete", "", 1)
-	resourceName = strings.Replace(resourceName, "create", "", 1)
-	resourceName = strings.Replace(resourceName, "request", "", 1)
-	return resourceName
 }

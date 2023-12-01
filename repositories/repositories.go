@@ -3,6 +3,8 @@ package repositories
 import (
 	"reflect"
 	"strings"
+
+	"github.com/katasec/ark/resources"
 )
 
 // GetTableName Gets the name of the table from the repository name
@@ -18,4 +20,9 @@ func GetTableName[T any]() string {
 	tableName = strings.ToLower(tableName)
 
 	return tableName
+}
+
+type Repositories interface {
+	Save(resource resources.Resource) error
+	Remove(resource resources.Resource) error
 }

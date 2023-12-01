@@ -18,10 +18,10 @@ func (r *DeleteAzureCloudspaceRequest) ToYamlAzureCloudpace() string {
 	return acs.ToYaml()
 }
 
-func (r *DeleteAzureCloudspaceRequest) GetResourceType() string {
+func (r DeleteAzureCloudspaceRequest) GetResourceType() string {
 	return "azurecloudspace"
 }
 
-func (r *DeleteAzureCloudspaceRequest) GetRequestType() string {
+func (r DeleteAzureCloudspaceRequest) GetActionType() string {
 	return "delete"
 }

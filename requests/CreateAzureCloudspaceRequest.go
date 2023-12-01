@@ -32,6 +32,6 @@ func (r CreateAzureCloudspaceRequest) GetResourceType() string {
 }
 
 // GetRequestType For e.g. "create"
-func (r CreateAzureCloudspaceRequest) GetRequestType() string {
+func (r CreateAzureCloudspaceRequest) GetActionType() string {
 	return "create"
 }

@@ -6,8 +6,8 @@ type RequestInterface interface {
 	// GetResourceType For e.g. "azurecloudspace
 	GetResourceType() string
 
-	// GetRequestType For e.g. "create"
-	GetRequestType() string
+	// GetActionType For e.g. "create"
+	GetActionType() string
 }
 type Request any
 type Requests struct{}

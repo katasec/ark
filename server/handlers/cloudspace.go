@@ -67,7 +67,7 @@ func PostCloudspace(s arkserver.Server) http.HandlerFunc {
 		}
 
 		// Save cloudspace to DB
-		db.AddCloudSpace(&acs)
+		db.Create(&acs)
 		w.Header().Set("Content-Type", "application/x-yaml")
 		w.WriteHeader(http.StatusOK)
 	})

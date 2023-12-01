@@ -6,16 +6,9 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/katasec/ark/resources"
 	"github.com/katasec/ark/resources/azure/cloudspaces"
 )
-
-type Repositories interface {
-	// GetCloudSpace(id int) (CloudSpace, error)
-	// GetCloudSpaces() ([]CloudSpace, error)
-	// CreateCloudSpace(cloudspace CloudSpace) (CloudSpace, error)
-	// UpdateCloudSpace(cloudspace CloudSpace) (CloudSpace, error)
-	// DeleteCloudSpace(id int) error
-}
 
 type AzureCloudSpaceRepository struct {
 	db        *sql.DB
@@ -70,8 +63,8 @@ func (acs *AzureCloudSpaceRepository) DropTable(db *sql.DB) {
 	}
 }
 
-// AddCloudSpace Inserts a new cloudspace into the database
-func (acs *AzureCloudSpaceRepository) AddCloudSpace(cs *cloudspaces.AzureCloudspace) error {
+// Create Inserts a new cloudspace into the database
+func (acs *AzureCloudSpaceRepository) Create(cs *cloudspaces.AzureCloudspace) error {
 
 	jsonAcs, err := json.Marshal(cs)
 	if err != nil {
@@ -98,7 +91,7 @@ func (acs *AzureCloudSpaceRepository) AddCloudSpace(cs *cloudspaces.AzureCloudsp
 	return nil
 }
 
-func (acs *AzureCloudSpaceRepository) UpdateCloudSpace(cs cloudspaces.AzureCloudspace) (cloudspaces.AzureCloudspace, error) {
+func (acs *AzureCloudSpaceRepository) Update(cs cloudspaces.AzureCloudspace) (cloudspaces.AzureCloudspace, error) {
 
 	jsonData, err := json.Marshal(cs)
 	if err != nil {
@@ -119,7 +112,7 @@ func (acs *AzureCloudSpaceRepository) UpdateCloudSpace(cs cloudspaces.AzureCloud
 	return cs, nil
 }
 
-func (acs *AzureCloudSpaceRepository) DeleteCloudSpace(name string) error {
+func (acs *AzureCloudSpaceRepository) Delete(name string) error {
 
 	log.Println("Deleting cloudspace:" + name)
 	sqlCmd := `
@@ -205,4 +198,52 @@ func (acs *AzureCloudSpaceRepository) GetCloudSpace(name string) (cloudspaces.Az
 	}
 
 	return cs, nil
+}
+
+func (acs AzureCloudSpaceRepository) Remove(cs resources.Resource) error {
+
+	log.Println("Deleting cloudspace:" + cs.GetName())
+	sqlCmd := `
+	Delete from %s
+	WHERE name = '%s';
+	`
+	sqlCmd = fmt.Sprintf(sqlCmd, acs.tableName, cs.GetName())
+
+	_, err := acs.db.Exec(sqlCmd)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	} else {
+		log.Println("Deleted cloudspace:" + cs.GetName())
+	}
+	return nil
+}
+
+// Create Inserts a new cloudspace into the database
+func (acs AzureCloudSpaceRepository) Save(cs resources.Resource) error {
+
+	log.Println("Saving cloudspace:" + cs.GetName())
+	jsonAcs, err := json.Marshal(cs.(cloudspaces.AzureCloudspace))
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	if cs.GetName() == "" {
+		fmt.Println("Cloudspace name is empty")
+		return fmt.Errorf("cloudspace name is empty")
+	}
+	sqlCmd := `
+	INSERT INTO %s(name, data)
+	VALUES('%s', '%s');
+	`
+	sqlCmd = fmt.Sprintf(sqlCmd, acs.tableName, cs.GetName(), jsonAcs)
+	//fmt.Println(sqlCmd)
+	_, err = acs.db.Exec(sqlCmd)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	return nil
 }

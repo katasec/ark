@@ -10,11 +10,12 @@ import (
 )
 
 type AzureCloudspace struct {
-	Name     string     `yaml:"Name"`
-	Hub      VNETInfo   `yaml:"Hub"`
-	Spokes   []VNETInfo `yaml:"Spokes"`
-	Status   string     `yaml:"Status"`
-	Id       string
+	ID     int
+	Name   string     `yaml:"Name"`
+	Hub    VNETInfo   `yaml:"Hub"`
+	Spokes []VNETInfo `yaml:"Spokes"`
+	Status string     `yaml:"Status"`
+	//Id       string
 	UpdateId string
 
 	hubOctet1 int
@@ -139,4 +140,8 @@ func (acs *AzureCloudspace) ToYaml() string {
 		fmt.Println(err.Error())
 	}
 	return string(b)
+}
+
+func (acs AzureCloudspace) GetName() string {
+	return acs.Name
 }

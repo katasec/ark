@@ -25,14 +25,14 @@ func TestNewAzureCloudSpaceRepository(t *testing.T) {
 	//acsRepo.DeleteCloudSpace()
 	name := "default4"
 	acs := CreateSampleAcs(name)
-	acsRepo.AddCloudSpace(acs)
+	acsRepo.Create(acs)
 	acsFromDb, err := acsRepo.GetCloudSpace(name)
 	if err != nil {
 		fmt.Println(err)
 	}
 	log.Printf("ACS Name:%s\n", acsFromDb.Name)
 
-	acsRepo.DeleteCloudSpace(name)
+	acsRepo.Delete(name)
 
 }
 

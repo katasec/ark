@@ -2,6 +2,7 @@ package server
 
 import (
 	"database/sql"
+	"encoding/json"
 	"os"
 	"strings"
 
@@ -16,6 +17,7 @@ import (
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/messaging"
 	"github.com/katasec/ark/repositories"
+	"github.com/katasec/ark/resources"
 	"github.com/katasec/ark/resources/azure/cloudspaces"
 	jsonx "github.com/katasec/utils/json"
 
@@ -95,26 +97,42 @@ func (s *Server) processRespQ() {
 		log.Println("Before switch statement")
 		switch subject {
 		case "createazurecloudspacerequest":
-			acs := cloudspaces.AzureCloudspace{}
-			log.Println("Received create azure cloudspace request")
-			acs, err := jsonx.JsonUnmarshall[cloudspaces.AzureCloudspace](message)
-			if err != nil {
-				fmt.Println(err)
-			} else {
-				s.Acsrepo.AddCloudSpace(&acs)
-			}
+			// acs := cloudspaces.AzureCloudspace{}
+			// log.Println("Received create azure cloudspace request")
+			// acs, err := jsonx.JsonUnmarshall[cloudspaces.AzureCloudspace](message)
+			// if err != nil {
+			// 	fmt.Println(err)
+			// } else {
+			// 	s.Acsrepo.Create(&acs)
+			// }
+			addToRepository[cloudspaces.AzureCloudspace](s, message)
 		case "deleteazurecloudspacerequest":
 			log.Println("Received delete azure cloudspace request")
 			acs, err := jsonx.JsonUnmarshall[cloudspaces.AzureCloudspace](message)
 			if err != nil {
 				fmt.Println(err)
 			} else {
-				s.Acsrepo.DeleteCloudSpace(acs.Name)
+				s.Acsrepo.Delete(acs.Name)
 			}
 		default:
 			log.Println("Unknown subject:" + subject)
 		}
 	}
+}
+
+// addToRepository Creates resources in the repository
+func addToRepository[T resources.Resource](s *Server, payload string) error {
+
+	// Convert payload to request type
+	var message T
+	err := json.Unmarshal([]byte(payload), &message)
+	if err != nil {
+		log.Println("Error unmarshalling message:" + err.Error())
+		return err
+	}
+
+	s.Acsrepo.Save(message)
+	return nil
 }
 
 func (s *Server) getDbConnection() (*sql.DB, error) {
