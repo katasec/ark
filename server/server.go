@@ -19,6 +19,7 @@ import (
 	"github.com/katasec/ark/repositories"
 	"github.com/katasec/ark/resources"
 	"github.com/katasec/ark/resources/azure/cloudspaces"
+	"github.com/katasec/tableio"
 	jsonx "github.com/katasec/utils/json"
 
 	_ "github.com/lib/pq" // Import the pq driver
@@ -97,14 +98,6 @@ func (s *Server) processRespQ() {
 		log.Println("Before switch statement")
 		switch subject {
 		case "createazurecloudspacerequest":
-			// acs := cloudspaces.AzureCloudspace{}
-			// log.Println("Received create azure cloudspace request")
-			// acs, err := jsonx.JsonUnmarshall[cloudspaces.AzureCloudspace](message)
-			// if err != nil {
-			// 	fmt.Println(err)
-			// } else {
-			// 	s.Acsrepo.Create(&acs)
-			// }
 			addToRepository[cloudspaces.AzureCloudspace](s, message)
 		case "deleteazurecloudspacerequest":
 			log.Println("Received delete azure cloudspace request")
@@ -131,7 +124,15 @@ func addToRepository[T resources.Resource](s *Server, payload string) error {
 		return err
 	}
 
-	s.Acsrepo.Save(message)
+	// Create tableio struct of type T
+	table, err := tableio.NewTableIO[T](s.config.DbConfig.DriverName, s.config.DbConfig.DataSourceName)
+	if err != nil {
+		log.Printf("Error creating tableio struct: %s\n", err)
+		return err
+	}
+	table.Insert(message)
+
+	//s.Acsrepo.Save(message)
 	return nil
 }
 
@@ -169,30 +170,4 @@ func getDbConnection() (*sql.DB, error) {
 	}
 
 	return db, err
-}
-
-// Returns Command Queue. The command queue is used to send commands to the worker
-func (s *Server) GetCmdQ() messaging.Messenger {
-	return s.cmdQ
-}
-
-// Returns Command Queue. The command queue is used to send commands to the worker
-func (s *Server) GetResqQ() messaging.Messenger {
-	return s.respQ
-}
-
-func (s *Server) GetRouter() *chi.Mux {
-	return s.router
-}
-
-func (s *Server) GetConfig() *config.Config {
-	return s.config
-}
-
-func (s *Server) GetDb() *sql.DB {
-	return s.db
-}
-
-func (s Server) GetAcsDb() *repositories.AzureCloudSpaceRepository {
-	return s.Acsrepo
 }

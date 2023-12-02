@@ -149,6 +149,8 @@ github.com/katasec/pulumi-runner v0.1.18 h1:xTs+xp8gNuztmelx19H32pSAZ9nXi1ujLsI+
 github.com/katasec/pulumi-runner v0.1.18/go.mod h1:9UilVyD+OxpJ+llRf2yvp5mNbqW7qm38qEHU5pJ9Xes=
 github.com/katasec/tableio v0.0.3 h1:EjmUjpvAGWN0IeMUNyJBF8eJp6CGkwwzZNwmOLiXLnY=
 github.com/katasec/tableio v0.0.3/go.mod h1:H7vR69mlppoOk1CuiTTZINshrEozNatL+u818tpj3z4=
+github.com/katasec/tableio v0.0.5 h1:e4Y6/DHPErhu/Kl0E1hmozpI05Qvt60O+1NhXO3MmNg=
+github.com/katasec/tableio v0.0.5/go.mod h1:a3a6422MhmSqLANF0HKQ0vwxf2horZ3quWv6EbiGO/w=
 github.com/katasec/utils v0.0.3 h1:R/OaDPXyf1vbEC+hqLlBoaGRERRILv9U9oo/13gJVI8=
 github.com/katasec/utils v0.0.3/go.mod h1:ICCpnxHdJSyhuTDBOlRWK5fM6RJVIu0urzWemulTC00=
 github.com/kevinburke/ssh_config v1.2.0 h1:x584FjTGwHzMwvHx18PXxbBVzfnxogHaAReU4gf13a4=

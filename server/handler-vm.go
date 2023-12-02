@@ -1,15 +1,14 @@
-package handlers
+package server
 
 import (
 	"encoding/json"
 	"fmt"
 	"net/http"
 
-	"github.com/katasec/ark/arkserver"
 	resources "github.com/katasec/ark/resources"
 )
 
-func PostVm(s arkserver.Server) http.HandlerFunc {
+func (s *Server) PostVm() http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		vm := resources.Vm{}

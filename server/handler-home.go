@@ -1,10 +1,8 @@
-package handlers
+package server
 
 import (
 	"fmt"
 	"net/http"
-
-	"github.com/katasec/ark/arkserver"
 )
 
 var (
@@ -39,7 +37,7 @@ var (
 					`
 )
 
-func HomeHander(s arkserver.Server) http.HandlerFunc {
+func (s *Server) HomeHander() http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, homeHtml)
 	})
