@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"reflect"
 	"strings"
 
 	"github.com/katasec/ark/requests"
@@ -76,6 +77,10 @@ func (w *Worker) Start() {
 
 func executeCommand[T requests.RequestInterface](w *Worker, payload string, err error) error {
 
+	var x T
+	requestName := reflect.TypeOf(x).Name()
+	fmt.Println("Executing command:" + requestName)
+
 	// Convert payload to message type
 	var message T
 	json.Unmarshal([]byte(payload), &message)
@@ -96,7 +101,8 @@ func executeCommand[T requests.RequestInterface](w *Worker, payload string, err 
 	// Send result to server via response queue on success
 	if handlerError == nil {
 		fmt.Println("Handler ran without errors !")
-		w.respQ.Send(action, payload)
+		fmt.Println("Sending response to server:" + requestName)
+		w.respQ.Send(requestName, payload)
 	} else {
 		fmt.Println("Handler errors:" + handlerError.Error())
 		return handlerError

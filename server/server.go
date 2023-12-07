@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"os"
+	"reflect"
 	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -20,7 +21,6 @@ import (
 	"github.com/katasec/ark/resources"
 	"github.com/katasec/ark/resources/azure/cloudspaces"
 	"github.com/katasec/tableio"
-	jsonx "github.com/katasec/utils/json"
 
 	_ "github.com/lib/pq" // Import the pq driver
 )
@@ -83,6 +83,7 @@ func (s *Server) processRespQ() {
 	log.Println("Starting loop for response processing")
 	// Inifinite loop polling messages
 	for {
+
 		// This is a blocking receive
 		log.Println("polling for message...")
 		message, subject, err := s.respQ.Receive()
@@ -90,23 +91,20 @@ func (s *Server) processRespQ() {
 			log.Println("Infinite loop polling for message, error:" + err.Error())
 			continue
 		}
-
 		subject = strings.ToLower(subject)
 
 		// Log Message
 		log.Println("The subject was:" + subject)
 		log.Println("Before switch statement")
+
+		// Switch on subject
 		switch subject {
 		case "createazurecloudspacerequest":
 			addToRepository[cloudspaces.AzureCloudspace](s, message)
+
 		case "deleteazurecloudspacerequest":
 			log.Println("Received delete azure cloudspace request")
-			acs, err := jsonx.JsonUnmarshall[cloudspaces.AzureCloudspace](message)
-			if err != nil {
-				fmt.Println(err)
-			} else {
-				s.Acsrepo.Delete(acs.Name)
-			}
+			deleteFromRepository[cloudspaces.AzureCloudspace](s, message)
 		default:
 			log.Println("Unknown subject:" + subject)
 		}
@@ -132,7 +130,29 @@ func addToRepository[T resources.Resource](s *Server, payload string) error {
 	}
 	table.Insert(message)
 
-	//s.Acsrepo.Save(message)
+	return nil
+}
+
+// addToRepository Creates resources in the repository
+func deleteFromRepository[T resources.Resource](s *Server, payload string) error {
+
+	// Convert payload to request type
+	var message T
+	err := json.Unmarshal([]byte(payload), &message)
+	if err != nil {
+		log.Println("Error unmarshalling message:" + err.Error())
+		return err
+	}
+	log.Println("Deleting resource:" + reflect.TypeOf(message).Name() + ":" + message.GetName())
+
+	// Create tableio struct of type T
+	table, err := tableio.NewTableIO[T](s.config.DbConfig.DriverName, s.config.DbConfig.DataSourceName)
+	if err != nil {
+		log.Printf("Error creating tableio struct: %s\n", err)
+		return err
+	}
+	table.DeleteByName(message.GetName())
+
 	return nil
 }
 
@@ -170,4 +190,13 @@ func getDbConnection() (*sql.DB, error) {
 	}
 
 	return db, err
+}
+
+// unmarshallJson Umarshalls a JSON string to type "T"
+func unmarshallJson[T resources.Resource](payload string) (message T, err error) {
+	err = json.Unmarshal([]byte(payload), &message)
+	if err != nil {
+		log.Println("Error unmarshalling message:" + err.Error())
+	}
+	return message, err
 }
