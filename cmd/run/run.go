@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"path"
 	"strings"
 
 	"oras.land/oras-go/v2"
@@ -14,44 +15,54 @@ import (
 )
 
 func DoStuff(ics string) {
-	//ics = "ghcr.io/katasec/cloudspace:v1"
-	refx := strings.Split(ics, ":")[0]
-	tagx := strings.Split(ics, ":")[1]
-	regx := strings.Split(ics, "/")[0]
 
-	fmt.Println("Doing stuff:" + ics)
-	localpath := "/Users/ameerdeen/.ark/manifests/"
+	// Extract registry domain, repo and tag from ics
+	// For e.g. ics = ghcr.io/katasec/cloudspace:v1
+	// registryDomain = ghcr.io
+	// repo = katasec/cloudspace
+	// tag = v1
+	ref := strings.Split(ics, ":")[0]
+	tagx := strings.Split(ics, ":")[1]
+	registryDomain := strings.Split(ics, "/")[0]
+
+	// Get home directory
+	homedir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Println("Error getting home directory:", err)
+		return
+	}
+
+	// Create local path under home directory
+	localpath := path.Join(homedir, "./ark/manifests") //"/Users/ameerdeen/.ark/manifests/"
+
+	// Create a file store in the local path
 	fs, err := file.New(localpath)
 	if err != nil {
 		panic(err)
 	}
 	defer fs.Close()
 
-	// 1. Connect to a remote repository
+	// Connect to a remote repository
 	ctx := context.Background()
-	//reg := "ghcr.io"
-	//repo, err := remote.NewRepository(reg + "/katasec/artifact")
-	repo, err := remote.NewRepository(refx)
+	repo, err := remote.NewRepository(ref)
 	if err != nil {
 		panic(err)
 	}
 
-	// Note: The below code can be omitted if authentication is not required
+	// Use the default registry credentials
 	username := os.Getenv("ARK_REGISTRY_USERNAME")
 	password := os.Getenv("ARK_REGISTRY_PASSWORD")
-
 	repo.Client = &auth.Client{
 		Client: retry.DefaultClient,
 		Cache:  auth.DefaultCache,
-		Credential: auth.StaticCredential(regx, auth.Credential{
+		Credential: auth.StaticCredential(registryDomain, auth.Credential{
 			Username: username,
 			Password: password,
 		}),
 	}
 
-	//tag := "v1"
+	// Pull the image to the local file store
 	_, err = oras.Copy(ctx, repo, tagx, fs, tagx, oras.DefaultCopyOptions)
-	//oras.FetchBytes(ctx, repo, tagx)
 	if err != nil {
 		panic(err)
 	} else {

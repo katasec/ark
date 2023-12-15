@@ -14,13 +14,14 @@ import (
 func TestNewAzureCloudSpaceRepository(t *testing.T) {
 
 	server := NewServer()
-	db, err := server.getDbConnection()
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer db.Close()
 
-	acsRepo := repositories.NewAzureCloudSpaceRepository(db)
+	// db, err := server.getDbConnection()
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// defer db.Close()
+
+	acsRepo := repositories.NewAzureCloudSpaceRepository(server.db)
 
 	//acsRepo.DeleteCloudSpace()
 	name := "default4"
