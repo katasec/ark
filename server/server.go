@@ -3,7 +3,6 @@ package server
 import (
 	"database/sql"
 	"encoding/json"
-	"os"
 	"reflect"
 	"strings"
 
@@ -45,22 +44,22 @@ func NewServer() *Server {
 	chiRouter.Use(middleware.Logger)
 
 	//Setup DB Config
-	db, err := getDbConnection()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+	// db, err := createDbConnection()
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	os.Exit(1)
+	// }
 
 	// Initialize Repositories
-	acsrepo := repositories.NewAzureCloudSpaceRepository(db)
+	//acsrepo := repositories.NewAzureCloudSpaceRepository(db)
 
 	// Return server with local config
 	return &Server{
-		config:  cfg,
-		cmdQ:    messaging.NewRabbitMqMessenger(cfg.MqConnStr, cfg.CmdQ),
-		respQ:   messaging.NewRabbitMqMessenger(cfg.MqConnStr, cfg.RespQ),
-		router:  chiRouter,
-		Acsrepo: acsrepo,
+		config: cfg,
+		cmdQ:   messaging.NewRabbitMqMessenger(cfg.MqConnStr, cfg.CmdQ),
+		respQ:  messaging.NewRabbitMqMessenger(cfg.MqConnStr, cfg.RespQ),
+		router: chiRouter,
+		//Acsrepo: acsrepo,
 	}
 }
 
@@ -129,7 +128,7 @@ func addToRepository[T resources.Resource](s *Server, payload string) error {
 		return err
 	}
 	table.Insert(message)
-
+	table.Close()
 	return nil
 }
 
@@ -152,7 +151,7 @@ func deleteFromRepository[T resources.Resource](s *Server, payload string) error
 		return err
 	}
 	table.DeleteByName(message.GetName())
-
+	table.Close()
 	return nil
 }
 
@@ -173,7 +172,7 @@ func (s *Server) getDbConnection() (*sql.DB, error) {
 	return db, err
 }
 
-func getDbConnection() (*sql.DB, error) {
+func createDbConnection() (*sql.DB, error) {
 
 	config := config.ReadConfig()
 
