@@ -78,6 +78,8 @@ github.com/docker/go-connections v0.4.0/go.mod h1:Gbd7IOopHjR8Iph03tsViu4nIes5Xh
 github.com/docker/go-units v0.5.0 h1:69rxXcBk27SvSaaxTtLh/8llcHD8vYHT7WSdRZ/jvr4=
 github.com/docker/go-units v0.5.0/go.mod h1:fgPhTUdO+D/Jk86RDLlptpiXQzgHJF7gydDDbaIK4Dk=
 github.com/elazarl/goproxy v0.0.0-20230808193330-2592e75ae04a h1:mATvB/9r/3gvcejNsXKSkQ6lcIaNec2nyfOdlTBR2lU=
+github.com/emicklei/go-restful/v3 v3.10.2 h1:hIovbnmBTLjHXkqEBUz3HGpXZdM7ZrE9fJIZIqlJLqE=
+github.com/emicklei/go-restful/v3 v3.10.2/go.mod h1:6n3XBCmQQb25CM2LCACGz8ukIrRry+4bhvbpWn3mrbc=
 github.com/emirpasic/gods v1.18.1 h1:FXtiHYKDGKCW2KzwZKx0iC0PQmdlorYgdFG9jPXJ1Bc=
 github.com/emirpasic/gods v1.18.1/go.mod h1:8tpGGwCnJ5H4r6BWwaV6OrWmMoPhUl5jm/FMNAnJvWQ=
 github.com/fatih/color v1.9.0/go.mod h1:eQcE1qtQxscV5RaZvpXrrb8Drkc3/DdQ+uUYCNjL+zU=
@@ -147,8 +149,6 @@ github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99/go.mod h1:1lJo3i
 github.com/joho/godotenv v1.3.0 h1:Zjp+RcGpHhGlrMbJzXTrZZPrWj+1vfm90La1wgB6Bhc=
 github.com/katasec/pulumi-runner v0.1.18 h1:xTs+xp8gNuztmelx19H32pSAZ9nXi1ujLsI+XsvNuqs=
 github.com/katasec/pulumi-runner v0.1.18/go.mod h1:9UilVyD+OxpJ+llRf2yvp5mNbqW7qm38qEHU5pJ9Xes=
-github.com/katasec/tableio v0.0.3 h1:EjmUjpvAGWN0IeMUNyJBF8eJp6CGkwwzZNwmOLiXLnY=
-github.com/katasec/tableio v0.0.3/go.mod h1:H7vR69mlppoOk1CuiTTZINshrEozNatL+u818tpj3z4=
 github.com/katasec/tableio v0.0.5 h1:e4Y6/DHPErhu/Kl0E1hmozpI05Qvt60O+1NhXO3MmNg=
 github.com/katasec/tableio v0.0.5/go.mod h1:a3a6422MhmSqLANF0HKQ0vwxf2horZ3quWv6EbiGO/w=
 github.com/katasec/utils v0.0.3 h1:R/OaDPXyf1vbEC+hqLlBoaGRERRILv9U9oo/13gJVI8=
