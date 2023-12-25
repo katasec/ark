@@ -159,12 +159,13 @@ func pushArchiveToRegistry(tmpdirBase string) {
 	fileNames := listFilesRecursively(tmpdirBase)
 	fileDescriptors := make([]v1.Descriptor, 0, len(fileNames))
 	for _, name := range fileNames {
+		log.Println("Adding file: " + name)
 		fileDescriptor, err := fs.Add(ctx, name, mediaType, "")
 		if err != nil {
 			panic(err)
 		}
 		fileDescriptors = append(fileDescriptors, fileDescriptor)
-		fmt.Printf("file descriptor for %s: %v\n", name, fileDescriptor)
+		//fmt.Printf("file descriptor for %s: %v\n", name, fileDescriptor)
 	}
 
 	// 2. Pack the files and tag the packed manifest
@@ -192,15 +193,18 @@ func pushArchiveToRegistry(tmpdirBase string) {
 	// tag = v1
 
 	// Get Remote registry details
-	ics := "ghcr.io/katasec/cloudspace:v1"
+	ics := "ghcr.io/katasec/cloudspace"
 	ref := strings.Split(ics, ":")[0]
-	tagx := strings.Split(ics, ":")[1]
+	//tagx := strings.Split(ics, ":")[1]
+	tagx := "latest"
 	registryDomain := strings.Split(ics, "/")[0]
 
 	// 3. Connect to a remote repository
 	repo, err := remote.NewRepository(ref)
 	if err != nil {
 		panic(err)
+	} else {
+		log.Println("Connected to remote repository: " + ref)
 	}
 
 	// Use the default registry credentials
@@ -216,15 +220,16 @@ func pushArchiveToRegistry(tmpdirBase string) {
 	}
 
 	// 4. Copy from the file store to the remote repository
-	src := fs
-	dst := repo
-	_, err = oras.Copy(ctx, src, tagx, dst, tagx, oras.DefaultCopyOptions)
+	// src := fs
+	// dst := repo
+
+	_, err = oras.Copy(ctx, fs, tagx, repo, tagx, oras.DefaultCopyOptions)
 	if err != nil {
-		fmt.Println("Error pushing files from: " + tmpdirBase + "to" + repo.Reference.Repository + ":" + tagx)
+		fmt.Println("Error pushing files from: " + tmpdirBase + " to " + repo.Reference.Repository + ":" + tagx)
 		fmt.Println(err.Error())
 		os.Exit(1)
 	} else {
-		fmt.Println("Pushed files from: " + tmpdirBase + "to" + repo.Reference.Repository + ":" + tagx)
+		fmt.Println("Pushed files from: " + tmpdirBase + " to " + repo.Reference.Repository + ":" + tagx)
 	}
 }
 
@@ -239,7 +244,7 @@ func listFilesRecursively(dirPath string) []string {
 		}
 
 		// Add file to files if it is not a directory
-		if !info.IsDir() {
+		if !strings.Contains(path, ".git/") && !strings.Contains(path, ".gitignore") && !info.IsDir() {
 			files = append(files, path)
 		}
 
