@@ -21,6 +21,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/mattn/go-sqlite3 v1.14.18
 	github.com/mitchellh/go-ps v1.0.0
+	github.com/opencontainers/image-spec v1.1.0-rc5
 	github.com/pulumi/pulumi-azure-native-sdk/resources v1.104.0
 	github.com/pulumi/pulumi-azure-native-sdk/storage v1.104.0
 	github.com/pulumi/pulumi/sdk/v3 v3.91.1
@@ -95,7 +96,6 @@ require (
 	github.com/nxadm/tail v1.4.11 // indirect
 	github.com/onsi/gomega v1.28.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
-	github.com/opencontainers/image-spec v1.1.0-rc5 // indirect
 	github.com/opentracing/basictracer-go v1.1.0 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/pjbgf/sha1cd v0.3.0 // indirect
