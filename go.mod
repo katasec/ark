@@ -9,7 +9,6 @@ require (
 	github.com/dapr/cli v1.12.0
 	github.com/docker/docker v24.0.7+incompatible
 	github.com/docker/go-connections v0.4.0
-	github.com/emicklei/go-restful/v3 v3.10.2
 	github.com/go-chi/chi v1.5.5
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/go-git/go-git/v5 v5.10.0

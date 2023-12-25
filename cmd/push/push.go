@@ -8,12 +8,11 @@ import (
 	"io"
 	"log"
 	"os"
-	"path"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/go-git/go-git/v5"
+	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 
 	"oras.land/oras-go/v2"
 	"oras.land/oras-go/v2/content/file"
@@ -23,23 +22,19 @@ import (
 )
 
 func DoPush(url string, tag string) {
-	tmpdir := CloneRemote(url, tag)
-	err := os.Chdir(tmpdir)
-	if err != nil {
-		log.Println("Could not change dir to tmpdir: " + tmpdir)
-	} else {
-		log.Println("Changed dir to tmpdir: " + tmpdir)
-	}
 
-	err = tarAndGzip(tmpdir)
-	if err != nil {
-		fmt.Println("Error creating tar archive:", err)
-		os.Exit(1)
-	}
+	// Clone repo into a temp dir
+	tmpdir := cloneRemote(url, tag)
+	os.Chdir(tmpdir)
+
+	// Zip the repo into a tar.gz
+	tarAndGzip(tmpdir)
+
+	pushArchiveToRegistry("")
 }
 
-func CloneRemote(url string, tag string) string {
-
+// cloneRemote clones a remote repo into a temp dir
+func cloneRemote(url string, tag string) string {
 	// Create a temp dir
 	tmpdirBase := filepath.Join(os.TempDir(), "ark")
 	err := os.Mkdir(tmpdirBase, os.FileMode(0777))
@@ -66,113 +61,143 @@ func CloneRemote(url string, tag string) string {
 	return tmpdir
 }
 
-func Fprintln(w io.Writer, message string) {
-	t := time.Now()
-	message = fmt.Sprint(t.Format("2006/01/02 15:04:05") + " " + message)
-	fmt.Fprintln(w, message)
-}
-
-// Function to process a file or directory during traversal
-func processFile(tarWriter *tar.Writer, path string, info os.FileInfo) error {
-	if info.IsDir() && path == ".git" {
-		return filepath.SkipDir // Skip the ".git" directory and its contents
-	}
-
-	if info.Mode().IsRegular() {
-
-		// Sip git files
-		if !strings.Contains(path, ".git/") {
-			// Create a new tar header, using FileInfo data
-			header, err := tar.FileInfoHeader(info, path)
-			if err != nil {
-				return err
-			}
-
-			// Update the header's name to correctly reflect the desired destination when untaring
-			if err := tarWriter.WriteHeader(header); err != nil {
-				return err
-			}
-
-			// Open files for taring
-			file, err := os.Open(path)
-			if err != nil {
-				return err
-			}
-			defer file.Close()
-
-			// Copy file data into tar writer
-			if _, err := io.Copy(tarWriter, file); err != nil {
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-// Function to create a tar archive of a directory and compress it with gzip
-func tarAndGzip(sourceDir string) error {
-
+// tarAndGzip Creates a tar archive of a directory and compress it with gzip
+func tarAndGzip(sourceDir string) *os.File {
+	// Create the tar file
 	targetFile := sourceDir + ".tar.gz"
 	tarFile, err := os.Create(targetFile)
 	if err != nil {
-		return err
+		fmt.Println("Error creating tar file:", err)
+		os.Exit(1)
 	}
 	defer tarFile.Close()
 
+	// Create a gzip writer
 	gzipWriter := gzip.NewWriter(tarFile)
 	defer gzipWriter.Close()
 
+	// Create a tar writer
 	tarWriter := tar.NewWriter(gzipWriter)
 	defer tarWriter.Close()
 
+	// Recursively walk through the directory and add files to the tarWriter
 	err = filepath.Walk(sourceDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			return err
+			fmt.Println("Error walking path:", err)
+			os.Exit(1)
 		}
 
 		// Skip the target file itself
 		if path == targetFile {
 			return nil
 		}
-
-		return processFile(tarWriter, path, info) // Call the separate function
+		return addFileToTar(tarWriter, path, info) // Call the separate function
 	})
 
-	return err
+	if err != nil {
+		fmt.Println("Error creating tar archive:", err)
+		os.Exit(1)
+	}
+
+	log.Println("The created tar file was:" + tarFile.Name())
+	return tarFile
 }
 
-func DoStuff(ics string) {
+// addFileToTar Adds a file to a tar archive
+func addFileToTar(tarWriter *tar.Writer, path string, info os.FileInfo) error {
+	// Skip directories, files in the .git directory and the .gitignore file
+	if strings.Contains(path, ".git/") || strings.Contains(path, ".gitignore") || !info.Mode().IsRegular() {
+		return nil
+	}
+
+	// Create tar header for file
+	header, err := tar.FileInfoHeader(info, path)
+	if err != nil {
+		return err
+	}
+
+	// Write header to tarWriter
+	if err := tarWriter.WriteHeader(header); err != nil {
+		return err
+	}
+
+	// Open file for taring
+	file, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	// Copy file data into tarWriter
+	if _, err := io.Copy(tarWriter, file); err != nil {
+		return err
+	}
+	return nil
+}
+
+// pushArchiveToRegistry pushes a tar.gz to a registry
+func pushArchiveToRegistry(tmpdirBase string) {
+
+	// Pusing a file to a registry requires the creation of an ORA
+	// local file store and a remote repository. The file store is a local directory
+	// where the file is stored. The remote repository is the registry where the file is pushed to.
+
+	// 0. Create a file store
+	//tmpdirBase := filepath.Join(os.TempDir(), "ark")
+	tmpdirBase = "/var/folders/kl/zcltgz9s1hv4c2p8tlh_13d40000gn/T/ark/ark-remote1114437107"
+	fs, err := file.New(tmpdirBase)
+	if err != nil {
+		fmt.Println("Error creating file store:", err)
+		os.Exit(1)
+	}
+	defer fs.Close()
+	ctx := context.Background()
+
+	// 1. Add files to the file store
+	mediaType := "application/vnd.test.file"
+	//fileNames := []string{f.Name()}
+	fileNames := listFilesRecursively(tmpdirBase)
+	fileDescriptors := make([]v1.Descriptor, 0, len(fileNames))
+	for _, name := range fileNames {
+		fileDescriptor, err := fs.Add(ctx, name, mediaType, "")
+		if err != nil {
+			panic(err)
+		}
+		fileDescriptors = append(fileDescriptors, fileDescriptor)
+		fmt.Printf("file descriptor for %s: %v\n", name, fileDescriptor)
+	}
+
+	// 2. Pack the files and tag the packed manifest
+	artifactType := "application/vnd.test.artifact"
+	opts := oras.PackManifestOptions{
+		Layers: fileDescriptors,
+	}
+	manifestDescriptor, err := oras.PackManifest(ctx, fs, oras.PackManifestVersion1_1_RC4, artifactType, opts)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("manifest descriptor:", manifestDescriptor)
+
+	tag := "latest"
+	if err = fs.Tag(ctx, manifestDescriptor, tag); err != nil {
+		panic(err)
+	}
+
+	// Add files to the file store
 
 	// Extract registry domain, repo and tag from ics
 	// For e.g. ics = ghcr.io/katasec/cloudspace:v1
 	// registryDomain = ghcr.io
 	// repo = katasec/cloudspace
 	// tag = v1
+
+	// Get Remote registry details
+	ics := "ghcr.io/katasec/cloudspace:v1"
 	ref := strings.Split(ics, ":")[0]
 	tagx := strings.Split(ics, ":")[1]
 	registryDomain := strings.Split(ics, "/")[0]
 
-	// Get home directory
-	homedir, err := os.UserHomeDir()
-	if err != nil {
-		fmt.Println("Error getting home directory:", err)
-		return
-	}
-
-	// Create local path under home directory
-	localpath := path.Join(homedir, "./ark/manifests") //"/Users/ameerdeen/.ark/manifests/"
-
-	// Create a file store in the local path
-	fs, err := file.New(localpath)
-	if err != nil {
-		panic(err)
-	}
-	defer fs.Close()
-
-	// Connect to a remote repository
-	ctx := context.Background()
+	// 3. Connect to a remote repository
 	repo, err := remote.NewRepository(ref)
 	if err != nil {
 		panic(err)
@@ -190,12 +215,56 @@ func DoStuff(ics string) {
 		}),
 	}
 
-	// Pull the image to the local file store
-	_, err = oras.Copy(ctx, repo, tagx, fs, tagx, oras.DefaultCopyOptions)
+	// 4. Copy from the file store to the remote repository
+	src := fs
+	dst := repo
+	_, err = oras.Copy(ctx, src, tagx, dst, tagx, oras.DefaultCopyOptions)
 	if err != nil {
-		panic(err)
+		fmt.Println("Error pushing files from: " + tmpdirBase + "to" + repo.Reference.Repository + ":" + tagx)
+		fmt.Println(err.Error())
+		os.Exit(1)
 	} else {
-		fmt.Println(repo.Reference.Repository + ":" + tagx + " copied to " + localpath)
+		fmt.Println("Pushed files from: " + tmpdirBase + "to" + repo.Reference.Repository + ":" + tagx)
+	}
+}
+
+func listFilesRecursively(dirPath string) []string {
+	var files []string
+
+	err := filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
+		// Check error walking path
+		if err != nil {
+			log.Println("Error walking path:", err)
+			os.Exit(1)
+		}
+
+		// Add file to files if it is not a directory
+		if !info.IsDir() {
+			files = append(files, path)
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Println("Error walking path:", err)
+		os.Exit(1)
 	}
 
+	return files
 }
+
+// func main() {
+//     dirPath := "path/to/your/directory" // Replace with the actual directory path
+
+//     files, err := listFilesRecursively(dirPath)
+//     if err != nil {
+//         fmt.Println("Error listing files:", err)
+//         return
+//     }
+
+//     fmt.Println("Files:")
+//     for _, file := range files {
+//         fmt.Println(file)
+//     }
+// }
