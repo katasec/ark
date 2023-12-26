@@ -27,7 +27,7 @@ func DoPush(url string, tag string) {
 	repoDir := cloneRemote(url, tag)
 	os.Chdir(repoDir)
 
-	// Zip the repo into a tar.gz
+	// Push the cloned directory to the registry
 	pushArchiveToRegistry(repoDir)
 }
 
@@ -42,9 +42,7 @@ func cloneRemote(url string, tag string) string {
 		os.Exit(1)
 	}
 	tmpdir, _ := os.MkdirTemp(tmpdirBase, "ark-remote")
-
 	log.Println("Cloning: " + url)
-	log.Println("Repo Dir: " + tmpdir)
 
 	// Clone Repo
 	_, err = git.PlainClone(tmpdir, false, &git.CloneOptions{
@@ -181,7 +179,7 @@ func pushArchiveToRegistry(tmpdirBase string) {
 		fmt.Println("Error packing manifest:", err)
 		os.Exit(1)
 	}
-	fmt.Println("manifest descriptor:", manifestDescriptor)
+
 	tag := "latest"
 	if err = fs.Tag(ctx, manifestDescriptor, tag); err != nil {
 		fmt.Println("Error tagging manifest:", err)
@@ -226,7 +224,7 @@ func pushArchiveToRegistry(tmpdirBase string) {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	} else {
-		fmt.Println("Pushed files from: " + tmpdirBase + " to " + repo.Reference.Repository + ":" + tagx)
+		log.Println("Pushed files from: " + tmpdirBase + " to " + repo.Reference.Repository + ":" + tagx)
 	}
 }
 
