@@ -37,6 +37,7 @@ func DoStuff(ics string) {
 
 	// Create a file store in the local path
 	fs, err := file.New(localpath)
+	fs.AllowPathTraversalOnWrite = true
 	if err != nil {
 		panic(err)
 	}
@@ -63,6 +64,9 @@ func DoStuff(ics string) {
 
 	// Pull the image to the local file store
 	_, err = oras.Copy(ctx, repo, tagx, fs, tagx, oras.DefaultCopyOptions)
+	//descriptorStr := descriptor.
+
+	fmt.Println(repo.Reference)
 	if err != nil {
 		panic(err)
 	} else {

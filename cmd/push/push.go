@@ -24,13 +24,11 @@ import (
 func DoPush(url string, tag string) {
 
 	// Clone repo into a temp dir
-	tmpdir := cloneRemote(url, tag)
-	os.Chdir(tmpdir)
+	repoDir := cloneRemote(url, tag)
+	os.Chdir(repoDir)
 
 	// Zip the repo into a tar.gz
-	tarAndGzip(tmpdir)
-
-	pushArchiveToRegistry("")
+	pushArchiveToRegistry(repoDir)
 }
 
 // cloneRemote clones a remote repo into a temp dir
@@ -143,9 +141,8 @@ func pushArchiveToRegistry(tmpdirBase string) {
 	// where the file is stored. The remote repository is the registry where the file is pushed to.
 
 	// 0. Create a file store
-	//tmpdirBase := filepath.Join(os.TempDir(), "ark")
-	tmpdirBase = "/var/folders/kl/zcltgz9s1hv4c2p8tlh_13d40000gn/T/ark/ark-remote1114437107"
 	fs, err := file.New(tmpdirBase)
+	log.Println("Creating file store: " + tmpdirBase)
 	if err != nil {
 		fmt.Println("Error creating file store:", err)
 		os.Exit(1)
@@ -155,42 +152,43 @@ func pushArchiveToRegistry(tmpdirBase string) {
 
 	// 1. Add files to the file store
 	mediaType := "application/vnd.test.file"
-	//fileNames := []string{f.Name()}
 	fileNames := listFilesRecursively(tmpdirBase)
 	fileDescriptors := make([]v1.Descriptor, 0, len(fileNames))
+
 	for _, name := range fileNames {
-		log.Println("Adding file: " + name)
-		fileDescriptor, err := fs.Add(ctx, name, mediaType, "")
+		// name is the absolute path to the file and we want to store it relative
+		// to the file store. As such we trim the tmpdirBase prefix.
+		relativePath := strings.TrimPrefix(name, tmpdirBase+"/")
+		log.Println("Adding file: " + relativePath)
+
+		// Add the file to the file store
+		fileDescriptor, err := fs.Add(ctx, relativePath, mediaType, "")
 		if err != nil {
-			panic(err)
+			fmt.Println("Error adding file to file store:", err)
+			os.Exit(1)
 		}
+
+		// Add the file descriptor to the list of file descriptors
 		fileDescriptors = append(fileDescriptors, fileDescriptor)
-		//fmt.Printf("file descriptor for %s: %v\n", name, fileDescriptor)
 	}
 
 	// 2. Pack the files and tag the packed manifest
 	artifactType := "application/vnd.test.artifact"
-	opts := oras.PackManifestOptions{
+	manifestDescriptor, err := oras.PackManifest(ctx, fs, oras.PackManifestVersion1_1_RC4, artifactType, oras.PackManifestOptions{
 		Layers: fileDescriptors,
-	}
-	manifestDescriptor, err := oras.PackManifest(ctx, fs, oras.PackManifestVersion1_1_RC4, artifactType, opts)
+	})
 	if err != nil {
-		panic(err)
+		fmt.Println("Error packing manifest:", err)
+		os.Exit(1)
 	}
 	fmt.Println("manifest descriptor:", manifestDescriptor)
-
 	tag := "latest"
 	if err = fs.Tag(ctx, manifestDescriptor, tag); err != nil {
-		panic(err)
+		fmt.Println("Error tagging manifest:", err)
+		os.Exit(1)
 	}
 
-	// Add files to the file store
-
-	// Extract registry domain, repo and tag from ics
-	// For e.g. ics = ghcr.io/katasec/cloudspace:v1
-	// registryDomain = ghcr.io
-	// repo = katasec/cloudspace
-	// tag = v1
+	// 3. Connect to a remote repository
 
 	// Get Remote registry details
 	ics := "ghcr.io/katasec/cloudspace"
@@ -199,7 +197,7 @@ func pushArchiveToRegistry(tmpdirBase string) {
 	tagx := "latest"
 	registryDomain := strings.Split(ics, "/")[0]
 
-	// 3. Connect to a remote repository
+	// Connect to the remote repository
 	repo, err := remote.NewRepository(ref)
 	if err != nil {
 		panic(err)
@@ -220,10 +218,9 @@ func pushArchiveToRegistry(tmpdirBase string) {
 	}
 
 	// 4. Copy from the file store to the remote repository
-	// src := fs
-	// dst := repo
-
-	_, err = oras.Copy(ctx, fs, tagx, repo, tagx, oras.DefaultCopyOptions)
+	src := fs
+	dst := repo
+	_, err = oras.Copy(ctx, src, tagx, dst, tagx, oras.DefaultCopyOptions)
 	if err != nil {
 		fmt.Println("Error pushing files from: " + tmpdirBase + " to " + repo.Reference.Repository + ":" + tagx)
 		fmt.Println(err.Error())
@@ -236,6 +233,7 @@ func pushArchiveToRegistry(tmpdirBase string) {
 func listFilesRecursively(dirPath string) []string {
 	var files []string
 
+	fmt.Println("Recusively listing files in: " + dirPath)
 	err := filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
 		// Check error walking path
 		if err != nil {
@@ -258,18 +256,3 @@ func listFilesRecursively(dirPath string) []string {
 
 	return files
 }
-
-// func main() {
-//     dirPath := "path/to/your/directory" // Replace with the actual directory path
-
-//     files, err := listFilesRecursively(dirPath)
-//     if err != nil {
-//         fmt.Println("Error listing files:", err)
-//         return
-//     }
-
-//     fmt.Println("Files:")
-//     for _, file := range files {
-//         fmt.Println(file)
-//     }
-// }
