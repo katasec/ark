@@ -205,8 +205,6 @@ func pushArchiveToRegistry(tmpdirBase string, tag string, gitUrl string) {
 		os.Exit(1)
 	}
 
-	tag = "v0.0.1"
-	tag = "latest"
 	if err = fs.Tag(ctx, manifestDescriptor, tag); err != nil {
 		fmt.Println("Error tagging manifest:", err)
 		os.Exit(1)
@@ -219,7 +217,6 @@ func pushArchiveToRegistry(tmpdirBase string, tag string, gitUrl string) {
 	repoName := arkConfig.Registry + "/" + resourceName
 	repoName = strings.Replace(repoName, "//", "/", -1)
 	registryDomain := arkConfig.RegistryDomain
-	fmt.Println("registryDomain: " + registryDomain)
 
 	// Connect to the remote repository
 	log.Println("Connecting to: " + repoName)
@@ -326,7 +323,6 @@ func isValidGitUrl(repoUrl string) bool {
 	}
 
 	// Check for common Git hosts and extensions
-	fmt.Println(parsedURL.Host)
 	if !strings.HasPrefix(parsedURL.Host, "github.com") {
 		return false
 	}
@@ -338,13 +334,8 @@ func isValidGitUrl(repoUrl string) bool {
 		}
 	}
 
-	resourceName, valid := hasValidResourceName(repoUrl)
-	if !valid {
-		return false
-	}
-
-	fmt.Println("resourceName: " + resourceName)
-	return true
+	_, valid := hasValidResourceName(repoUrl)
+	return valid
 }
 
 func hasValidResourceName(repoUrl string) (resourceName string, valid bool) {

@@ -25,7 +25,6 @@ func DoStuff(ics string) {
 	fmt.Println("ref: " + ref)
 	tagx := strings.Split(ics, ":")[1]
 	registryDomain := strings.Split(ics, "/")[0]
-	fmt.Println("registryDomain: " + registryDomain)
 	// Get home directory
 	homedir, err := os.UserHomeDir()
 	if err != nil {
