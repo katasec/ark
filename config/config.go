@@ -38,6 +38,7 @@ type Config struct {
 	MqConnStr       string
 	CmdQ            string
 	RespQ           string
+	Registry        string
 }
 
 func check(e error) {

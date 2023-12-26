@@ -7,11 +7,14 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/katasec/ark/config"
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 
 	"oras.land/oras-go/v2"
@@ -21,37 +24,57 @@ import (
 	"oras.land/oras-go/v2/registry/remote/retry"
 )
 
-func DoPush(url string, tag string) {
+var (
+	arkConfig = config.ReadConfig()
+)
 
-	// Clone repo into a temp dir
-	repoDir := cloneRemote(url, tag)
-	os.Chdir(repoDir)
+func DoPush(gitUrl string, tag string) {
 
-	// Push the cloned directory to the registry
-	pushArchiveToRegistry(repoDir)
+	if isValidGitUrl(gitUrl) {
+		// Clone repo into a temp dir
+		repoDir := cloneRemote(gitUrl, tag)
+		os.Chdir(repoDir)
+
+		// Push the cloned directory to the registry
+		pushArchiveToRegistry(repoDir, tag, gitUrl)
+	} else {
+		fmt.Println("Not a git URL: " + gitUrl)
+	}
+
 }
 
 // cloneRemote clones a remote repo into a temp dir
 func cloneRemote(url string, tag string) string {
 	// Create a temp dir
-	tmpdirBase := filepath.Join(os.TempDir(), "ark")
-	err := os.Mkdir(tmpdirBase, os.FileMode(0777))
-	if err != nil && !strings.Contains(err.Error(), "file exists") {
-		fmt.Println("could not create tmpdirBase, exitting." + tmpdirBase)
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
-	tmpdir, _ := os.MkdirTemp(tmpdirBase, "ark-remote")
-	log.Println("Cloning: " + url)
+	tmpdir := createTempDir()
 
 	// Clone Repo
-	_, err = git.PlainClone(tmpdir, false, &git.CloneOptions{
+	repo, err := git.PlainClone(tmpdir, false, &git.CloneOptions{
 		URL: url,
 	})
 	if err != nil {
 		log.Println("Cloning error:" + err.Error())
 	} else {
-		log.Println("Done.")
+		log.Println("Cloned: " + url)
+	}
+
+	// Get worktree
+	w, err := repo.Worktree()
+	if err != nil {
+		log.Println("Worktree error:" + err.Error())
+		os.Exit(1)
+	}
+
+	// Checkout tag
+	err = w.Checkout(&git.CheckoutOptions{
+		Branch: plumbing.ReferenceName("refs/tags/" + tag),
+		Force:  true,
+	})
+	if err != nil {
+		log.Printf("Error checking out tag: %v. Message: %v\n", tag, err.Error())
+		os.Exit(1)
+	} else {
+		log.Println("Checked out tag: " + tag)
 	}
 
 	return tmpdir
@@ -132,7 +155,7 @@ func addFileToTar(tarWriter *tar.Writer, path string, info os.FileInfo) error {
 }
 
 // pushArchiveToRegistry pushes a tar.gz to a registry
-func pushArchiveToRegistry(tmpdirBase string) {
+func pushArchiveToRegistry(tmpdirBase string, tag string, gitUrl string) {
 
 	// Pusing a file to a registry requires the creation of an ORA
 	// local file store and a remote repository. The file store is a local directory
@@ -180,7 +203,7 @@ func pushArchiveToRegistry(tmpdirBase string) {
 		os.Exit(1)
 	}
 
-	tag := "latest"
+	tag = "latest"
 	if err = fs.Tag(ctx, manifestDescriptor, tag); err != nil {
 		fmt.Println("Error tagging manifest:", err)
 		os.Exit(1)
@@ -189,18 +212,25 @@ func pushArchiveToRegistry(tmpdirBase string) {
 	// 3. Connect to a remote repository
 
 	// Get Remote registry details
-	ics := "ghcr.io/katasec/cloudspace"
-	ref := strings.Split(ics, ":")[0]
-	//tagx := strings.Split(ics, ":")[1]
-	tagx := "latest"
-	registryDomain := strings.Split(ics, "/")[0]
+	resourceName, _ := hasValidResourceName(gitUrl)
+	resourceName = "cloudspace"
+	repoName := arkConfig.Registry + "/" + resourceName
+	repoName = strings.Replace(repoName, "//", "/", -1)
+
+	// Get registry domain
+	parsedURL, err := url.Parse(gitUrl)
+	if err != nil {
+		fmt.Println("Error parsing git URL:" + err.Error())
+		os.Exit(1)
+	}
+	registryDomain := parsedURL.Host
 
 	// Connect to the remote repository
-	repo, err := remote.NewRepository(ref)
+	repo, err := remote.NewRepository(repoName)
 	if err != nil {
 		panic(err)
 	} else {
-		log.Println("Connected to remote repository: " + ref)
+		log.Println("Connected to remote repository: " + repoName)
 	}
 
 	// Use the default registry credentials
@@ -216,22 +246,19 @@ func pushArchiveToRegistry(tmpdirBase string) {
 	}
 
 	// 4. Copy from the file store to the remote repository
-	src := fs
-	dst := repo
-	_, err = oras.Copy(ctx, src, tagx, dst, tagx, oras.DefaultCopyOptions)
+	_, err = oras.Copy(ctx, fs, tag, repo, tag, oras.DefaultCopyOptions)
 	if err != nil {
-		fmt.Println("Error pushing files from: " + tmpdirBase + " to " + repo.Reference.Repository + ":" + tagx)
+		fmt.Println("Error pushing files from: " + tmpdirBase + " to " + repo.Reference.Repository + ":" + tag)
 		fmt.Println(err.Error())
 		os.Exit(1)
 	} else {
-		log.Println("Pushed files from: " + tmpdirBase + " to " + repo.Reference.Repository + ":" + tagx)
+		log.Println("Pushed files from: " + tmpdirBase + " to " + repo.Reference.Repository + ":" + tag)
 	}
 }
 
 func listFilesRecursively(dirPath string) []string {
 	var files []string
 
-	fmt.Println("Recusively listing files in: " + dirPath)
 	err := filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
 		// Check error walking path
 		if err != nil {
@@ -253,4 +280,85 @@ func listFilesRecursively(dirPath string) []string {
 	}
 
 	return files
+}
+
+// createTempDir creates a temp dir
+func createTempDir() string {
+
+	// Create a folder called ark in the system temp dir if it does not exist.
+	tmpdirBase := filepath.Join(os.TempDir(), "ark")
+	err := os.Mkdir(tmpdirBase, os.FileMode(0777))
+	log.Println("Ark's base temp dir: " + tmpdirBase)
+
+	// Exit on error
+	if err != nil && !strings.Contains(err.Error(), "file exists") {
+		fmt.Println("could not create tmpdirBase, exitting." + tmpdirBase)
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+
+	// Create a temp dir under ark for use
+	tmpdir, err := os.MkdirTemp(tmpdirBase, "ark-remote")
+	if err != nil {
+		fmt.Println("could not create tmpdir, exitting.")
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+
+	// Return the temp dir
+	return tmpdir
+}
+
+// isValidGitUrl checks if a URL is a valid Git URL
+func isValidGitUrl(repoUrl string) bool {
+
+	// Currently just accepting Github URLs and is very simplistic
+
+	// Parse the URL using the standard library
+	parsedURL, err := url.Parse(repoUrl)
+	if err != nil {
+		return false
+	}
+
+	// Check for valid Git transport schemes
+	if parsedURL.Scheme != "https" && parsedURL.Scheme != "git" && parsedURL.Scheme != "ssh" {
+		return false
+	}
+
+	// Check for common Git hosts and extensions
+	fmt.Println(parsedURL.Host)
+	if !strings.HasPrefix(parsedURL.Host, "github.com") {
+		return false
+	}
+
+	// Additional checks for SSH URLs
+	if parsedURL.Scheme == "ssh" {
+		if parsedURL.User == nil || parsedURL.Path == "" {
+			return false
+		}
+	}
+
+	resourceName, valid := hasValidResourceName(repoUrl)
+	if !valid {
+		return false
+	}
+
+	fmt.Println("resourceName: " + resourceName)
+	return true
+}
+
+func hasValidResourceName(repoUrl string) (resourceName string, valid bool) {
+
+	// Split the URL into parts by "/" and get the last fragment.
+	// For e.g  https://github.com/katasec/ark-resource-azurecloudspace will return "ark-resource-azurecloudspace"
+	parts := strings.Split(repoUrl, "/")
+	repoName := parts[len(parts)-1]
+
+	// Check it starts with "ark-resource-"
+	if !strings.HasPrefix(repoName, "ark-resource-") {
+		return "", false
+	}
+
+	resourceName = strings.TrimPrefix(repoName, "ark-resource-")
+	return resourceName, true
 }
