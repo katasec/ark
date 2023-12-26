@@ -39,6 +39,7 @@ type Config struct {
 	CmdQ            string
 	RespQ           string
 	Registry        string
+	RegistryDomain  string
 }
 
 func check(e error) {

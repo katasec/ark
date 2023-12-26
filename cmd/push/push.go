@@ -163,6 +163,7 @@ func pushArchiveToRegistry(tmpdirBase string, tag string, gitUrl string) {
 
 	// 0. Create a file store
 	fs, err := file.New(tmpdirBase)
+	fs.AllowPathTraversalOnWrite = true
 	log.Println("Creating file store: " + tmpdirBase)
 	if err != nil {
 		fmt.Println("Error creating file store:", err)
@@ -195,15 +196,17 @@ func pushArchiveToRegistry(tmpdirBase string, tag string, gitUrl string) {
 
 	// 2. Pack the files and tag the packed manifest
 	artifactType := "application/vnd.test.artifact"
-	manifestDescriptor, err := oras.PackManifest(ctx, fs, oras.PackManifestVersion1_1_RC4, artifactType, oras.PackManifestOptions{
+	opts := oras.PackManifestOptions{
 		Layers: fileDescriptors,
-	})
+	}
+	manifestDescriptor, err := oras.PackManifest(ctx, fs, oras.PackManifestVersion1_1_RC4, artifactType, opts)
 	if err != nil {
 		fmt.Println("Error packing manifest:", err)
 		os.Exit(1)
 	}
 
-	tag = ""
+	tag = "v0.0.1"
+	tag = "latest"
 	if err = fs.Tag(ctx, manifestDescriptor, tag); err != nil {
 		fmt.Println("Error tagging manifest:", err)
 		os.Exit(1)
@@ -213,19 +216,13 @@ func pushArchiveToRegistry(tmpdirBase string, tag string, gitUrl string) {
 
 	// Get Remote registry details
 	resourceName, _ := hasValidResourceName(gitUrl)
-	resourceName = "cloudspace"
 	repoName := arkConfig.Registry + "/" + resourceName
 	repoName = strings.Replace(repoName, "//", "/", -1)
-
-	// Get registry domain
-	parsedURL, err := url.Parse(gitUrl)
-	if err != nil {
-		fmt.Println("Error parsing git URL:" + err.Error())
-		os.Exit(1)
-	}
-	registryDomain := parsedURL.Host
+	registryDomain := arkConfig.RegistryDomain
+	fmt.Println("registryDomain: " + registryDomain)
 
 	// Connect to the remote repository
+	log.Println("Connecting to: " + repoName)
 	repo, err := remote.NewRepository(repoName)
 	if err != nil {
 		panic(err)
@@ -236,6 +233,8 @@ func pushArchiveToRegistry(tmpdirBase string, tag string, gitUrl string) {
 	// Use the default registry credentials
 	username := os.Getenv("ARK_REGISTRY_USERNAME")
 	password := os.Getenv("ARK_REGISTRY_PASSWORD")
+	log.Println("Using registry credentials: " + username + ":" + password)
+
 	repo.Client = &auth.Client{
 		Client: retry.DefaultClient,
 		Cache:  auth.DefaultCache,
@@ -246,6 +245,7 @@ func pushArchiveToRegistry(tmpdirBase string, tag string, gitUrl string) {
 	}
 
 	// 4. Copy from the file store to the remote repository
+
 	_, err = oras.Copy(ctx, fs, tag, repo, tag, oras.DefaultCopyOptions)
 	if err != nil {
 		fmt.Println("Error pushing files from: " + tmpdirBase + " to " + repo.Reference.Repository + ":" + tag)

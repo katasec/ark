@@ -22,9 +22,10 @@ func DoStuff(ics string) {
 	// repo = katasec/cloudspace
 	// tag = v1
 	ref := strings.Split(ics, ":")[0]
+	fmt.Println("ref: " + ref)
 	tagx := strings.Split(ics, ":")[1]
 	registryDomain := strings.Split(ics, "/")[0]
-
+	fmt.Println("registryDomain: " + registryDomain)
 	// Get home directory
 	homedir, err := os.UserHomeDir()
 	if err != nil {
@@ -37,7 +38,6 @@ func DoStuff(ics string) {
 
 	// Create a file store in the local path
 	fs, err := file.New(localpath)
-	fs.AllowPathTraversalOnWrite = true
 	if err != nil {
 		panic(err)
 	}
