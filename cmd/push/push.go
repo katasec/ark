@@ -203,7 +203,7 @@ func pushArchiveToRegistry(tmpdirBase string, tag string, gitUrl string) {
 		os.Exit(1)
 	}
 
-	tag = "latest"
+	tag = ""
 	if err = fs.Tag(ctx, manifestDescriptor, tag); err != nil {
 		fmt.Println("Error tagging manifest:", err)
 		os.Exit(1)
