@@ -27,19 +27,21 @@ var (
 )
 
 type Config struct {
-	CloudId         string
-	AzureConfig     AzureConfig
-	AwsConfig       AwsConfig
-	LogFile         string
-	ApiServer       ApiServer
-	DockerImages    DockerImages
-	PulumiDefultOrg string
-	DbConfig        DbConfig
-	MqConnStr       string
-	CmdQ            string
-	RespQ           string
-	Registry        string
-	RegistryDomain  string
+	CloudId          string
+	AzureConfig      AzureConfig
+	AwsConfig        AwsConfig
+	LogFile          string
+	ApiServer        ApiServer
+	DockerImages     DockerImages
+	PulumiDefultOrg  string
+	DbConfig         DbConfig
+	MqConnStr        string
+	CmdQ             string
+	RespQ            string
+	Registry         string
+	RegistryDomain   string
+	RegistryUsername string
+	RegistryPassword string
 }
 
 func check(e error) {

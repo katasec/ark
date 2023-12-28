@@ -145,6 +145,7 @@ func (w *Worker) createPulumiProgram(resourceName string, runtime string) (*pulu
 	//projectPath := fmt.Sprintf("%s-handler", resourceName)
 
 	//log.Println("Project path:" + projectPath)
+
 	args := &pulumirunner.RemoteProgramArgs{
 		ProjectName: resourceName,
 		ProjectPath: resourceName + "-handler", //projectPath,
