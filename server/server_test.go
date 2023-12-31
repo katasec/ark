@@ -2,38 +2,19 @@ package server
 
 import (
 	"fmt"
-	"log"
 	"testing"
 
-	"github.com/katasec/ark/repositories"
 	"github.com/katasec/ark/resources/azure/cloudspaces"
 
 	_ "github.com/lib/pq" // Import the pq driver
 )
 
-func TestNewAzureCloudSpaceRepository(t *testing.T) {
+func TestCreateAcsJson(t *testing.T) {
 
-	server := NewServer()
-
-	// db, err := server.getDbConnection()
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// defer db.Close()
-
-	acsRepo := repositories.NewAzureCloudSpaceRepository(server.db)
-
-	//acsRepo.DeleteCloudSpace()
-	name := "default4"
-	acs := CreateSampleAcs(name)
-	acsRepo.Create(acs)
-	acsFromDb, err := acsRepo.GetCloudSpace(name)
-	if err != nil {
-		fmt.Println(err)
-	}
-	log.Printf("ACS Name:%s\n", acsFromDb.Name)
-
-	acsRepo.Delete(name)
+	acs := cloudspaces.NewAzureCloudSpace()
+	acs.AddSpoke("dev")
+	acs.AddSpoke("prod")
+	fmt.Println(acs.ToJson())
 
 }
 
