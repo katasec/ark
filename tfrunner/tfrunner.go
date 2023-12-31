@@ -82,6 +82,6 @@ func (t *Tfrunner) Run() {
 	}
 
 	tf.Apply(context.Background())
-
+	tf.Destroy(context.Background())
 	fmt.Println(state.FormatVersion) // "0.1"
 }
