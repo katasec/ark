@@ -26,22 +26,26 @@ var (
 	DEV_ARK_WORKER_IMAGE_NAME = "ghcr.io/katasec/arkworker:v0.0.6"
 )
 
+type ArkRegistry struct {
+	Domain   string
+	RepoName string
+	Username string
+	Password string
+}
+
 type Config struct {
-	CloudId          string
-	AzureConfig      AzureConfig
-	AwsConfig        AwsConfig
-	LogFile          string
-	ApiServer        ApiServer
-	DockerImages     DockerImages
-	PulumiDefultOrg  string
-	DbConfig         DbConfig
-	MqConnStr        string
-	CmdQ             string
-	RespQ            string
-	Registry         string
-	RegistryDomain   string
-	RegistryUsername string
-	RegistryPassword string
+	CloudId         string
+	AzureConfig     AzureConfig
+	AwsConfig       AwsConfig
+	LogFile         string
+	ApiServer       ApiServer
+	DockerImages    DockerImages
+	PulumiDefultOrg string
+	DbConfig        DbConfig
+	MqConnStr       string
+	CmdQ            string
+	RespQ           string
+	ArkRegistry     ArkRegistry
 }
 
 func check(e error) {

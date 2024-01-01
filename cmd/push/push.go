@@ -214,9 +214,9 @@ func pushArchiveToRegistry(tmpdirBase string, tag string, gitUrl string) {
 
 	// Get Remote registry details
 	resourceName, _ := hasValidResourceName(gitUrl)
-	repoName := arkConfig.Registry + "/" + resourceName
+	repoName := arkConfig.ArkRegistry.RepoName + "/" + resourceName
 	repoName = strings.Replace(repoName, "//", "/", -1)
-	registryDomain := arkConfig.RegistryDomain
+	registryDomain := arkConfig.ArkRegistry.Domain
 
 	// Connect to the remote repository
 	log.Println("Connecting to: " + repoName)

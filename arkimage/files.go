@@ -1,4 +1,4 @@
-package crate
+package arkimage
 
 import (
 	"fmt"

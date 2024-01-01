@@ -1,4 +1,4 @@
-package crate
+package arkimage
 
 import (
 	"context"
@@ -22,24 +22,18 @@ var (
 	arkConfig = config.ReadConfig()
 )
 
-type Crate struct {
-	ctx              context.Context
-	registryDomain   string
-	registryUsername string
-	registryPassword string
+type ArkImage struct {
+	ctx context.Context
 }
 
-func NewCrate() *Crate {
-	return &Crate{
-		ctx:              context.Background(),
-		registryDomain:   arkConfig.RegistryDomain,
-		registryUsername: arkConfig.RegistryUsername,
-		registryPassword: arkConfig.RegistryPassword,
+func NewArkImage() *ArkImage {
+	return &ArkImage{
+		ctx: context.Background(),
 	}
 }
 
 // Push Pushes code from a git repo to a registry
-func (c *Crate) Push(gitUrl string, tag string) {
+func (c *ArkImage) Push(gitUrl string, tag string) {
 	fmt.Println("Pushing crate")
 
 	if isValidGitUrl(gitUrl) {
@@ -56,7 +50,8 @@ func (c *Crate) Push(gitUrl string, tag string) {
 }
 
 // Pull Pulls code from a registry to a local directory
-func (c *Crate) Pull(image string) {
+func (c *ArkImage) Pull(image string) {
+
 	//ghcr.io/katasec/azurecloudspace:v0.0.1
 
 	fmt.Println(image)
@@ -88,9 +83,9 @@ func (c *Crate) Pull(image string) {
 	repo.Client = &auth.Client{
 		Client: retry.DefaultClient,
 		Cache:  auth.DefaultCache,
-		Credential: auth.StaticCredential(c.registryDomain, auth.Credential{
-			Username: c.registryUsername,
-			Password: c.registryPassword,
+		Credential: auth.StaticCredential(arkConfig.ArkRegistry.Domain, auth.Credential{
+			Username: arkConfig.ArkRegistry.Username,
+			Password: arkConfig.ArkRegistry.Password,
 		}),
 	}
 
@@ -106,7 +101,7 @@ func (c *Crate) Pull(image string) {
 }
 
 // pushToRegistry Pushes files from a directory to a registry
-func (c *Crate) pushToRegistry(dir string, tag string, gitUrl string) {
+func (c *ArkImage) pushToRegistry(dir string, tag string, gitUrl string) {
 
 	// Pusing a file to a registry requires the creation of an ORA
 	// local file store and a remote repository. The file store is a local directory
@@ -162,9 +157,10 @@ func (c *Crate) pushToRegistry(dir string, tag string, gitUrl string) {
 
 	// 3. Get Remote registry details
 	resourceName, _ := hasValidResourceName(gitUrl)
-	repoName := arkConfig.Registry + "/" + resourceName
+	repoName := arkConfig.ArkRegistry.Domain + "/" + arkConfig.ArkRegistry.RepoName + "/" + resourceName
 	repoName = strings.Replace(repoName, "//", "/", -1)
-	registryDomain := arkConfig.RegistryDomain
+	registryDomain := arkConfig.ArkRegistry.Domain
+	log.Println("Registry domain: " + registryDomain)
 
 	// 4. Connect to the remote repository
 	log.Println("Connecting to: " + repoName)
@@ -176,8 +172,9 @@ func (c *Crate) pushToRegistry(dir string, tag string, gitUrl string) {
 	}
 
 	// Use the default registry credentials
-	username := c.registryUsername
-	password := c.registryPassword
+	username := arkConfig.ArkRegistry.Username
+	password := arkConfig.ArkRegistry.Password
+
 	log.Println("Using registry credentials: " + username + ":" + password)
 
 	repo.Client = &auth.Client{

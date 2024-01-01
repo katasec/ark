@@ -13,18 +13,18 @@ import (
 	"github.com/hashicorp/hc-install/product"
 	"github.com/hashicorp/hc-install/releases"
 	"github.com/hashicorp/terraform-exec/tfexec"
-	"github.com/katasec/ark/crate"
+	"github.com/katasec/ark/arkimage"
 )
 
 type Tfrunner struct {
-	CrateImage string
-	ExecPath   string
+	ArkImage string
+	ExecPath string
 }
 
-func NewTfrunner(crateImage string, arkdata string) *Tfrunner {
+func NewTfrunner(arkImage string, arkdata string) *Tfrunner {
 
 	runner := &Tfrunner{
-		CrateImage: crateImage,
+		ArkImage: arkImage,
 	}
 
 	runner.installTerraform()
@@ -35,7 +35,7 @@ func NewTfrunner(crateImage string, arkdata string) *Tfrunner {
 func (t *Tfrunner) installTerraform() {
 	installer := &releases.ExactVersion{
 		Product: product.Terraform,
-		Version: version.Must(version.NewVersion("1.0.6")),
+		Version: version.Must(version.NewVersion("1.6.6")),
 	}
 
 	execPath, err := installer.Install(context.Background())
@@ -46,8 +46,8 @@ func (t *Tfrunner) installTerraform() {
 	t.ExecPath = execPath
 }
 func (t *Tfrunner) Run() {
-	c := crate.NewCrate()
-	c.Pull(t.CrateImage)
+	c := arkimage.NewArkImage()
+	c.Pull(t.ArkImage)
 
 	// Get home directory
 	homedir, err := os.UserHomeDir()
