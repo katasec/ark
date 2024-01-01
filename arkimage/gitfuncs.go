@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/go-git/go-git/v5"
@@ -93,4 +94,26 @@ func cloneRemote(url string, tag string) string {
 	}
 
 	return tmpdir
+}
+
+func deleteDirectoryContents(dir string) error {
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if info.IsDir() {
+			err = os.RemoveAll(path) // Delete the directory itself
+		} else {
+			err = os.Remove(path) // Delete the file
+		}
+
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return err
 }

@@ -74,6 +74,10 @@ func (c *ArkImage) Pull(image string) {
 	}
 	defer fs.Close()
 
+	// Delete files in file store if any
+	log.Println("Deleting files in file store if any before download: " + localpath)
+	deleteDirectoryContents(localpath)
+
 	// Connect to a remote repository
 	ref := strings.Split(image, ":")[0]
 	repo, err := remote.NewRepository(ref)
