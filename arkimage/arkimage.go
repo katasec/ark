@@ -75,7 +75,7 @@ func (c *ArkImage) Pull(image string) {
 
 	// Create local path under ~/.ark/registry/registrydomain/reponame/resourcename/version/
 	localpath := c.GetLocalPath(image)
-	fmt.Println("The localpath is:" + localpath)
+	//log.Println("The localpath is:" + localpath)
 
 	// Create a file store in the local path
 	fs, err := file.New(localpath)
@@ -85,12 +85,11 @@ func (c *ArkImage) Pull(image string) {
 	defer fs.Close()
 
 	// Delete files in file store if any
-	log.Println("Deleting files in file store if any before download: " + localpath)
+	//log.Println("Deleting files in file store if any before download: " + localpath)
 	deleteDirectoryContents(localpath)
 
 	// Connect to a remote repository
 	ref := strings.Split(fqImage, ":")[0]
-	fmt.Println("The ref is: " + ref)
 	repo, err := remote.NewRepository(ref)
 	if err != nil {
 		panic(err)
@@ -108,10 +107,15 @@ func (c *ArkImage) Pull(image string) {
 	tagx := strings.Split(image, ":")[1]
 	_, err = oras.Copy(c.ctx, repo, tagx, fs, tagx, oras.DefaultCopyOptions)
 	if err != nil {
-		panic(err)
+		log.Println("Error pulling " + repo.Reference.Repository + ":" + tagx)
+		log.Println(err.Error())
 	} else {
-		fmt.Println(repo.Reference.Repository + ":" + tagx + " copied to " + localpath)
+		//fmt.Println(repo.Reference.Repository + ":" + tagx + " copied to " + localpath)
 	}
+
+	// delete file if it exists
+	log.Println("Deleting configdata.json if it exists")
+	os.Remove(localpath + "/configdata.json")
 
 }
 
@@ -192,6 +196,7 @@ func (c *ArkImage) pushToRegistry(dir string, tag string, gitUrl string) {
 
 	// 3. Get Remote registry details
 	resourceName, _ := hasValidResourceName(gitUrl)
+	log.Println("Resource name: " + resourceName)
 	repoName := arkConfig.ArkRegistry.Domain + "/" + arkConfig.ArkRegistry.RepoName + "/" + resourceName
 	repoName = strings.Replace(repoName, "//", "/", -1)
 	registryDomain := arkConfig.ArkRegistry.Domain
@@ -209,8 +214,6 @@ func (c *ArkImage) pushToRegistry(dir string, tag string, gitUrl string) {
 	// Use the default registry credentials
 	username := arkConfig.ArkRegistry.Username
 	password := arkConfig.ArkRegistry.Password
-
-	log.Println("Using registry credentials: " + username + ":" + password)
 
 	repo.Client = &auth.Client{
 		Client: retry.DefaultClient,

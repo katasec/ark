@@ -1,6 +1,6 @@
 # Overview 
 
-Create a struct with func that can:
+Tfrunner will:
 
 - Download an ark resource from an OCI registry, unpack it and then execute a terraform init and terraform apply using tfexec
 

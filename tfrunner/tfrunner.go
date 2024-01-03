@@ -3,6 +3,7 @@ package tfrunner
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -16,14 +17,16 @@ import (
 )
 
 type Tfrunner struct {
-	ArkImage string
-	ExecPath string
+	ArkImage   string
+	ExecPath   string
+	configdata string
 }
 
-func NewTfrunner(arkImage string, arkdata string) *Tfrunner {
+func NewTfrunner(arkImage string, configdata string) *Tfrunner {
 
 	runner := &Tfrunner{
-		ArkImage: arkImage,
+		ArkImage:   arkImage,
+		configdata: configdata,
 	}
 
 	runner.installTerraform()
@@ -50,12 +53,34 @@ func (t *Tfrunner) Run() {
 
 	// Set working directory
 	workingDir := c.GetLocalPath(t.ArkImage)
+	log.Println("Working directory: " + workingDir)
 	tf, err := tfexec.NewTerraform(workingDir, t.ExecPath)
 	if err != nil {
 		log.Fatalf("error running NewTerraform: %s", err)
 	} else {
 		log.Println("Terraform initialized")
 	}
+
+	// Unmarshal configdata
+	var data map[string]interface{}
+	err = json.Unmarshal([]byte(t.configdata), &data)
+	if err != nil {
+		panic(err)
+	}
+
+	// Marshal with indentation
+	prettyJSON, err := json.MarshalIndent(data, "", "    ")
+	if err != nil {
+		panic(err)
+	}
+
+	// Create arkdata.json file
+	arkdataFile, err := os.Create(workingDir + "/configdata.json")
+	if err != nil {
+		log.Fatalf("error creating configdata.json: %s", err)
+	}
+	defer arkdataFile.Close()
+	arkdataFile.Write(prettyJSON)
 
 	// Set stdout/stderr for TF output
 	var buffer1 bytes.Buffer

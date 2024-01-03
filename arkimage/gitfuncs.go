@@ -55,8 +55,8 @@ func hasValidResourceName(repoUrl string) (resourceName string, valid bool) {
 		return "", false
 	}
 
-	resourceName = strings.TrimPrefix(repoName, "ark-resource-")
-	return resourceName, true
+	//resourceName = strings.TrimPrefix(repoName, "ark-resource-")
+	return repoName, true
 }
 
 // cloneRemote clones a remote repo into a temp dir
