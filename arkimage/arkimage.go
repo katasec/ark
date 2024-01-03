@@ -49,23 +49,33 @@ func (c *ArkImage) Push(gitUrl string, tag string) {
 
 }
 
-// Pull Pulls code from a registry to a local directory
-func (c *ArkImage) Pull(image string) {
-
-	//ghcr.io/katasec/azurecloudspace:v0.0.1
-
-	fmt.Println(image)
-	fmt.Println("Pulling crate")
-
+func (c *ArkImage) GetLocalPath(image string) string {
 	// Get home directory
 	homedir, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Println("Error getting home directory:", err)
-		return
+		os.Exit(1)
 	}
 
-	// Create local path under home directory
-	localpath := path.Join(homedir, "./ark/manifests")
+	fqImage := getFqImage(image)
+	resourceName := getResourceName(fqImage)
+	version := getVersion(fqImage)
+
+	localpath := path.Join(homedir, ".ark", "registry", arkConfig.ArkRegistry.Domain, arkConfig.ArkRegistry.RepoName, resourceName, version)
+
+	return localpath
+}
+
+// Pull Pulls code from a registry to a local directory
+func (c *ArkImage) Pull(image string) {
+
+	//ghcr.io/katasec/ark-resource-hello:v0.0.1 or ark-resource-hello:v0.0.1
+
+	fqImage := getFqImage(image)
+
+	// Create local path under ~/.ark/registry/registrydomain/reponame/resourcename/version/
+	localpath := c.GetLocalPath(image)
+	fmt.Println("The localpath is:" + localpath)
 
 	// Create a file store in the local path
 	fs, err := file.New(localpath)
@@ -79,7 +89,8 @@ func (c *ArkImage) Pull(image string) {
 	deleteDirectoryContents(localpath)
 
 	// Connect to a remote repository
-	ref := strings.Split(image, ":")[0]
+	ref := strings.Split(fqImage, ":")[0]
+	fmt.Println("The ref is: " + ref)
 	repo, err := remote.NewRepository(ref)
 	if err != nil {
 		panic(err)
@@ -102,6 +113,26 @@ func (c *ArkImage) Pull(image string) {
 		fmt.Println(repo.Reference.Repository + ":" + tagx + " copied to " + localpath)
 	}
 
+}
+
+func getFqImage(image string) string {
+	if strings.Contains(image, "/") {
+		return image
+	} else {
+		return arkConfig.ArkRegistry.Domain + "/" + arkConfig.ArkRegistry.RepoName + "/" + image
+	}
+}
+
+func getResourceName(fqImage string) string {
+	resourceName := strings.Split(fqImage, "/")[len(strings.Split(fqImage, "/"))-1]
+	resourceName = strings.Split(resourceName, ":")[0]
+	return resourceName
+}
+
+func getVersion(fqImage string) string {
+	resourceName := strings.Split(fqImage, "/")[len(strings.Split(fqImage, "/"))-1]
+	resourceName = strings.Split(resourceName, ":")[1]
+	return resourceName
 }
 
 // pushToRegistry Pushes files from a directory to a registry

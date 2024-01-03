@@ -7,7 +7,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"path"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hc-install/product"
@@ -49,15 +48,8 @@ func (t *Tfrunner) Run() {
 	c := arkimage.NewArkImage()
 	c.Pull(t.ArkImage)
 
-	// Get home directory
-	homedir, err := os.UserHomeDir()
-	if err != nil {
-		fmt.Println("Error getting home directory:", err)
-		return
-	}
-
 	// Set working directory
-	workingDir := path.Join(homedir, "./ark/manifests")
+	workingDir := c.GetLocalPath(t.ArkImage)
 	tf, err := tfexec.NewTerraform(workingDir, t.ExecPath)
 	if err != nil {
 		log.Fatalf("error running NewTerraform: %s", err)
