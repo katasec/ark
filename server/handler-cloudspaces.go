@@ -20,11 +20,15 @@ func (s *Server) PostCloudspace() http.HandlerFunc {
 	if err != nil {
 		log.Printf("Error creating tableio struct: %s\n", err)
 		return nil
+	} else {
+		log.Printf("Created tableio struct: ")
 	}
 	acsTable.CreateTableIfNotExists()
 	if err != nil {
-		log.Printf("Error creating table: %s\n", err)
+		log.Printf("Error creating table %s\n", err)
 		return nil
+	} else {
+		log.Printf("Created table\n")
 	}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -43,18 +47,22 @@ func (s *Server) PostCloudspace() http.HandlerFunc {
 
 		// Get cloudspace from DB
 		rows, err := acsTable.ByName(acsRequest.Name)
+		log.Println("looking for cloudspace:" + acsRequest.Name)
+		log.Println("Number of rows returned:" + string(len(rows)))
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintf(w, "Error getting cloudspace: %s,", err)
 			return
 		}
-		acs := rows[0]
 
+		var acs cloudspaces.AzureCloudspace
 		// Generate new cloudspace struct if none found in DB
 		if len(rows) == 0 {
 			fmt.Println("Cloudspace not found in DB, creating new cloudspace")
 			acs = *(cloudspaces.NewAzureCloudSpace())
 			fmt.Println(acs.ToJson())
+		} else {
+			acs = rows[0]
 		}
 
 		// Add environments from reuqest into struct
@@ -76,7 +84,7 @@ func (s *Server) PostCloudspace() http.HandlerFunc {
 		}
 
 		// Save cloudspace to DB
-		//acsTable.Insert(acs)
+		acsTable.Insert(acs)
 
 		w.Header().Set("Content-Type", "application/x-yaml")
 		w.WriteHeader(http.StatusOK)
@@ -86,6 +94,7 @@ func (s *Server) PostCloudspace() http.HandlerFunc {
 
 func (s *Server) DeleteCloudspace() http.HandlerFunc {
 
+	fmt.Println("In DeleteCloudspace() http.HandlerFunc")
 	acsTable, err := tableio.NewTableIO[cloudspaces.AzureCloudspace](s.config.DbConfig.DriverName, s.config.DbConfig.DataSourceName)
 	if err != nil {
 		log.Printf("Error creating tableio struct: %s\n", err)
@@ -116,7 +125,10 @@ func (s *Server) DeleteCloudspace() http.HandlerFunc {
 
 		fmt.Fprint(w, request.ToYamlAzureCloudpace())
 
-		s.cmdQ.Send("DeleteAzureCloudspaceRequest", request.ToJsonAzureCloudpace())
+		err = s.cmdQ.Send("DeleteAzureCloudspaceRequest", request.ToJsonAzureCloudpace())
+		if err != nil {
+			log.Printf("Error sending message to queue: %s\n", err.Error())
+		}
 
 	})
 }

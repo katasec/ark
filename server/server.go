@@ -3,6 +3,7 @@ package server
 import (
 	"database/sql"
 	"encoding/json"
+	"os"
 	"reflect"
 	"strings"
 
@@ -183,7 +184,8 @@ func createDbConnection() (*sql.DB, error) {
 
 	err = db.Ping()
 	if err != nil {
-		fmt.Println(err)
+		log.Println("Error pinging database:" + err.Error())
+		os.Exit(1)
 	} else {
 		log.Println("Database ping successful!")
 	}
