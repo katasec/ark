@@ -6,7 +6,6 @@ import (
 )
 
 var (
-	link     = "https://katasecid.b2clogin.com/katasecid.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1_SignUpIn&client_id=6fa18972-6f2d-4bca-a4a6-0ebd58f77bf6&nonce=defaultNonce&redirect_uri=https%3A%2F%2Fjwt.ms&scope=openid&response_type=id_token&prompt=login"
 	homeHtml = `
 		<!DOCTYPE html>
 		<html>

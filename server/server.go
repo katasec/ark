@@ -1,15 +1,12 @@
 package server
 
 import (
-	"database/sql"
 	"encoding/json"
-	"os"
 	"reflect"
 	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 
-	"fmt"
 	"log"
 	"net/http"
 
@@ -17,7 +14,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/messaging"
-	"github.com/katasec/ark/repositories"
+
+	//"github.com/katasec/ark/repositories"
 	"github.com/katasec/ark/resources"
 	"github.com/katasec/ark/resources/azure/cloudspaces"
 	"github.com/katasec/tableio"
@@ -27,12 +25,10 @@ import (
 
 // Server struct models the ark server and its dependencies
 type Server struct {
-	router  *chi.Mux
-	config  *config.Config
-	cmdQ    messaging.Messenger
-	respQ   messaging.Messenger
-	db      *sql.DB
-	Acsrepo *repositories.AzureCloudSpaceRepository
+	router *chi.Mux
+	config *config.Config
+	cmdQ   messaging.Messenger
+	respQ  messaging.Messenger
 }
 
 func NewServer() *Server {
@@ -43,16 +39,6 @@ func NewServer() *Server {
 	// Setup Router
 	chiRouter := chi.NewRouter()
 	chiRouter.Use(middleware.Logger)
-
-	//Setup DB Config
-	// db, err := createDbConnection()
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	os.Exit(1)
-	// }
-
-	// Initialize Repositories
-	//acsrepo := repositories.NewAzureCloudSpaceRepository(db)
 
 	// Return server with local config
 	return &Server{
@@ -154,50 +140,4 @@ func deleteFromRepository[T resources.Resource](s *Server, payload string) error
 	table.DeleteByName(message.GetName())
 	table.Close()
 	return nil
-}
-
-func (s *Server) getDbConnection() (*sql.DB, error) {
-
-	db, err := sql.Open(s.config.DbConfig.DriverName, s.config.DbConfig.DataSourceName)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	err = db.Ping()
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		log.Println("Database ping successful!")
-	}
-
-	return db, err
-}
-
-func createDbConnection() (*sql.DB, error) {
-
-	config := config.ReadConfig()
-
-	db, err := sql.Open(config.DbConfig.DriverName, config.DbConfig.DataSourceName)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	err = db.Ping()
-	if err != nil {
-		log.Println("Error pinging database:" + err.Error())
-		os.Exit(1)
-	} else {
-		log.Println("Database ping successful!")
-	}
-
-	return db, err
-}
-
-// unmarshallJson Umarshalls a JSON string to type "T"
-func unmarshallJson[T resources.Resource](payload string) (message T, err error) {
-	err = json.Unmarshal([]byte(payload), &message)
-	if err != nil {
-		log.Println("Error unmarshalling message:" + err.Error())
-	}
-	return message, err
 }

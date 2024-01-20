@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"reflect"
 
-	logx "github.com/katasec/ark/log"
 	"github.com/katasec/tableio"
 
 	"github.com/katasec/ark/requests"
@@ -48,7 +47,7 @@ func (s *Server) PostCloudspace() http.HandlerFunc {
 		// Get cloudspace from DB
 		rows, err := acsTable.ByName(acsRequest.Name)
 		log.Println("looking for cloudspace:" + acsRequest.Name)
-		log.Println("Number of rows returned:" + string(len(rows)))
+		log.Printf("Number of rows returned:%d\n", len(rows))
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintf(w, "Error getting cloudspace: %s,", err)
@@ -107,7 +106,7 @@ func (s *Server) DeleteCloudspace() http.HandlerFunc {
 	}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logx.LoggerFn().Info("In DeleteCloudspace handler")
+		log.Println("In DeleteCloudspace handler")
 
 		request := requests.DeleteAzureCloudspaceRequest{
 			Name: "default",

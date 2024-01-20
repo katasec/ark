@@ -29,7 +29,6 @@ require (
 	github.com/pulumi/pulumi-azure-native-sdk/storage v1.104.0
 	github.com/pulumi/pulumi/sdk/v3 v3.99.0
 	github.com/rabbitmq/amqp091-go v1.9.0
-	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.8.4
 	gopkg.in/yaml.v2 v2.4.0

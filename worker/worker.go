@@ -1,24 +1,16 @@
 package worker
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"log"
-	"os"
 	"reflect"
 	"strings"
 
 	"github.com/katasec/ark/requests"
-	resources "github.com/katasec/ark/resources"
-	shell "github.com/katasec/utils/shell"
 
 	"github.com/katasec/ark/config"
 	"github.com/katasec/ark/messaging"
-	pulumirunner "github.com/katasec/pulumi-runner"
-	"github.com/pulumi/pulumi/sdk/v3/go/auto"
-
-	logx "github.com/katasec/ark/log"
 )
 
 type Worker struct {
@@ -62,7 +54,7 @@ func (w *Worker) Start() {
 
 		// Log Message
 		subject = strings.ToLower(subject)
-		logx.Logger.Info("The subject was:" + subject)
+		log.Println("The subject was:" + subject)
 
 		// Execute command based on subject
 		switch subject {
@@ -77,6 +69,7 @@ func (w *Worker) Start() {
 
 func executeCommand[T requests.RequestInterface](w *Worker, payload string, err error) error {
 
+	// Output command name
 	var x T
 	requestName := reflect.TypeOf(x).Name()
 	fmt.Println("Executing command:" + requestName)
@@ -95,7 +88,8 @@ func executeCommand[T requests.RequestInterface](w *Worker, payload string, err 
 
 	// Run handler in a go routine to create/destroy infra
 	c := make(chan error)
-	go w.messageHandler(action, resourceName, payload, c)
+	//go w.pulumiHandler(action, resourceName, payload, c)
+	go w.terraformHandler(action, resourceName, payload, c)
 	handlerError := <-c
 
 	// Send result to server via response queue on success
@@ -109,96 +103,4 @@ func executeCommand[T requests.RequestInterface](w *Worker, payload string, err 
 	}
 
 	return nil
-}
-
-// messageHandler Creates a pulumi program and injects the message as pulumi config
-func (w *Worker) messageHandler(action string, resourceName string, yamlconfig string, c chan error) {
-
-	log.Println("Before creating pulumi program")
-
-	// Create a pulumi program to handle this message
-	p, err := w.createPulumiProgram(resourceName, resources.Runtimes.Dotnet)
-
-	if err == nil {
-		// Inject yaml config as input for pulumi program
-		p.Stack.SetConfig(context.Background(), "arkdata", auto.ConfigValue{Value: yamlconfig})
-		p.FixConfig()
-
-		// Run pulumi up or destroy
-		if strings.HasPrefix(strings.ToLower(action), "delete") {
-			_, err := p.Destroy()
-			c <- err
-		} else {
-			_, err := p.Up()
-			c <- err
-		}
-	} else {
-		log.Println("Error creating pulumi program:" + err.Error())
-		c <- err
-	}
-}
-
-// createPulumiProgram creates a pulumi program from a git remote resource for the given resource name
-func (w *Worker) createPulumiProgram(resourceName string, runtime string) (*pulumirunner.RemoteProgram, error) {
-
-	//logger := utils.ConfigureLogger(w.config.LogFile)
-	//projectPath := fmt.Sprintf("%s-handler", resourceName)
-
-	//log.Println("Project path:" + projectPath)
-
-	args := &pulumirunner.RemoteProgramArgs{
-		ProjectName: resourceName,
-		ProjectPath: resourceName + "-handler", //projectPath,
-		GitURL:      "https://github.com/katasec/library.git",
-		Branch:      "refs/remotes/origin/main",
-		StackName:   "dev",
-		Plugins: []map[string]string{
-			{
-				"name":    "azure-native",
-				"version": "v2.7.0",
-			},
-		},
-		Config: []map[string]string{
-			{
-				"name":  "azure-native:location",
-				"value": "westus2",
-			},
-		},
-		Runtime: runtime,
-		Writer:  os.Stdout,
-	}
-
-	// Create a new pulumi program
-	return pulumirunner.NewRemoteProgram(args)
-}
-
-// getAzureCredsFromEnv reads Azure creds from env vars and sets them in pulumi config
-func (w *Worker) getAzureCredsFromEnv() {
-
-	// Define env vars to read
-	log.Println("Reading Azure creds from env vars")
-	envvars := []string{
-		"ARM_CLIENT_ID",
-		"ARM_CLIENT_SECRET",
-		"ARM_TENANT_ID",
-		"ARM_SUBSCRIPTION_ID",
-	}
-
-	// Check if all env vars are set
-	ok := false
-	for _, envvar := range envvars {
-		if os.Getenv(envvar) != "" {
-			ok = true
-			shell.ExecShellCmd("pulumi config set azure-native:clientId " + os.Getenv(envvar))
-		} else {
-			ok = false
-			log.Println("Env var " + envvar + " not set")
-		}
-	}
-
-	// Exit if any env var is not set
-	if !ok {
-		log.Println("Some env vars not set, exitting...")
-		os.Exit(1)
-	}
 }
