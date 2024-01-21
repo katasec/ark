@@ -65,8 +65,7 @@ func (s *Server) PostHello() http.HandlerFunc {
 
 		// Send request to queue
 		subject := reflect.TypeOf(request).Name()
-		log.Println("The subject is:" + subject)
-		err = s.cmdQ.Send(subject, resource.ToJson()) // "azurecloudspace"
+		err = s.cmdQ.Send(subject, resource.ToJson())
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprintf(w, "Internal Error: %s,", err)

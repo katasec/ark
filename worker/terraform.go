@@ -14,7 +14,7 @@ func (w *Worker) terraformHandler(action string, resourceName string, configdata
 	//fmt.Println("The config was:" + configdata)
 	fmt.Println("The resource name was:" + resourceName)
 	fmt.Println("The action name was:" + action)
-	imageName := fmt.Sprintf("ark-resource-%s:v1", resourceName)
+	imageName := fmt.Sprintf("ark-resource-%s:v0.0.3", resourceName)
 	runner := tfrunner.NewTfrunner(imageName, configdata)
 	runner.Run()
 

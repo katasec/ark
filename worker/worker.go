@@ -54,7 +54,7 @@ func (w *Worker) Start() {
 
 		// Log Message
 		subject = strings.ToLower(subject)
-		log.Println("The subject was:" + subject)
+		log.Println("Worker received subject was:" + subject)
 
 		// Execute command based on subject
 		switch subject {
@@ -62,6 +62,10 @@ func (w *Worker) Start() {
 			executeCommand[requests.CreateAzureCloudspaceRequest](w, message, err)
 		case "deleteazurecloudspacerequest":
 			executeCommand[requests.DeleteAzureCloudspaceRequest](w, message, err)
+		case "createhellorequest":
+			executeCommand[requests.CreateHelloRequest](w, message, err)
+		default:
+			log.Println("Invalid subject:" + subject)
 		}
 
 	}
@@ -88,8 +92,13 @@ func executeCommand[T requests.RequestInterface](w *Worker, payload string, err 
 
 	// Run handler in a go routine to create/destroy infra
 	c := make(chan error)
-	go w.pulumiHandler(action, resourceName, payload, c)
-	//go w.terraformHandler(action, resourceName, payload, c)
+
+	// Run Pulumi handler
+	//go w.pulumiHandler(action, resourceName, payload, c)
+
+	// Run Terraform handler
+	go w.terraformHandler(action, resourceName, payload, c)
+
 	handlerError := <-c
 
 	// Send result to server via response queue on success
