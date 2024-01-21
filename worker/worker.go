@@ -88,8 +88,8 @@ func executeCommand[T requests.RequestInterface](w *Worker, payload string, err 
 
 	// Run handler in a go routine to create/destroy infra
 	c := make(chan error)
-	//go w.pulumiHandler(action, resourceName, payload, c)
-	go w.terraformHandler(action, resourceName, payload, c)
+	go w.pulumiHandler(action, resourceName, payload, c)
+	//go w.terraformHandler(action, resourceName, payload, c)
 	handlerError := <-c
 
 	// Send result to server via response queue on success

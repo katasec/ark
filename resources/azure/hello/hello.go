@@ -6,6 +6,7 @@ import (
 )
 
 type Hello struct {
+	ID   int
 	Name string
 }
 

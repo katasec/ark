@@ -1,2 +1,4 @@
 kind: azure/hello
+version: v1
+driver: terraform
 name: ameer

@@ -14,6 +14,7 @@ import (
 
 func (s *Server) PostHello() http.HandlerFunc {
 
+	log.Println("PostHello()")
 	resourceTable, err := tableio.NewTableIO[hello.Hello](s.config.DbConfig.DriverName, s.config.DbConfig.DataSourceName)
 	if err != nil {
 		log.Printf("Error creating tableio struct: %s\n", err)
@@ -33,20 +34,18 @@ func (s *Server) PostHello() http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		// Set default acs name
-		acsRequest := requests.CreateAzureCloudspaceRequest{
-			Name: "default",
-		}
+		request := requests.CreateHelloRequest{}
 
-		// Decode request body into acsRequest
-		err := yaml.NewDecoder(r.Body).Decode(&acsRequest)
+		// Decode request body into HelloRequest
+		err := yaml.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		// Get cloudspace from DB
-		rows, err := resourceTable.ByName(acsRequest.Name)
-		log.Println("looking for cloudspace:" + acsRequest.Name)
+		rows, err := resourceTable.ByName(request.Name)
+		log.Println("looking for  hello:" + request.Name)
 		log.Printf("Number of rows returned:%d\n", len(rows))
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
@@ -65,7 +64,7 @@ func (s *Server) PostHello() http.HandlerFunc {
 		}
 
 		// Send request to queue
-		subject := reflect.TypeOf(acsRequest).Name()
+		subject := reflect.TypeOf(request).Name()
 		log.Println("The subject is:" + subject)
 		err = s.cmdQ.Send(subject, resource.ToJson()) // "azurecloudspace"
 		if err != nil {

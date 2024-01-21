@@ -4,7 +4,7 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/katasec/ark/cmd/apply"
+	"github.com/katasec/ark/manifest"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +16,10 @@ var applyCmd = &cobra.Command{
 	Short: "Use to create resource defined in the yaml file",
 	Long:  "Use to create resource defined in the yaml file",
 	Run: func(cmd *cobra.Command, args []string) {
-		apply.DoStuff(applyFile)
+		//apply.StartApply(applyFile)
+
+		myCmd := manifest.NewManifestCommand("apply", applyFile)
+		myCmd.Execute()
 	},
 }
 
