@@ -94,6 +94,7 @@ func (c *ArkImage) Pull(image string) {
 	if err != nil {
 		panic(err)
 	}
+
 	repo.Client = &auth.Client{
 		Client: retry.DefaultClient,
 		Cache:  auth.DefaultCache,
@@ -109,6 +110,7 @@ func (c *ArkImage) Pull(image string) {
 	if err != nil {
 		log.Println("Error pulling " + repo.Reference.Repository + ":" + tagx)
 		log.Println(err.Error())
+		os.Exit(1)
 	} else {
 		//fmt.Println(repo.Reference.Repository + ":" + tagx + " copied to " + localpath)
 	}
