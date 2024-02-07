@@ -2,7 +2,9 @@ package arkimage
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"path"
@@ -90,6 +92,7 @@ func (c *ArkImage) Pull(image string) {
 
 	// Connect to a remote repository
 	ref := strings.Split(fqImage, ":")[0]
+	log.Println("ref:", ref)
 	repo, err := remote.NewRepository(ref)
 	if err != nil {
 		panic(err)
@@ -106,13 +109,30 @@ func (c *ArkImage) Pull(image string) {
 
 	// Pull the image to the local file store
 	tagx := strings.Split(image, ":")[1]
-	_, err = oras.Copy(c.ctx, repo, tagx, fs, tagx, oras.DefaultCopyOptions)
+	descriptor, err := oras.Copy(c.ctx, repo, tagx, fs, tagx, oras.DefaultCopyOptions)
 	if err != nil {
 		log.Println("Error pulling " + repo.Reference.Repository + ":" + tagx)
 		log.Println(err.Error())
 		os.Exit(1)
 	} else {
-		//fmt.Println(repo.Reference.Repository + ":" + tagx + " copied to " + localpath)
+
+		manifestReader, err := fs.Fetch(c.ctx, descriptor)
+		if err != nil {
+			panic(err)
+		}
+		data, err := io.ReadAll(manifestReader)
+		if err != nil {
+			panic(err)
+		}
+		// Unmarshal the manifest to access annotations
+		var manifest Manifest
+		err = json.Unmarshal(data, &manifest)
+		if err != nil {
+			panic(err) // Handle error appropriately
+		}
+
+		log.Println("Parsed Type:", manifest.Annotations.ImageType)
+
 	}
 
 	// delete file if it exists
@@ -162,6 +182,7 @@ func (c *ArkImage) pushToRegistry(dir string, tag string, gitUrl string) {
 	// 1. Add files to the file store
 	mediaType := "application/vnd.test.file"
 	fileNames := listFilesRecursively(dir)
+
 	fileDescriptors := make([]v1.Descriptor, 0, len(fileNames))
 
 	for _, fullPath := range fileNames {
@@ -184,8 +205,11 @@ func (c *ArkImage) pushToRegistry(dir string, tag string, gitUrl string) {
 	artifactType := "application/vnd.test.artifact"
 	opts := oras.PackManifestOptions{
 		Layers: fileDescriptors,
+		ManifestAnnotations: map[string]string{
+			"org.opencontainers.image.type": "terraform",
+		},
 	}
-	manifestDescriptor, err := oras.PackManifest(ctx, fs, oras.PackManifestVersion1_1_RC4, artifactType, opts)
+	manifestDescriptor, err := oras.PackManifest(ctx, fs, oras.PackManifestVersion1_0, artifactType, opts)
 	if err != nil {
 		fmt.Println("Error packing manifest:", err)
 		os.Exit(1)
@@ -200,6 +224,7 @@ func (c *ArkImage) pushToRegistry(dir string, tag string, gitUrl string) {
 	resourceName, _ := hasValidResourceName(gitUrl)
 	log.Println("Resource name: " + resourceName)
 	repoName := arkConfig.ArkRegistry.Domain + "/" + arkConfig.ArkRegistry.RepoName + "/" + resourceName
+	log.Println("Reponame:" + repoName)
 	repoName = strings.Replace(repoName, "//", "/", -1)
 	registryDomain := arkConfig.ArkRegistry.Domain
 	log.Println("Registry domain: " + registryDomain)
