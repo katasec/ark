@@ -51,23 +51,6 @@ func (c *ArkImage) Push(gitUrl string, tag string, imageType string) {
 
 }
 
-func (c *ArkImage) GetLocalPath(image string) string {
-	// Get home directory
-	homedir, err := os.UserHomeDir()
-	if err != nil {
-		fmt.Println("Error getting home directory:", err)
-		os.Exit(1)
-	}
-
-	fqImage := getFqImage(image)
-	resourceName := getResourceName(fqImage)
-	version := getVersion(fqImage)
-
-	localpath := path.Join(homedir, ".ark", "registry", arkConfig.ArkRegistry.Domain, arkConfig.ArkRegistry.RepoName, resourceName, version)
-
-	return localpath
-}
-
 // Pull Pulls code from a registry to a local directory
 func (c *ArkImage) Pull(image string) {
 
@@ -115,14 +98,18 @@ func (c *ArkImage) Pull(image string) {
 		os.Exit(1)
 	} else {
 
+		// Get manifest reader after image pull
 		manifestReader, err := fs.Fetch(c.ctx, descriptor)
 		if err != nil {
 			panic(err)
 		}
+
+		// Get manifest data
 		data, err := io.ReadAll(manifestReader)
 		if err != nil {
 			panic(err)
 		}
+
 		// Unmarshal the manifest to access annotations
 		var manifest Manifest
 		err = json.Unmarshal(data, &manifest)
@@ -135,29 +122,8 @@ func (c *ArkImage) Pull(image string) {
 	}
 
 	// delete file if it exists
-	//log.Println("Deleting configdata.json if it exists")
 	os.Remove(localpath + "/configdata.json")
 
-}
-
-func getFqImage(image string) string {
-	if strings.Contains(image, "/") {
-		return image
-	} else {
-		return arkConfig.ArkRegistry.Domain + "/" + arkConfig.ArkRegistry.RepoName + "/" + image
-	}
-}
-
-func getResourceName(fqImage string) string {
-	resourceName := strings.Split(fqImage, "/")[len(strings.Split(fqImage, "/"))-1]
-	resourceName = strings.Split(resourceName, ":")[0]
-	return resourceName
-}
-
-func getVersion(fqImage string) string {
-	resourceName := strings.Split(fqImage, "/")[len(strings.Split(fqImage, "/"))-1]
-	resourceName = strings.Split(resourceName, ":")[1]
-	return resourceName
 }
 
 // pushToRegistry Pushes files from a directory to a registry
@@ -259,4 +225,41 @@ func (c *ArkImage) pushToRegistry(dir string, tag string, gitUrl string, imageTy
 	} else {
 		log.Println("Pushed files from: " + dir + " to " + repo.Reference.Repository + ":" + tag)
 	}
+}
+
+func (c *ArkImage) GetLocalPath(image string) string {
+	// Get home directory
+	homedir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Println("Error getting home directory:", err)
+		os.Exit(1)
+	}
+
+	fqImage := getFqImage(image)
+	resourceName := getResourceName(fqImage)
+	version := getVersion(fqImage)
+
+	localpath := path.Join(homedir, ".ark", "registry", arkConfig.ArkRegistry.Domain, arkConfig.ArkRegistry.RepoName, resourceName, version)
+
+	return localpath
+}
+
+func getFqImage(image string) string {
+	if strings.Contains(image, "/") {
+		return image
+	} else {
+		return arkConfig.ArkRegistry.Domain + "/" + arkConfig.ArkRegistry.RepoName + "/" + image
+	}
+}
+
+func getResourceName(fqImage string) string {
+	resourceName := strings.Split(fqImage, "/")[len(strings.Split(fqImage, "/"))-1]
+	resourceName = strings.Split(resourceName, ":")[0]
+	return resourceName
+}
+
+func getVersion(fqImage string) string {
+	resourceName := strings.Split(fqImage, "/")[len(strings.Split(fqImage, "/"))-1]
+	resourceName = strings.Split(resourceName, ":")[1]
+	return resourceName
 }
