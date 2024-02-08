@@ -52,15 +52,12 @@ func (c *ArkImage) Push(gitUrl string, tag string, imageType string) {
 }
 
 // Pull Pulls code from a registry to a local directory
-func (c *ArkImage) Pull(image string) {
+func (c *ArkImage) Pull(image string) string {
 
-	//ghcr.io/katasec/ark-resource-hello:v0.0.1 or ark-resource-hello:v0.0.1
+	imageType := "" // For e.g. pulumi or terraform
 
-	fqImage := getFqImage(image)
-
-	// Create local path under ~/.ark/registry/registrydomain/reponame/resourcename/version/
+	// Create local path under ~/.ark/registry/...
 	localpath := c.GetLocalPath(image)
-	//log.Println("The localpath is:" + localpath)
 
 	// Create a file store in the local path
 	fs, err := file.New(localpath)
@@ -70,16 +67,19 @@ func (c *ArkImage) Pull(image string) {
 	defer fs.Close()
 
 	// Delete files in file store if any
-	//log.Println("Deleting files in file store if any before download: " + localpath)
 	deleteDirectoryContents(localpath)
 
-	// Connect to a remote repository
+	// Get fully qualified image name (with registry domain)
+	fqImage := getFqImage(image)
+
+	// Create repository struct to connect to registry
 	ref := strings.Split(fqImage, ":")[0]
 	repo, err := remote.NewRepository(ref)
 	if err != nil {
 		panic(err)
 	}
 
+	// Auth creds for registry
 	repo.Client = &auth.Client{
 		Client: retry.DefaultClient,
 		Cache:  auth.DefaultCache,
@@ -89,7 +89,7 @@ func (c *ArkImage) Pull(image string) {
 		}),
 	}
 
-	// Pull the image to the local file store
+	// Pull/Copy image from repo to the local file store
 	tagx := strings.Split(image, ":")[1]
 	descriptor, err := oras.Copy(c.ctx, repo, tagx, fs, tagx, oras.DefaultCopyOptions)
 	if err != nil {
@@ -97,7 +97,6 @@ func (c *ArkImage) Pull(image string) {
 		log.Println(err.Error())
 		os.Exit(1)
 	} else {
-
 		// Get manifest reader after image pull
 		manifestReader, err := fs.Fetch(c.ctx, descriptor)
 		if err != nil {
@@ -117,13 +116,13 @@ func (c *ArkImage) Pull(image string) {
 			panic(err) // Handle error appropriately
 		}
 
-		log.Println("ImageType:", manifest.Annotations.ImageType)
-
+		imageType = manifest.Annotations.ImageType
 	}
 
 	// delete file if it exists
 	os.Remove(localpath + "/configdata.json")
 
+	return imageType
 }
 
 // pushToRegistry Pushes files from a directory to a registry
@@ -244,6 +243,7 @@ func (c *ArkImage) GetLocalPath(image string) string {
 	return localpath
 }
 
+// getFqImage Returns the fully qualified image name that include regis domain and repo name
 func getFqImage(image string) string {
 	if strings.Contains(image, "/") {
 		return image
