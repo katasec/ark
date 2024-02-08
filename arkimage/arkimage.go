@@ -35,7 +35,7 @@ func NewArkImage() *ArkImage {
 }
 
 // Push Pushes code from a git repo to a registry
-func (c *ArkImage) Push(gitUrl string, tag string) {
+func (c *ArkImage) Push(gitUrl string, tag string, imageType string) {
 	fmt.Println("Pushing crate")
 
 	if isValidGitUrl(gitUrl) {
@@ -44,7 +44,7 @@ func (c *ArkImage) Push(gitUrl string, tag string) {
 		os.Chdir(repoDir)
 
 		// Push the cloned directory to the registry
-		c.pushToRegistry(repoDir, tag, gitUrl)
+		c.pushToRegistry(repoDir, tag, gitUrl, imageType)
 	} else {
 		fmt.Println("Not a git URL: " + gitUrl)
 	}
@@ -92,20 +92,19 @@ func (c *ArkImage) Pull(image string) {
 
 	// Connect to a remote repository
 	ref := strings.Split(fqImage, ":")[0]
-	log.Println("ref:", ref)
 	repo, err := remote.NewRepository(ref)
 	if err != nil {
 		panic(err)
 	}
 
-	repo.Client = &auth.Client{
-		Client: retry.DefaultClient,
-		Cache:  auth.DefaultCache,
-		Credential: auth.StaticCredential(arkConfig.ArkRegistry.Domain, auth.Credential{
-			Username: arkConfig.ArkRegistry.Username,
-			Password: arkConfig.ArkRegistry.Password,
-		}),
-	}
+	// repo.Client = &auth.Client{
+	// 	Client: retry.DefaultClient,
+	// 	Cache:  auth.DefaultCache,
+	// 	Credential: auth.StaticCredential(arkConfig.ArkRegistry.Domain, auth.Credential{
+	// 		Username: arkConfig.ArkRegistry.Username,
+	// 		Password: arkConfig.ArkRegistry.Password,
+	// 	}),
+	// }
 
 	// Pull the image to the local file store
 	tagx := strings.Split(image, ":")[1]
@@ -131,12 +130,12 @@ func (c *ArkImage) Pull(image string) {
 			panic(err) // Handle error appropriately
 		}
 
-		log.Println("Parsed Type:", manifest.Annotations.ImageType)
+		log.Println("ImageType:", manifest.Annotations.ImageType)
 
 	}
 
 	// delete file if it exists
-	log.Println("Deleting configdata.json if it exists")
+	//log.Println("Deleting configdata.json if it exists")
 	os.Remove(localpath + "/configdata.json")
 
 }
@@ -162,7 +161,7 @@ func getVersion(fqImage string) string {
 }
 
 // pushToRegistry Pushes files from a directory to a registry
-func (c *ArkImage) pushToRegistry(dir string, tag string, gitUrl string) {
+func (c *ArkImage) pushToRegistry(dir string, tag string, gitUrl string, imageType string) {
 
 	// Pusing a file to a registry requires the creation of an ORA
 	// local file store and a remote repository. The file store is a local directory
@@ -206,7 +205,7 @@ func (c *ArkImage) pushToRegistry(dir string, tag string, gitUrl string) {
 	opts := oras.PackManifestOptions{
 		Layers: fileDescriptors,
 		ManifestAnnotations: map[string]string{
-			"org.opencontainers.image.type": "terraform",
+			"org.opencontainers.image.type": imageType,
 		},
 	}
 	manifestDescriptor, err := oras.PackManifest(ctx, fs, oras.PackManifestVersion1_0, artifactType, opts)
