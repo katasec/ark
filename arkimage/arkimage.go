@@ -97,14 +97,14 @@ func (c *ArkImage) Pull(image string) {
 		panic(err)
 	}
 
-	// repo.Client = &auth.Client{
-	// 	Client: retry.DefaultClient,
-	// 	Cache:  auth.DefaultCache,
-	// 	Credential: auth.StaticCredential(arkConfig.ArkRegistry.Domain, auth.Credential{
-	// 		Username: arkConfig.ArkRegistry.Username,
-	// 		Password: arkConfig.ArkRegistry.Password,
-	// 	}),
-	// }
+	repo.Client = &auth.Client{
+		Client: retry.DefaultClient,
+		Cache:  auth.DefaultCache,
+		Credential: auth.StaticCredential(arkConfig.ArkRegistry.Domain, auth.Credential{
+			Username: arkConfig.ArkRegistry.Username,
+			Password: arkConfig.ArkRegistry.Password,
+		}),
+	}
 
 	// Pull the image to the local file store
 	tagx := strings.Split(image, ":")[1]
