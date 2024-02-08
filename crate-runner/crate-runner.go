@@ -40,6 +40,44 @@ func (c *CreateRunner) Run() {
 		runner.Run()
 	case "pulumi":
 		runner := prunner.NewPRunner(c.imageName, c.configData, workDir)
+		runner.Up()
+		runner.Destroy()
+	}
+}
+
+func (c *CreateRunner) Up() {
+
+	// Need to pull image to determine type
+	image := arkimage.NewArkImage()
+	imagetype, workDir := image.Pull(c.imageName)
+
+	log.Println("The image type was:" + imagetype)
+
+	switch imagetype {
+	case "terraform":
+		runner := tfrunner.NewTfrunner(c.imageName, c.configData)
 		runner.Run()
+	case "pulumi":
+		runner := prunner.NewPRunner(c.imageName, c.configData, workDir)
+		runner.Up()
+		runner.Destroy()
+	}
+}
+
+func (c *CreateRunner) Destroy() {
+
+	// Need to pull image to determine type
+	image := arkimage.NewArkImage()
+	imagetype, workDir := image.Pull(c.imageName)
+
+	log.Println("The image type was:" + imagetype)
+
+	switch imagetype {
+	case "terraform":
+		runner := tfrunner.NewTfrunner(c.imageName, c.configData)
+		runner.Run()
+	case "pulumi":
+		runner := prunner.NewPRunner(c.imageName, c.configData, workDir)
+		runner.Destroy()
 	}
 }

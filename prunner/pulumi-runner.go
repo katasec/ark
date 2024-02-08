@@ -1,11 +1,13 @@
 package prunner
 
 import (
+	"context"
 	"log"
 	"os"
 	"strings"
 
 	pulumirunner "github.com/katasec/pulumi-runner"
+	"github.com/pulumi/pulumi/sdk/v3/go/auto"
 )
 
 // PRunner is a helper struct for running pulumi programs
@@ -14,6 +16,7 @@ type PRunner struct {
 	configdata   string
 	resourceName string
 	workDir      string
+	localProgram pulumirunner.LocalProgram
 }
 
 func NewPRunner(arkImage string, configdata string, workDir string) *PRunner {
@@ -23,6 +26,7 @@ func NewPRunner(arkImage string, configdata string, workDir string) *PRunner {
 		workDir:    workDir,
 	}
 	runner.setResourceName()
+	runner.createLocalProgram()
 
 	return runner
 }
@@ -40,9 +44,7 @@ func (p *PRunner) setResourceName() {
 	p.resourceName = resourceName
 }
 
-func (p *PRunner) Run() {
-
-	log.Println("Do pulumi stuff!")
+func (p *PRunner) createLocalProgram() {
 
 	args := &pulumirunner.LocalProgramArgs{
 		ProjectName: p.resourceName,
@@ -67,21 +69,17 @@ func (p *PRunner) Run() {
 	if err != nil {
 		log.Println(err.Error())
 	} else {
-		localProgram.Up()
+		p.localProgram = *localProgram
 	}
 
 }
 
-// // createPulumiProgram creates a pulumi program from a git remote resource for the given resource name
-// func (p *PRunner) createPulumiProgram(resourceName string, runtime string) (*pulumirunner.RemoteProgram, error) {
+func (p *PRunner) Up() {
+	p.localProgram.Stack.SetConfig(context.Background(), "arkdata", auto.ConfigValue{Value: p.configdata})
+	p.localProgram.Up()
+}
 
-// 	//logger := utils.ConfigureLogger(w.config.LogFile)
-// 	//projectPath := fmt.Sprintf("%s-handler", resourceName)
-
-// 	//log.Println("Project path:" + projectPath)
-
-// 	args := &pulumirunner.
-
-// 	// Create a new pulumi program
-// 	return pulumirunner.NewRemoteProgram(args)
-// }
+func (p *PRunner) Destroy() {
+	p.localProgram.Stack.SetConfig(context.Background(), "arkdata", auto.ConfigValue{Value: p.configdata})
+	p.localProgram.Destroy()
+}
