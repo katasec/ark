@@ -30,7 +30,8 @@ func (c *CreateRunner) Run() {
 
 	// Need to pull image to determine type
 	image := arkimage.NewArkImage()
-	imagetype := image.Pull(c.imageName)
+	imagetype, workDir := image.Pull(c.imageName)
+
 	log.Println("The image type was:" + imagetype)
 
 	switch imagetype {
@@ -38,7 +39,7 @@ func (c *CreateRunner) Run() {
 		runner := tfrunner.NewTfrunner(c.imageName, c.configData)
 		runner.Run()
 	case "pulumi":
-		runner := prunner.NewPRunner(c.imageName, c.configData)
+		runner := prunner.NewPRunner(c.imageName, c.configData, workDir)
 		runner.Run()
 	}
 }

@@ -13,12 +13,14 @@ type PRunner struct {
 	ArkImage     string
 	configdata   string
 	resourceName string
+	workDir      string
 }
 
-func NewPRunner(arkImage string, configdata string) *PRunner {
+func NewPRunner(arkImage string, configdata string, workDir string) *PRunner {
 	runner := &PRunner{
 		ArkImage:   arkImage,
 		configdata: configdata,
+		workDir:    workDir,
 	}
 	runner.setResourceName()
 
@@ -57,7 +59,8 @@ func (p *PRunner) Run() {
 				"value": "westus2",
 			},
 		},
-		Writer: os.Stdout,
+		WorkDir: p.workDir,
+		Writer:  os.Stdout,
 	}
 
 	localProgram, err := pulumirunner.NewLocalProgram(args)

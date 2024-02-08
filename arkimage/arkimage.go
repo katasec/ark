@@ -52,12 +52,12 @@ func (c *ArkImage) Push(gitUrl string, tag string, imageType string) {
 }
 
 // Pull Pulls code from a registry to a local directory
-func (c *ArkImage) Pull(image string) string {
+func (c *ArkImage) Pull(image string) (imageType string, localpath string) {
 
-	imageType := "" // For e.g. pulumi or terraform
+	imageType = "" // For e.g. pulumi or terraform
 
 	// Create local path under ~/.ark/registry/...
-	localpath := c.GetLocalPath(image)
+	localpath = c.GetLocalPath(image)
 
 	// Create a file store in the local path
 	fs, err := file.New(localpath)
@@ -122,7 +122,7 @@ func (c *ArkImage) Pull(image string) string {
 	// delete file if it exists
 	os.Remove(localpath + "/configdata.json")
 
-	return imageType
+	return imageType, localpath
 }
 
 // pushToRegistry Pushes files from a directory to a registry
