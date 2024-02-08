@@ -18,7 +18,7 @@ require (
 	github.com/hashicorp/hc-install v0.6.2
 	github.com/hashicorp/terraform-exec v0.20.0
 	github.com/hpcloud/tail v1.0.0
-	github.com/katasec/pulumi-runner v0.1.18
+	github.com/katasec/pulumi-runner v0.1.19
 	github.com/katasec/tableio v0.0.5
 	github.com/katasec/utils v0.0.3
 	github.com/lib/pq v1.10.9

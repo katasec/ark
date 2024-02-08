@@ -176,6 +176,8 @@ github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99/go.mod h1:1lJo3i
 github.com/joho/godotenv v1.3.0 h1:Zjp+RcGpHhGlrMbJzXTrZZPrWj+1vfm90La1wgB6Bhc=
 github.com/katasec/pulumi-runner v0.1.18 h1:xTs+xp8gNuztmelx19H32pSAZ9nXi1ujLsI+XsvNuqs=
 github.com/katasec/pulumi-runner v0.1.18/go.mod h1:9UilVyD+OxpJ+llRf2yvp5mNbqW7qm38qEHU5pJ9Xes=
+github.com/katasec/pulumi-runner v0.1.19 h1:UplZIffoOrzCAUBBgmNNU26ZbJxfthXd1y3JxaAL2ao=
+github.com/katasec/pulumi-runner v0.1.19/go.mod h1:9UilVyD+OxpJ+llRf2yvp5mNbqW7qm38qEHU5pJ9Xes=
 github.com/katasec/tableio v0.0.5 h1:e4Y6/DHPErhu/Kl0E1hmozpI05Qvt60O+1NhXO3MmNg=
 github.com/katasec/tableio v0.0.5/go.mod h1:a3a6422MhmSqLANF0HKQ0vwxf2horZ3quWv6EbiGO/w=
 github.com/katasec/utils v0.0.3 h1:R/OaDPXyf1vbEC+hqLlBoaGRERRILv9U9oo/13gJVI8=
