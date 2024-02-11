@@ -7,13 +7,13 @@ type DeleteAzureCloudspaceRequest struct {
 }
 
 func (r *DeleteAzureCloudspaceRequest) ToJsonAzureCloudpace() string {
-	acs := cloudspaces.NewAzureCloudSpace()
+	acs := cloudspaces.NewAzureCloudSpace("UAE North")
 	acs.Name = r.Name
 	return acs.ToJson()
 }
 
 func (r *DeleteAzureCloudspaceRequest) ToYamlAzureCloudpace() string {
-	acs := cloudspaces.NewAzureCloudSpace()
+	acs := cloudspaces.NewAzureCloudSpace("UAE North")
 	acs.Name = r.Name
 	return acs.ToYaml()
 }

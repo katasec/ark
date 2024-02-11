@@ -10,8 +10,10 @@ import (
 )
 
 type CreateRunner struct {
-	configData string
-	imageName  string
+	configData string // Config data to inject into the IaC program before run
+	imageName  string // container image name
+	imageType  string // For e.g. Pulumi or Terraform
+	workDir    string // Pulumi program will be downloaded into this local folder
 }
 
 func NewCrateRunner(imageName string, configData string) *CreateRunner {
@@ -20,64 +22,39 @@ func NewCrateRunner(imageName string, configData string) *CreateRunner {
 		os.Exit(1)
 	}
 
+	// Need to pull image to determine type
+	image := arkimage.NewArkImage()
+	imageType, workDir := image.Pull(imageName)
+	log.Println("The image type was:" + imageType)
+
 	return &CreateRunner{
 		configData: configData,
 		imageName:  imageName,
+		imageType:  imageType,
+		workDir:    workDir,
 	}
 }
 
-func (c *CreateRunner) Run() {
+func (c *CreateRunner) Apply() {
 
-	// Need to pull image to determine type
-	image := arkimage.NewArkImage()
-	imagetype, workDir := image.Pull(c.imageName)
-
-	log.Println("The image type was:" + imagetype)
-
-	switch imagetype {
+	switch c.imageType {
 	case "terraform":
 		runner := tfrunner.NewTfrunner(c.imageName, c.configData)
-		runner.Run()
+		runner.Apply()
 	case "pulumi":
-		runner := prunner.NewPRunner(c.imageName, c.configData, workDir)
+		runner := prunner.NewPRunner(c.imageName, c.configData, c.workDir)
 		runner.Up()
-		runner.Destroy()
-	}
-}
-
-func (c *CreateRunner) Up() {
-
-	// Need to pull image to determine type
-	image := arkimage.NewArkImage()
-	imagetype, workDir := image.Pull(c.imageName)
-
-	log.Println("The image type was:" + imagetype)
-
-	switch imagetype {
-	case "terraform":
-		runner := tfrunner.NewTfrunner(c.imageName, c.configData)
-		runner.Run()
-	case "pulumi":
-		runner := prunner.NewPRunner(c.imageName, c.configData, workDir)
-		runner.Up()
-		runner.Destroy()
 	}
 }
 
 func (c *CreateRunner) Destroy() {
 
-	// Need to pull image to determine type
-	image := arkimage.NewArkImage()
-	imagetype, workDir := image.Pull(c.imageName)
-
-	log.Println("The image type was:" + imagetype)
-
-	switch imagetype {
+	switch c.imageType {
 	case "terraform":
 		runner := tfrunner.NewTfrunner(c.imageName, c.configData)
-		runner.Run()
+		runner.Destroy()
 	case "pulumi":
-		runner := prunner.NewPRunner(c.imageName, c.configData, workDir)
+		runner := prunner.NewPRunner(c.imageName, c.configData, c.workDir)
 		runner.Destroy()
 	}
 }

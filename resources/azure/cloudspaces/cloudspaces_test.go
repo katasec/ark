@@ -10,7 +10,7 @@ import (
 
 func TestGenJson(t *testing.T) {
 	// Generate a new cloudspace
-	acs := NewAzureCloudSpace()
+	acs := NewAzureCloudSpace("UAE North")
 	// Add a spoke to the cloudspace
 	acs.AddSpoke("test")
 	// Generate the JSON representation of the cloudspace
@@ -34,6 +34,6 @@ func TestAcs(t *testing.T) {
 
 	for _, newAcs := range result {
 		fmt.Println(newAcs.Name)
-		fmt.Println(newAcs.Hub.SubnetsInfo[0].AddressPrefix)
+		fmt.Println(newAcs.Hub.SubnetsInfo[0].AddressPrefixes)
 	}
 }

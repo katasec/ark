@@ -1,52 +1,95 @@
 package craterunner
 
 import (
+	"log"
 	"testing"
 
 	"github.com/katasec/ark/resources/azure/cloudspaces"
 )
 
-func TestRunTerraformCrate(t *testing.T) {
+func TestTerraformApply(t *testing.T) {
 
 	// Generate data for crate
-	acs := cloudspaces.NewAzureCloudSpace()
-	acs.AddSpoke("dev")
-	acs.AddSpoke("prod")
-	data := acs.ToJson()
+	data := getAcsData()
 
 	// Create crate runner
 	r := NewCrateRunner("ghcr.io/katasec/ark-resource-hello:v0.0.4", data)
 
 	// Run crate
-	r.Run()
+	r.Apply()
 }
 
-func TestRunPulumiHelloCrate(t *testing.T) {
+func TestTerraformDestroy(t *testing.T) {
 
 	// Generate data for crate
-	acs := cloudspaces.NewAzureCloudSpace()
+	data := getAcsData()
+
+	// Create crate runner
+	r := NewCrateRunner("ghcr.io/katasec/ark-resource-hello:v0.0.4", data)
+
+	// Run crate
+	r.Destroy()
+}
+
+func TestRunPulumiHelloApply(t *testing.T) {
+
+	// Generate data for crate
+	data := getAcsData()
+
+	// Create crate runner
+	r := NewCrateRunner("ghcr.io/katasec/ark-resource-phello:v0.0.1", data)
+
+	// Run crate
+	r.Apply()
+}
+
+func TestRunPulumiHelloDestroy(t *testing.T) {
+
+	// Generate data for crate
+	acs := cloudspaces.NewAzureCloudSpace("UAE North")
 	acs.AddSpoke("dev")
-	acs.AddSpoke("prod")
 	data := acs.ToJson()
 
 	// Create crate runner
 	r := NewCrateRunner("ghcr.io/katasec/ark-resource-phello:v0.0.1", data)
 
 	// Run crate
-	r.Run()
+	r.Destroy()
 }
 
-func TestRunPulumiAzureCloudspaceCrate(t *testing.T) {
+func TestPulumiAcsApply(t *testing.T) {
 
 	// Generate data for crate
-	acs := cloudspaces.NewAzureCloudSpace()
-	acs.AddSpoke("dev")
-	acs.AddSpoke("prod")
-	data := acs.ToJson()
+	data := getAcsData()
 
 	// Create crate runner
 	r := NewCrateRunner("ghcr.io/katasec/ark-resource-azurecloudspace:v0.0.1", data)
 
 	// Run crate
-	r.Run()
+	r.Apply()
+}
+
+func TestPulumiAcsDestroy(t *testing.T) {
+
+	// Generate data for crate
+	data := getAcsData()
+
+	// Create crate runner
+	r := NewCrateRunner("ghcr.io/katasec/ark-resource-azurecloudspace:v0.0.1", data)
+
+	// Run crate
+	r.Destroy()
+}
+
+func getAcsData() string {
+	// Generate data for crate
+	acs := cloudspaces.NewAzureCloudSpace("UAE North")
+	acs.AddSpoke("dev")
+	data := acs.ToJson()
+	return data
+}
+
+func TestJson(t *testing.T) {
+	data := getAcsData()
+	log.Println(data)
 }

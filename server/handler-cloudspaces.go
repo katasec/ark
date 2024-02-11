@@ -58,7 +58,7 @@ func (s *Server) PostCloudspace() http.HandlerFunc {
 		// Generate new cloudspace struct if none found in DB
 		if len(rows) == 0 {
 			fmt.Println("Cloudspace not found in DB, creating new cloudspace")
-			acs = *(cloudspaces.NewAzureCloudSpace())
+			acs = *(cloudspaces.NewAzureCloudSpace("UAE North"))
 			fmt.Println(acs.ToJson())
 		} else {
 			acs = rows[0]

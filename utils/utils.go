@@ -4,12 +4,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"strings"
+	"time"
 
 	ps "github.com/mitchellh/go-ps"
 	"gopkg.in/yaml.v2"
 )
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
 
 // Returnh true if current process is a child process of pulumi
 func IsPulumiChild(args []string) bool {
@@ -66,4 +72,14 @@ func JsonUnmarshall[T any](message string) (T, error) {
 		log.Println("jsonUnmarshall error:" + message)
 	}
 	return msg, err
+}
+
+const charset = "abcdefghijklmnopqrstuvwxyz"
+
+func RandomString(length int) string {
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(b)
 }

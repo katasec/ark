@@ -11,7 +11,7 @@ import (
 
 func TestCreateAcsJson(t *testing.T) {
 
-	acs := cloudspaces.NewAzureCloudSpace()
+	acs := cloudspaces.NewAzureCloudSpace("UAE North")
 	acs.AddSpoke("dev")
 	acs.AddSpoke("prod")
 	fmt.Println(acs.ToJson())
@@ -28,8 +28,8 @@ func CreateSampleAcs(name string) *cloudspaces.AzureCloudspace {
 			AddressPrefix: "10.1.0.0/16",
 			SubnetsInfo: []cloudspaces.SubnetsInfo{
 				{
-					Name:          "hub-snet1",
-					AddressPrefix: "10.1.1.0/24",
+					Name:            "hub-snet1",
+					AddressPrefixes: "10.1.1.0/24",
 				},
 			},
 		},
@@ -39,8 +39,8 @@ func CreateSampleAcs(name string) *cloudspaces.AzureCloudspace {
 				AddressPrefix: "10.2.0.0/16",
 				SubnetsInfo: []cloudspaces.SubnetsInfo{
 					{
-						Name:          "hub-snet1",
-						AddressPrefix: "10.2.1.0/24",
+						Name:            "hub-snet1",
+						AddressPrefixes: "10.2.1.0/24",
 					},
 				},
 			},

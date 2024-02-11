@@ -20,6 +20,7 @@ type Tfrunner struct {
 	ArkImage   string
 	ExecPath   string
 	configdata string
+	tf         *tfexec.Terraform
 }
 
 func NewTfrunner(arkImage string, configdata string) *Tfrunner {
@@ -29,12 +30,16 @@ func NewTfrunner(arkImage string, configdata string) *Tfrunner {
 		configdata: configdata,
 	}
 
+	// Install Terraform
 	runner.installTerraform()
+
+	// Run Terraform Init to prepare for apply/destroy
+	runner.tf = runner.Init()
 
 	return runner
 }
 
-func (t *Tfrunner) installTerraform() {
+func (runner *Tfrunner) installTerraform() {
 	installer := &releases.ExactVersion{
 		Product: product.Terraform,
 		Version: version.Must(version.NewVersion("1.6.6")),
@@ -45,16 +50,17 @@ func (t *Tfrunner) installTerraform() {
 		log.Fatalf("error installing Terraform: %s", err)
 	}
 
-	t.ExecPath = execPath
+	runner.ExecPath = execPath
 }
-func (t *Tfrunner) Run() {
+
+func (runner *Tfrunner) Init() *tfexec.Terraform {
 	c := arkimage.NewArkImage()
-	c.Pull(t.ArkImage)
+	c.Pull(runner.ArkImage)
 
 	// Set working directory
-	workingDir := c.GetLocalPath(t.ArkImage)
+	workingDir := c.GetLocalPath(runner.ArkImage)
 	log.Println("Working directory: " + workingDir)
-	tf, err := tfexec.NewTerraform(workingDir, t.ExecPath)
+	tf, err := tfexec.NewTerraform(workingDir, runner.ExecPath)
 	if err != nil {
 		log.Fatalf("error running NewTerraform: %s", err)
 	} else {
@@ -63,7 +69,7 @@ func (t *Tfrunner) Run() {
 
 	// Unmarshal configdata
 	var data map[string]interface{}
-	err = json.Unmarshal([]byte(t.configdata), &data)
+	err = json.Unmarshal([]byte(runner.configdata), &data)
 	if err != nil {
 		panic(err)
 	}
@@ -88,6 +94,7 @@ func (t *Tfrunner) Run() {
 	tf.SetStdout(writer)
 	tf.SetStderr(os.Stderr)
 
+	// Run Tf init
 	err = tf.Init(context.Background(), tfexec.Upgrade(true))
 	if err != nil {
 		log.Fatalf("error running Init: %s", err)
@@ -98,7 +105,15 @@ func (t *Tfrunner) Run() {
 		log.Fatalf("error running Show: %s", err)
 	}
 
-	tf.Apply(context.Background())
-	tf.Destroy(context.Background())
 	fmt.Println(state.FormatVersion) // "0.1"
+
+	return tf
+}
+
+func (runner *Tfrunner) Apply() {
+	runner.tf.Apply(context.Background())
+}
+
+func (runner *Tfrunner) Destroy() {
+	runner.tf.Destroy(context.Background())
 }

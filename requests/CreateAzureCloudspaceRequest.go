@@ -11,7 +11,7 @@ type CreateAzureCloudspaceRequest struct {
 }
 
 func (r *CreateAzureCloudspaceRequest) ToJsonAzureCloudpace() string {
-	acs := cloudspaces.NewAzureCloudSpace()
+	acs := cloudspaces.NewAzureCloudSpace("UAE North")
 	for _, env := range r.Environments {
 		acs.AddSpoke(env)
 	}
@@ -19,7 +19,7 @@ func (r *CreateAzureCloudspaceRequest) ToJsonAzureCloudpace() string {
 }
 
 func (r *CreateAzureCloudspaceRequest) ToYamlAzureCloudpace() string {
-	acs := cloudspaces.NewAzureCloudSpace()
+	acs := cloudspaces.NewAzureCloudSpace("UAE North")
 	for _, env := range r.Environments {
 		acs.AddSpoke(env)
 	}

@@ -6,11 +6,16 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/katasec/ark/utils"
 	"gopkg.in/yaml.v2"
 )
 
 type AzureCloudspace struct {
-	ID     int
+	ID int
+
+	ResourceGroup string
+	Location      string
+
 	Name   string     `yaml:"Name"`
 	Hub    VNETInfo   `yaml:"Hub"`
 	Spokes []VNETInfo `yaml:"Spokes"`
@@ -22,10 +27,12 @@ type AzureCloudspace struct {
 	hubOctet2 int
 
 	firstOctet2 int
+
+	suffix string
 }
 
 // NewAzureCloudSpace Create a new Azure Cloudspace
-func NewAzureCloudSpace(oct1 ...int) *AzureCloudspace {
+func NewAzureCloudSpace(location string, oct1 ...int) *AzureCloudspace {
 
 	// variables DefaultOctet1 and DefaultOctet2  default value for the first/second octets
 	octet1 := DefaultOctet1
@@ -33,16 +40,25 @@ func NewAzureCloudSpace(oct1 ...int) *AzureCloudspace {
 		octet1 = oct1[0]
 	}
 
+	suffix := utils.RandomString(6)
+
+	vnetName := "vnet-hub"
+	resourceGroupName := "rg-hub" + "-" + suffix
+
 	return &AzureCloudspace{
-		Name: "default",
+		ResourceGroup: resourceGroupName,
+		Name:          "default",
+		Location:      location,
 		Hub: VNETInfo{
-			Name:          "vnet-hub",
+			ResourceGroup: resourceGroupName,
+			Name:          vnetName,
 			AddressPrefix: fmt.Sprintf("%d.%d.0.0/16", octet1, DefaultOctet2),
-			SubnetsInfo:   GenerateHubSubnets(octet1, DefaultOctet2),
+			SubnetsInfo:   GenerateHubSubnets(octet1, DefaultOctet2, vnetName, resourceGroupName),
 		},
 		hubOctet2:   DefaultOctet2,
 		firstOctet2: DefaultOctet2 + 1,
 		hubOctet1:   octet1,
+		suffix:      suffix,
 	}
 }
 
@@ -60,11 +76,14 @@ func (acs *AzureCloudspace) AddSpoke(name string) error {
 	// Determine 2nd octet for the new spoke
 	octet2 := acs.NextAvailableOctet2()
 
+	vnetName := "vnet-" + name
+	resourceGroupName := fmt.Sprintf("rg-%s-%s", name, acs.suffix) //"rg-" + name + "-" + acs.suffix
 	// Create a new spoke
 	newSpoke := VNETInfo{
+		ResourceGroup: resourceGroupName,
 		Name:          fmt.Sprintf("%s%s", VnetPrefix, name),
 		AddressPrefix: fmt.Sprintf("%d.%d.0.0/16", acs.hubOctet1, octet2),
-		SubnetsInfo:   GenerateSpokeSubnets(acs.hubOctet1, octet2),
+		SubnetsInfo:   GenerateSpokeSubnets(acs.hubOctet1, octet2, vnetName, resourceGroupName),
 	}
 
 	// Add the new spoke to the list of spokes

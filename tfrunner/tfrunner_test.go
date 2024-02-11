@@ -8,9 +8,9 @@ import (
 
 func TestRunHello(t *testing.T) {
 
-	acs := cloudspaces.NewAzureCloudSpace()
+	acs := cloudspaces.NewAzureCloudSpace("UAE North")
 	acs.AddSpoke("dev")
 	acs.AddSpoke("prod")
 	runner := NewTfrunner("ark-resource-hello:v0.0.3", acs.ToJson())
-	runner.Run()
+	runner.Apply()
 }

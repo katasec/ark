@@ -1,8 +1,11 @@
 package cloudspaces
 
 type SubnetsInfo struct {
-	AddressPrefix string            `yaml:"AddressPrefix" `
-	Description   string            `yaml:"Description"`
-	Name          string            `yaml:"Name"`
-	Tags          map[string]string `yaml:"Tags"`
+	Name               string `yaml:"Name"`
+	ResourceGroupName  string `yaml:"ResourceGroupName" `
+	VirtualNetworkName string `yaml:"VirtualNetworkName" `
+	AddressPrefixes    string `yaml:"AddressPrefixes" `
+
+	Description string            `yaml:"Description"`
+	Tags        map[string]string `yaml:"Tags"`
 }
