@@ -12,12 +12,37 @@ func TestPulumi(t *testing.T) {
 	pulumiDestroy()
 }
 
+func TestPulumiAcs(t *testing.T) {
+	pulumiApplyAcs()
+	pulumiDestroyAcs()
+}
+
 func pulumiApply() {
+
 	// Create crate runner
 	r := craterunner.NewCrateRunner("ghcr.io/katasec/ark-resource-phello:v0.0.1", "")
 
 	// Run crate
 	r.Apply()
+}
+
+func pulumiApplyAcs() {
+
+	configdata := genAcsJson()
+	// Create crate runner
+	r := craterunner.NewCrateRunner("ghcr.io/katasec/ark-resource-azurecloudspace:v0.0.1", configdata)
+
+	// Run crate
+	r.Apply()
+}
+
+func pulumiDestroyAcs() {
+	configdata := genAcsJson()
+	// Create crate runner
+	r := craterunner.NewCrateRunner("ghcr.io/katasec/ark-resource-azurecloudspace:v0.0.1", configdata)
+
+	// Run crate
+	r.Destroy()
 }
 
 func pulumiDestroy() {
