@@ -23,6 +23,9 @@ var (
 	DEV_ARK_WORKER_IMAGE_NAME = "ghcr.io/katasec/arkworker:v0.0.11"
 
 	DEV_ARK_DB_MYSQL_IMAGE_NAME = "mysql:8.1.0"
+
+	DEV_ARK_MQ_IMAGE_NAME = "rabbitmq:3.12.12"
+
 	// Dev Instance defaults
 	DevDbDefaultUser = "postgres"
 	DevDbDefaultPass = "postgres"

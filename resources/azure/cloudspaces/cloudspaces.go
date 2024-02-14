@@ -43,7 +43,7 @@ func NewAzureCloudSpace(location string, oct1 ...int) *AzureCloudspace {
 	suffix := utils.RandomString(6)
 
 	vnetName := "vnet-hub"
-	resourceGroupName := "rg-hub" + "-" + suffix
+	resourceGroupName := "rg-hub" //+ "-" + suffix
 
 	return &AzureCloudspace{
 		ResourceGroup: resourceGroupName,
@@ -77,7 +77,7 @@ func (acs *AzureCloudspace) AddSpoke(name string) error {
 	octet2 := acs.NextAvailableOctet2()
 
 	vnetName := "vnet-" + name
-	resourceGroupName := fmt.Sprintf("rg-%s-%s", name, acs.suffix) //"rg-" + name + "-" + acs.suffix
+	resourceGroupName := fmt.Sprintf("rg-%s", name) //"rg-" + name + "-" + acs.suffix
 	// Create a new spoke
 	newSpoke := VNETInfo{
 		ResourceGroup: resourceGroupName,

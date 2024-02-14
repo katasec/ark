@@ -17,6 +17,8 @@ func genAcsJson() string {
 	// Generate data for crate
 	acs := cloudspaces.NewAzureCloudSpace("UAE North")
 	acs.AddSpoke("dev")
+	acs.AddSpoke("uat")
+	acs.AddSpoke("prod")
 	data := acs.ToJson()
 	return data
 }
