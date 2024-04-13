@@ -17,13 +17,16 @@ func TestPulumiAcs(t *testing.T) {
 	pulumiDestroyAcs()
 }
 
-func TestPulumiApplyAcs(t *testing.T) {
-	pulumiApplyAcs()
+func TestTerraform(t *testing.T) {
+	terraformApply()
+	terraformDestroy()
 }
 
-func TestPulumiDestroyAcs(t *testing.T) {
-	pulumiDestroyAcs()
-}
+/*
+------------------------------------------------------------
+Functions
+------------------------------------------------------------
+*/
 
 func pulumiApply() {
 
@@ -59,11 +62,6 @@ func pulumiDestroy() {
 
 	// Run crate
 	r.Destroy()
-}
-
-func TestTerraform(t *testing.T) {
-	terraformApply()
-	terraformDestroy()
 }
 
 func terraformApply() {
