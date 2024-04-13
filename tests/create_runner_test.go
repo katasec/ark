@@ -37,6 +37,14 @@ func pulumiApply() {
 	r.Apply()
 }
 
+func pulumiDestroy() {
+	// Create crate runner
+	r := craterunner.NewCrateRunner("ghcr.io/katasec/ark-resource-phello:v0.0.1", "")
+
+	// Run crate
+	r.Destroy()
+}
+
 func pulumiApplyAcs() {
 
 	configdata := genAcsJson()
@@ -51,14 +59,6 @@ func pulumiDestroyAcs() {
 	configdata := genAcsJson()
 	// Create crate runner
 	r := craterunner.NewCrateRunner("ghcr.io/katasec/ark-resource-azurecloudspace:v0.0.3", configdata)
-
-	// Run crate
-	r.Destroy()
-}
-
-func pulumiDestroy() {
-	// Create crate runner
-	r := craterunner.NewCrateRunner("ghcr.io/katasec/ark-resource-phello:v0.0.1", "")
 
 	// Run crate
 	r.Destroy()
